@@ -1,7 +1,4 @@
 import api from "../../services/api"
-import {useRouter} from "vue-router"
-
-const router = useRouter()
 
 const state = () => ({
     auth: false,
@@ -46,6 +43,7 @@ const actions = {
     },
 
     async LOGIN({commit, state}, payload) {
+        console.log(payload.email)
         await api.get(import.meta.env.VITE_BASE_API_URL + '/sanctum/csrf-cookie')
         await api.post(import.meta.env.VITE_BASE_API_URL + '/login', payload).then(() => {
             window.location.href = '/'

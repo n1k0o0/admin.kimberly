@@ -51,7 +51,7 @@ const data = reactive({
 });
 
 onMounted(async () => {
-  await store.dispatch('auth/GET_AUTH_ME')
+  // await store.dispatch('auth/GET_AUTH_ME')
   if(store.getters['auth/GET_USER_ID']) {
     await router.push({name: 'applications'})
   }

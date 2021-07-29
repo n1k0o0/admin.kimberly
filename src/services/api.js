@@ -22,6 +22,7 @@ api.interceptors.response.use(undefined, (error) => {
         // ElNotification({type: 'error', title: 'Ошибка', message: 'Обратитесь к разработчикам.'})
         return;
     }
+    console.log(Promise.reject(error))
     return Promise.reject(error);
 });
 
