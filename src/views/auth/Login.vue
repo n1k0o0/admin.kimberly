@@ -1,7 +1,7 @@
 <template>
   <div class="d-flex flex-center flex-column flex-column-fluid p-10 pb-lg-20">
-    <a href="../../demo1/dist/index.html" class="mb-12">
-      <img alt="Logo" src="assets/media/logos/logo-2.svg" class="h-45px">
+    <a href="javascript:;" class="mb-12">
+      <img alt="Logo" src="../../assets/logo.png" class="h-45px">
     </a>
     <div class="w-lg-500px bg-body rounded shadow-sm p-10 p-lg-15 mx-auto">
       <form class="form w-100 fv-plugins-bootstrap5 fv-plugins-framework"
