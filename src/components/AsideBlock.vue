@@ -72,8 +72,8 @@
               <span class="menu-section text-muted text-uppercase fs-8 ls-1">Crafted</span>
             </div>
           </div>
-          <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-            <span class="menu-link">
+          <div data-kt-menu-trigger="click" class="menu-item menu-accordion" v-bind:class="{'hover show': data.dd['pages']}">
+            <span class="menu-link" @click="toggleDropdown('pages')">
               <span class="menu-icon">
                 <span class="svg-icon svg-icon-2">
                   <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
@@ -85,7 +85,7 @@
               <span class="menu-title">Pages</span>
               <span class="menu-arrow"></span>
             </span>
-            <div class="menu-sub menu-sub-accordion menu-active-bg">
+            <div class="menu-sub menu-sub-accordion menu-active-bg" v-bind:class="{'show': data.dd['pages']}">
               <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
                 <span class="menu-link">
                   <span class="menu-bullet">
@@ -136,3 +136,21 @@
     </div>
   </div>
 </template>
+
+<script setup>
+  import { reactive } from 'vue'
+
+  const data = reactive({
+    dd: {}
+  })
+
+  const toggleDropdown = (type) => {
+    data.dd[type] = !data.dd[type]
+  }
+</script>
+
+<style scoped>
+  .aside-menu .menu-item {
+    position: relative;
+  }
+</style>

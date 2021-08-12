@@ -51,7 +51,7 @@ const actions = {
     },
 
     async LOGOUT({commit, state}) {
-        await api.post(import.meta.env.VITE_BASE_API_URL + '/api/logout').then(() => {
+        await api.post(import.meta.env.VITE_BASE_API_URL + '/logout').then(() => {
             window.location.href = '/auth'
         })
     },
