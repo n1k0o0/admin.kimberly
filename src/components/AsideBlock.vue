@@ -22,117 +22,83 @@
         <div class="menu menu-column menu-title-gray-800 menu-state-title-primary menu-state-icon-primary menu-state-bullet-primary menu-arrow-gray-500" id="#kt_aside_menu" data-kt-menu="true">
           <div class="menu-item">
             <div class="menu-content pb-2">
-              <span class="menu-section text-muted text-uppercase fs-8 ls-1">Dashboard</span>
+              <span class="menu-section text-muted text-uppercase fs-8 ls-1">Kimberly</span>
             </div>
           </div>
           <div class="menu-item">
-            <a class="menu-link active" href="../../demo1/dist/index.html">
+            <router-link class="menu-link" to="/leagues">
               <span class="menu-icon">
                 <span class="svg-icon svg-icon-2">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
-                    <path d="M3,16 L5,16 C5.55228475,16 6,15.5522847 6,15 C6,14.4477153 5.55228475,14 5,14 L3,14 L3,12 L5,12 C5.55228475,12 6,11.5522847 6,11 C6,10.4477153 5.55228475,10 5,10 L3,10 L3,8 L5,8 C5.55228475,8 6,7.55228475 6,7 C6,6.44771525 5.55228475,6 5,6 L3,6 L3,4 C3,3.44771525 3.44771525,3 4,3 L10,3 C10.5522847,3 11,3.44771525 11,4 L11,19 C11,19.5522847 10.5522847,20 10,20 L4,20 C3.44771525,20 3,19.5522847 3,19 L3,16 Z" fill="#000000" opacity="0.3" />
-                    <path d="M16,3 L19,3 C20.1045695,3 21,3.8954305 21,5 L21,15.2485298 C21,15.7329761 20.8241635,16.200956 20.5051534,16.565539 L17.8762883,19.5699562 C17.6944473,19.7777745 17.378566,19.7988332 17.1707477,19.6169922 C17.1540423,19.602375 17.1383289,19.5866616 17.1237117,19.5699562 L14.4948466,16.565539 C14.1758365,16.200956 14,15.7329761 14,15.2485298 L14,5 C14,3.8954305 14.8954305,3 16,3 Z" fill="#000000" />
-                  </svg>
                 </span>
               </span>
-              <span class="menu-title">Default</span>
-            </a>
+              <span class="menu-title">Лиги</span>
+            </router-link>
           </div>
           <div class="menu-item">
-            <a class="menu-link" href="../../demo1/dist/dashboards/compact.html">
+            <router-link class="menu-link" to="/schools">
               <span class="menu-icon">
                 <span class="svg-icon svg-icon-2">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
-                    <path d="M6,9 L6,15 C6,16.6568542 7.34314575,18 9,18 L15,18 L15,18.8181818 C15,20.2324881 14.2324881,21 12.8181818,21 L5.18181818,21 C3.76751186,21 3,20.2324881 3,18.8181818 L3,11.1818182 C3,9.76751186 3.76751186,9 5.18181818,9 L6,9 Z M17,16 L17,10 C17,8.34314575 15.6568542,7 14,7 L8,7 L8,6.18181818 C8,4.76751186 8.76751186,4 10.1818182,4 L17.8181818,4 C19.2324881,4 20,4.76751186 20,6.18181818 L20,13.8181818 C20,15.2324881 19.2324881,16 17.8181818,16 L17,16 Z" fill="#000000" fill-rule="nonzero" />
-                    <path d="M9.27272727,9 L13.7272727,9 C14.5522847,9 15,9.44771525 15,10.2727273 L15,14.7272727 C15,15.5522847 14.5522847,16 13.7272727,16 L9.27272727,16 C8.44771525,16 8,15.5522847 8,14.7272727 L8,10.2727273 C8,9.44771525 8.44771525,9 9.27272727,9 Z" fill="#000000" opacity="0.3" />
-                  </svg>
                 </span>
               </span>
-              <span class="menu-title">Compact</span>
-            </a>
+              <span class="menu-title">Школы</span>
+            </router-link>
           </div>
           <div class="menu-item">
-            <a class="menu-link" href="../../demo1/dist/dashboards/header.html">
+            <router-link class="menu-link" to="/tables">
               <span class="menu-icon">
                 <span class="svg-icon svg-icon-2">
-                  <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
-                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                      <rect x="0" y="0" width="24" height="24" />
-                      <rect fill="#000000" x="2" y="5" width="19" height="4" rx="1" />
-                      <rect fill="#000000" opacity="0.3" x="2" y="11" width="19" height="10" rx="1" />
-                    </g>
-                  </svg>
                 </span>
               </span>
-              <span class="menu-title">Header</span>
-            </a>
+              <span class="menu-title">Таблицы</span>
+            </router-link>
           </div>
           <div class="menu-item">
-            <div class="menu-content pt-8 pb-2">
-              <span class="menu-section text-muted text-uppercase fs-8 ls-1">Crafted</span>
-            </div>
-          </div>
-          <div data-kt-menu-trigger="click" class="menu-item menu-accordion" v-bind:class="{'hover show': data.dd['pages']}">
-            <span class="menu-link" @click="toggleDropdown('pages')">
+            <router-link class="menu-link" to="/calendar">
               <span class="menu-icon">
                 <span class="svg-icon svg-icon-2">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
-                    <path d="M2.56066017,10.6819805 L4.68198052,8.56066017 C5.26776695,7.97487373 6.21751442,7.97487373 6.80330086,8.56066017 L8.9246212,10.6819805 C9.51040764,11.267767 9.51040764,12.2175144 8.9246212,12.8033009 L6.80330086,14.9246212 C6.21751442,15.5104076 5.26776695,15.5104076 4.68198052,14.9246212 L2.56066017,12.8033009 C1.97487373,12.2175144 1.97487373,11.267767 2.56066017,10.6819805 Z M14.5606602,10.6819805 L16.6819805,8.56066017 C17.267767,7.97487373 18.2175144,7.97487373 18.8033009,8.56066017 L20.9246212,10.6819805 C21.5104076,11.267767 21.5104076,12.2175144 20.9246212,12.8033009 L18.8033009,14.9246212 C18.2175144,15.5104076 17.267767,15.5104076 16.6819805,14.9246212 L14.5606602,12.8033009 C13.9748737,12.2175144 13.9748737,11.267767 14.5606602,10.6819805 Z" fill="#000000" opacity="0.3" />
-                    <path d="M8.56066017,16.6819805 L10.6819805,14.5606602 C11.267767,13.9748737 12.2175144,13.9748737 12.8033009,14.5606602 L14.9246212,16.6819805 C15.5104076,17.267767 15.5104076,18.2175144 14.9246212,18.8033009 L12.8033009,20.9246212 C12.2175144,21.5104076 11.267767,21.5104076 10.6819805,20.9246212 L8.56066017,18.8033009 C7.97487373,18.2175144 7.97487373,17.267767 8.56066017,16.6819805 Z M8.56066017,4.68198052 L10.6819805,2.56066017 C11.267767,1.97487373 12.2175144,1.97487373 12.8033009,2.56066017 L14.9246212,4.68198052 C15.5104076,5.26776695 15.5104076,6.21751442 14.9246212,6.80330086 L12.8033009,8.9246212 C12.2175144,9.51040764 11.267767,9.51040764 10.6819805,8.9246212 L8.56066017,6.80330086 C7.97487373,6.21751442 7.97487373,5.26776695 8.56066017,4.68198052 Z" fill="#000000" />
-                  </svg>
                 </span>
               </span>
-              <span class="menu-title">Pages</span>
-              <span class="menu-arrow"></span>
-            </span>
-            <div class="menu-sub menu-sub-accordion menu-active-bg" v-bind:class="{'show': data.dd['pages']}">
-              <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-                <span class="menu-link">
-                  <span class="menu-bullet">
-                    <span class="bullet bullet-dot"></span>
-                  </span>
-                  <span class="menu-title">Profile</span>
-                  <span class="menu-arrow"></span>
+              <span class="menu-title">Календарь</span>
+            </router-link>
+          </div>
+          <div class="menu-item">
+            <router-link class="menu-link" to="/results">
+              <span class="menu-icon">
+                <span class="svg-icon svg-icon-2">
                 </span>
-                <div class="menu-sub menu-sub-accordion menu-active-bg">
-                  <div class="menu-item">
-                    <a class="menu-link" href="../../demo1/dist/pages/profile/overview.html">
-                      <span class="menu-bullet">
-                        <span class="bullet bullet-dot"></span>
-                      </span>
-                      <span class="menu-title">Overview</span>
-                    </a>
-                  </div>
-                  <div class="menu-item">
-                    <a class="menu-link" href="../../demo1/dist/pages/profile/projects.html">
-                      <span class="menu-bullet">
-                        <span class="bullet bullet-dot"></span>
-                      </span>
-                      <span class="menu-title">Projects</span>
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
+              </span>
+              <span class="menu-title">Результаты</span>
+            </router-link>
+          </div>
+          <div class="menu-item">
+            <router-link class="menu-link" to="/players">
+              <span class="menu-icon">
+                <span class="svg-icon svg-icon-2">
+                </span>
+              </span>
+              <span class="menu-title">Игроки</span>
+            </router-link>
+          </div>
+          <div class="menu-item">
+            <router-link class="menu-link" to="/statistics">
+              <span class="menu-icon">
+                <span class="svg-icon svg-icon-2">
+                </span>
+              </span>
+              <span class="menu-title">Статистика</span>
+            </router-link>
+          </div>
+          <div class="menu-item">
+            <router-link class="menu-link" to="/notifications">
+              <span class="menu-icon">
+                <span class="svg-icon svg-icon-2">
+                </span>
+              </span>
+              <span class="menu-title">Уведомления</span>
+            </router-link>
           </div>
         </div>
       </div>
-    </div>
-    <div class="aside-footer flex-column-auto pt-5 pb-7 px-5" id="kt_aside_footer">
-      <a href="../../demo1/dist/documentation/getting-started.html" class="btn btn-custom btn-primary w-100" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss-="click" title="200+ in-house components and 3rd-party plugins">
-        <span class="btn-label">Docs &amp; Components</span>
-        <span class="svg-icon btn-icon svg-icon-2">
-          <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
-            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-              <rect x="0" y="0" width="24" height="24" />
-              <path d="M8,3 L8,3.5 C8,4.32842712 8.67157288,5 9.5,5 L14.5,5 C15.3284271,5 16,4.32842712 16,3.5 L16,3 L18,3 C19.1045695,3 20,3.8954305 20,5 L20,21 C20,22.1045695 19.1045695,23 18,23 L6,23 C4.8954305,23 4,22.1045695 4,21 L4,5 C4,3.8954305 4.8954305,3 6,3 L8,3 Z" fill="#000000" opacity="0.3" />
-              <path d="M11,2 C11,1.44771525 11.4477153,1 12,1 C12.5522847,1 13,1.44771525 13,2 L14.5,2 C14.7761424,2 15,2.22385763 15,2.5 L15,3.5 C15,3.77614237 14.7761424,4 14.5,4 L9.5,4 C9.22385763,4 9,3.77614237 9,3.5 L9,2.5 C9,2.22385763 9.22385763,2 9.5,2 L11,2 Z" fill="#000000" />
-              <rect fill="#000000" opacity="0.3" x="7" y="10" width="5" height="2" rx="1" />
-              <rect fill="#000000" opacity="0.3" x="7" y="14" width="9" height="2" rx="1" />
-            </g>
-          </svg>
-        </span>
-      </a>
     </div>
   </div>
 </template>

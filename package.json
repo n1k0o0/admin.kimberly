@@ -2,11 +2,12 @@
   "name": "t",
   "version": "0.0.0",
   "scripts": {
-    "dev": "vite --host admin.sample.loc --port 3000",
+    "dev": "vite --host dashboard.kimberly.local --port 3000",
     "build": "vite build"
   },
   "dependencies": {
     "axios": "^0.21.1",
+    "element-plus": "^1.0.2-beta.70",
     "vue": "^3.0.5",
     "vue-router": "^4.0.10",
     "vuex": "^4.0.2"
