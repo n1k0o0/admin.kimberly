@@ -39,6 +39,7 @@ const actions = {
         const response = await api.post('/auth/me')
         if (response) {
             commit('SET_AUTH', response.data.user)
+            commit('general/SET_COUNTRIES', response.data.countries, {root: true})
         }
     },
 
