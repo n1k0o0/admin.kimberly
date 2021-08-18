@@ -20,8 +20,8 @@ export default function useCountryAndCity(country=null, city=null) {
   const countries = computed(() => store.getters["general/GET_COUNTRIES"])
   const cities = computed(() => store.getters["general/GET_CITIES"])
 
-  watch(selectedCountryId, () => store.commit('general/SET_SELECTED_COUNTRY', selectedCountryId))
-  watch(selectedCityId, () => store.commit('general/SET_SELECTED_CITY', selectedCityId))
+  watch(selectedCountryId, (newSelectedCountryId) => store.commit('general/SET_SELECTED_COUNTRY', newSelectedCountryId))
+  watch(selectedCityId, (newSelectedCityId) => store.commit('general/SET_SELECTED_CITY', newSelectedCityId))
 
   return {
     countries,

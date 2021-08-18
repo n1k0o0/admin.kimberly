@@ -23,8 +23,13 @@
       >
         <template #default>
           <div class="form-group">
-            Выберите страну, с которой будете работать
-            <el-select v-model="selectedCountryId">
+            <label>Выберите страну, с которой будете работать</label>
+          </div>
+          <div class="form-group">
+            <el-select
+              v-model="selectedCountryId"
+              placeholder="Страна"
+            >
               <el-option
                 v-for="country in countries"
                 :value="country.id"
@@ -33,10 +38,14 @@
               >
               </el-option>
             </el-select>
-
+          </div>
+          <div class="form-group">
             <label>Выберите город, с которым будете работать</label>
+          </div>
+          <div class="form-group">
             <el-select
               v-model="selectedCityId"
+              placeholder="Город"
             >
               <el-option
                 v-for="city in cities"
@@ -69,7 +78,7 @@ import HeaderBlock from './components/HeaderBlock.vue'
 import FooterBlock from './components/FooterBlock.vue'
 import { computed, onMounted, reactive, ref, watch } from 'vue'
 import { useStore } from 'vuex'
-import useLocalStorage from "./services/useLocalStorage";
+import useCountryAndCity from "./useCountryAndCity";
 
 const store = useStore();
 
@@ -78,25 +87,11 @@ onMounted(() => {
 })
 const countryAndCityModalShown = ref(false);
 const isLoading = false
-const countries = computed(() => store.getters["general/GET_COUNTRIES"])
-const cities = computed(() => store.getters["general/GET_CITIES"])
-let showUserPanel = computed(() => store.getters['GET_USER_PANEL'])
-const selectedCountryId = useLocalStorage('selected_country', null)
-const selectedCityId = useLocalStorage('selected_city', null)
-const selectedCountry = computed(() => store.getters['general/GET_SELECTED_COUNTRY'])
-const selectedCity = computed(() => store.getters['general/GET_SELECTED_CITY'])
+const showUserPanel = computed(() => store.getters['GET_USER_PANEL'])
+const data = reactive({ isLoading, showUserPanel, })
+const {selectedCountry, selectedCity, selectedCountryId, selectedCityId, countries, cities} = useCountryAndCity()
 
-watch(selectedCountryId, (newValue) => {
-  console.log('Country', newValue)
-  store.commit('general/SET_SELECTED_COUNTRY', newValue)
-})
-watch(selectedCityId, (newValue) => {
-  console.log('City', newValue)
-  store.commit('general/SET_SELECTED_CITY', newValue)
-})
-const data = reactive({ isLoading, showUserPanel, selectedCountry, selectedCity })
 const closeCountryAndCityModal = () => {
-  console.log(selectedCountry.value, selectedCity.value)
   if (selectedCountry.value && selectedCity.value) {
     countryAndCityModalShown.value = false
   }

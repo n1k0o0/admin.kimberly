@@ -30,7 +30,9 @@
                data-kt-drawer-width="{default:'200px', '300px': '250px'}" data-kt-drawer-direction="end"
                data-kt-drawer-toggle="#kt_header_menu_mobile_toggle" data-kt-swapper="true"
                data-kt-swapper-mode="prepend" data-kt-swapper-parent="{default: '#kt_body', lg: '#kt_header_nav'}">
-            <el-select v-model="selectedCountryId">
+            <el-select
+              v-model="selectedCountryId"
+            >
               <el-option
                 v-for="country in countries"
                 :value="country.id"
@@ -60,23 +62,16 @@
 </template>
 
 <script setup>
-import { reactive, onMounted, computed, watch } from 'vue'
+import { reactive, onMounted, } from 'vue'
 import {useStore} from 'vuex'
-import useLocalStorage from "../services/useLocalStorage";
+import useCountryAndCity from "../useCountryAndCity";
   const data = reactive({
     headerMenu: {},
     subMenu: {},
   })
   const store = useStore()
 
-  const countries = computed(() => store.getters["general/GET_COUNTRIES"])
-  const selectedCountry = computed(() => store.getters['general/GET_SELECTED_COUNTRY'])
-
-  const selectedCountryId = useLocalStorage('selected_country', null)
-  const selectedCityId = useLocalStorage('selected_city', null)
-
-  watch(selectedCountryId, () => store.commit('general/SET_SELECTED_COUNTRY', selectedCountryId))
-  watch(selectedCityId, () => store.commit('general/SET_SELECTED_CITY', selectedCityId))
+  const {selectedCountry, selectedCountryId, selectedCityId, countries, cities} = useCountryAndCity()
 
   const toggleDropdown = (type) => {
     if (!type) {
