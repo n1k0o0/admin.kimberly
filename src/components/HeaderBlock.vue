@@ -30,29 +30,37 @@
                data-kt-drawer-width="{default:'200px', '300px': '250px'}" data-kt-drawer-direction="end"
                data-kt-drawer-toggle="#kt_header_menu_mobile_toggle" data-kt-swapper="true"
                data-kt-swapper-mode="prepend" data-kt-swapper-parent="{default: '#kt_body', lg: '#kt_header_nav'}">
-            <el-select
-              v-model="selectedCountryId"
-            >
-              <el-option
-                v-for="country in countries"
-                :value="country.id"
-                :label="country.name"
-                :key="country.id"
+            <el-row>
+              <el-col :span="12">
+              <el-select
+                v-model="selectedCountryId"
+                placeholder="Страна"
               >
-              </el-option>
-            </el-select>
-            <el-select
-              v-if="selectedCountry"
-              v-model="selectedCityId"
-            >
-              <el-option
-                v-for="city in selectedCountry.cities"
-                :value="city.id"
-                :label="city.name"
-                :key="city.id"
+                <el-option
+                  v-for="country in countries"
+                  :value="country.id"
+                  :label="country.name"
+                  :key="country.id"
+                >
+                </el-option>
+              </el-select>
+              </el-col>
+              <el-col :span="12">
+              <el-select
+                v-if="selectedCountry"
+                v-model="selectedCityId"
+                placeholder="Город"
               >
-              </el-option>
-            </el-select>
+                <el-option
+                  v-for="city in selectedCountry.cities"
+                  :value="city.id"
+                  :label="city.name"
+                  :key="city.id"
+                >
+                </el-option>
+              </el-select>
+              </el-col>
+            </el-row>
           </div>
         </div>
         <TopbarBlock></TopbarBlock>
@@ -62,58 +70,60 @@
 </template>
 
 <script setup>
-import { reactive, onMounted, } from 'vue'
-import {useStore} from 'vuex'
-import useCountryAndCity from "../useCountryAndCity";
-  const data = reactive({
-    headerMenu: {},
-    subMenu: {},
-  })
-  const store = useStore()
+import { onMounted, reactive, } from 'vue'
+import { useStore } from 'vuex'
+import useCountryAndCity from "../composables/useCountryAndCity";
 
-  const {selectedCountry, selectedCountryId, selectedCityId, countries, cities} = useCountryAndCity()
+const data = reactive({
+  headerMenu: {},
+  subMenu: {},
+})
+const store = useStore()
 
-  const toggleDropdown = (type) => {
-    if (!type) {
-      data.headerMenu = {};
-      return
-    }
-    data.headerMenu[type] = !data.headerMenu[type]
+const { selectedCountry, selectedCountryId, selectedCityId, countries, cities } = useCountryAndCity()
+
+const toggleDropdown = (type) => {
+  if (!type) {
+    data.headerMenu = {};
+    return
   }
+  data.headerMenu[type] = !data.headerMenu[type]
+}
 
-  const toggleSubmenu = (type) => {
-    if (!type) {
-      this.subMenu = [];
-    } else {
-      if (type !== 'rooms' && type !== 'categories') {
-        this.subMenu = []
-      }
+const toggleSubmenu = (type) => {
+  if (!type) {
+    this.subMenu = [];
+  } else {
+    if (type !== 'rooms' && type !== 'categories') {
+      this.subMenu = []
     }
-    if (type === 'categories' && this.subMenu[type]) {
-      setTimeout(() => {
-        this.subMenu[type] = !this.subMenu[type]
-      }, 750)
-    } else {
+  }
+  if (type === 'categories' && this.subMenu[type]) {
+    setTimeout(() => {
       this.subMenu[type] = !this.subMenu[type]
+    }, 750)
+  } else {
+    this.subMenu[type] = !this.subMenu[type]
 
-    }
   }
+}
 
-  onMounted(() => {
+onMounted(() => {
 
-  })
+})
 
 </script>
 
 <style>
-  .header-menu .show.menu-dropdown {
-    position: relative;
-  }
-  .header-menu .show.menu-sub {
-    z-index: 105;
-    position: absolute;
-    inset: 0px auto auto 0px;
-    margin: 0px;
-    transform: translate(0, 65px);
-  }
+.header-menu .show.menu-dropdown {
+  position: relative;
+}
+
+.header-menu .show.menu-sub {
+  z-index: 105;
+  position: absolute;
+  inset: 0px auto auto 0px;
+  margin: 0px;
+  transform: translate(0, 65px);
+}
 </style>

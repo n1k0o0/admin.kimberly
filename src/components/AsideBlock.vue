@@ -35,6 +35,15 @@
             </router-link>
           </div>
           <div class="menu-item">
+            <router-link class="menu-link" to="/internal-users">
+              <span class="menu-icon">
+                <span class="svg-icon svg-icon-2">
+                </span>
+              </span>
+              <span class="menu-title">Пользователи</span>
+            </router-link>
+          </div>
+          <div class="menu-item">
             <router-link class="menu-link" to="/schools">
               <span class="menu-icon">
                 <span class="svg-icon svg-icon-2">

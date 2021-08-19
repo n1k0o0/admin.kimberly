@@ -12,14 +12,17 @@
       <HeaderBlock></HeaderBlock>
 
       <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+        <el-container>
         <router-view></router-view>
+        </el-container>
       </div>
 
       <FooterBlock></FooterBlock>
       <el-dialog
-        title="Tips"
+        title="Первоначальная настройка"
         v-model="countryAndCityModalShown"
         width="30%"
+        :show-close="false"
       >
         <template #default>
           <div class="form-group">
@@ -78,7 +81,7 @@ import HeaderBlock from './components/HeaderBlock.vue'
 import FooterBlock from './components/FooterBlock.vue'
 import { computed, onMounted, reactive, ref, watch } from 'vue'
 import { useStore } from 'vuex'
-import useCountryAndCity from "./useCountryAndCity";
+import useCountryAndCity from "./composables/useCountryAndCity";
 
 const store = useStore();
 

@@ -1,4 +1,5 @@
 import api from "../../services/api"
+import useLocalStorage from "../../composables/useLocalStorage";
 
 const state = () => ({
     auth: false,
@@ -44,7 +45,6 @@ const actions = {
     },
 
     async LOGIN({commit, state}, payload) {
-        console.log(payload.email)
         await api.get(import.meta.env.VITE_BASE_API_URL + '/sanctum/csrf-cookie')
         await api.post(import.meta.env.VITE_BASE_API_URL + '/login', payload).then(() => {
             window.location.href = '/'
@@ -55,6 +55,8 @@ const actions = {
         await api.post(import.meta.env.VITE_BASE_API_URL + '/logout').then(() => {
             window.location.href = '/auth'
         })
+        useLocalStorage('selected_country').removeValue()
+        useLocalStorage('selected_city').removeValue()
     },
 
     async LOAD_TEST({commit, state}) {

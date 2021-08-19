@@ -1,12 +1,12 @@
-import useLocalStorage from "./services/useLocalStorage";
+import useLocalStorage from "./useLocalStorage";
 import { useStore } from "vuex";
 import { computed, watch } from "vue";
 
 export default function useCountryAndCity(country=null, city=null) {
   const store = useStore()
 
-  const selectedCountryId = useLocalStorage('selected_country', country)
-  const selectedCityId = useLocalStorage('selected_city', city)
+  const { item: selectedCountryId, removeValue: removeCountryId } = useLocalStorage('selected_country', country)
+  const { item: selectedCityId, removeValue: removeCityId } = useLocalStorage('selected_city', city)
   if (selectedCountryId) {
     store.commit('general/SET_SELECTED_COUNTRY', selectedCountryId)
   }
@@ -23,6 +23,11 @@ export default function useCountryAndCity(country=null, city=null) {
   watch(selectedCountryId, (newSelectedCountryId) => store.commit('general/SET_SELECTED_COUNTRY', newSelectedCountryId))
   watch(selectedCityId, (newSelectedCityId) => store.commit('general/SET_SELECTED_CITY', newSelectedCityId))
 
+  const resetCountryAndCity = () => {
+    removeCountryId()
+    removeCityId()
+  }
+
   return {
     countries,
     cities,
@@ -30,5 +35,6 @@ export default function useCountryAndCity(country=null, city=null) {
     selectedCityId,
     selectedCountry,
     selectedCity,
+    resetCountryAndCity,
   }
 }
