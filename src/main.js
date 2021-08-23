@@ -5,6 +5,9 @@ import 'element-plus/lib/theme-chalk/index.css'
 import router from "./router"
 import store from "./store"
 const app = createApp(App)
+import moment from 'moment';
+
+app.config.globalProperties.$moment = moment;
 
 app.config.devtools = true;
 

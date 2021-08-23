@@ -1,4 +1,4 @@
-import useLocalStorage from "./useLocalStorage";
+import useLocalStorage from "./common/useLocalStorage";
 import { useStore } from "vuex";
 import { computed, watch } from "vue";
 

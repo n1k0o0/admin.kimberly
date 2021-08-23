@@ -44,6 +44,24 @@
             </router-link>
           </div>
           <div class="menu-item">
+            <router-link class="menu-link" to="/tournaments">
+              <span class="menu-icon">
+                <span class="svg-icon svg-icon-2">
+                </span>
+              </span>
+              <span class="menu-title">Страны и города</span>
+            </router-link>
+          </div>
+          <div class="menu-item">
+            <router-link class="menu-link" to="/tournaments">
+              <span class="menu-icon">
+                <span class="svg-icon svg-icon-2">
+                </span>
+              </span>
+              <span class="menu-title">Турниры</span>
+            </router-link>
+          </div>
+          <div class="menu-item">
             <router-link class="menu-link" to="/schools">
               <span class="menu-icon">
                 <span class="svg-icon svg-icon-2">

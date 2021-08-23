@@ -13,7 +13,9 @@
 
       <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
         <el-container>
-        <router-view></router-view>
+          <el-main>
+              <router-view></router-view>
+          </el-main>
         </el-container>
       </div>
 
@@ -92,7 +94,7 @@ const countryAndCityModalShown = ref(false);
 const isLoading = false
 const showUserPanel = computed(() => store.getters['GET_USER_PANEL'])
 const data = reactive({ isLoading, showUserPanel, })
-const {selectedCountry, selectedCity, selectedCountryId, selectedCityId, countries, cities} = useCountryAndCity()
+const { selectedCountry, selectedCity, selectedCountryId, selectedCityId, countries, cities } = useCountryAndCity()
 
 const closeCountryAndCityModal = () => {
   if (selectedCountry.value && selectedCity.value) {

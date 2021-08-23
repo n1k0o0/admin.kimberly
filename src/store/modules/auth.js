@@ -1,5 +1,5 @@
 import api from "../../services/api"
-import useLocalStorage from "../../composables/useLocalStorage";
+import useLocalStorage from "../../composables/common/useLocalStorage";
 
 const state = () => ({
     auth: false,
