@@ -37,19 +37,31 @@
           <div class="menu-item">
             <router-link class="menu-link" to="/internal-users">
               <span class="menu-icon">
-                <span class="svg-icon svg-icon-2">
+                <span class="svg-icon svg-icon-1">
+                  <i class="fas fa-user-shield" style="color:white"></i>
                 </span>
               </span>
-              <span class="menu-title">Пользователи</span>
+              <span class="menu-title">Внутренние пользователи</span>
             </router-link>
           </div>
           <div class="menu-item">
             <router-link class="menu-link" to="/tournaments">
               <span class="menu-icon">
                 <span class="svg-icon svg-icon-2">
+                  <i class="fas fa-globe-europe" style="color:white"></i>
                 </span>
               </span>
               <span class="menu-title">Страны и города</span>
+            </router-link>
+          </div>
+          <div class="menu-item">
+            <router-link class="menu-link" to="/stadiums">
+              <span class="menu-icon">
+                <span class="svg-icon svg-icon-2">
+                  <i class="fas fa-map-marked" style="color:white"></i>
+                </span>
+              </span>
+              <span class="menu-title">Стадионы</span>
             </router-link>
           </div>
           <div class="menu-item">

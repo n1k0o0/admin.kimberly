@@ -30,6 +30,5 @@ export function removeInternalUser(id) {
 }
 
 export function updateInternalUser(id, fields) {
-  // TODO ADD FIELD WITH method
   return api.put(`${ENDPOINT}/${id}`, cleanFalsyFields(fields))
 }

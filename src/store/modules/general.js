@@ -22,6 +22,9 @@ const getters = {
   GET_COUNTRIES(state) {
     return state.countries
   },
+  GET_COUNTRY_BY_ID(state, countryId) {
+    return state.countries.find((countryItem) => countryItem.id === countryId)
+  },
   GET_CITIES(state, getters) {
     return getters.GET_SELECTED_COUNTRY ? getters.GET_SELECTED_COUNTRY.cities : []
   },

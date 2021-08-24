@@ -131,6 +131,7 @@ export default {
     const internalUserTypes = getPrintableInternalUserTypes()
 
     return {
+      newPassword,
       loading,
       user,
       onUpdateInternalUserClicked,

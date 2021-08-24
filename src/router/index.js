@@ -11,6 +11,10 @@ const routes = [
   { path: "/internal-users/create", name: 'internal-users-create', component: () => import('../views/internal_users/Create.vue') },
   { path: "/internal-users", name: 'internal-users', component: () => import('../views/internal_users/Index.vue') },
 
+  { path: '/stadiums/:id', name: 'stadiums-edit', component: () => import('../views/stadiums/Edit.vue')},
+  { path: '/stadiums/create', name: 'stadiums-create', component: () => import('../views/stadiums/Create.vue')},
+  { path: '/stadiums', name: 'stadiums', component: () => import('../views/stadiums/Index.vue')},
+
   { path: "/leagues", name: 'leagues', component: Dashboard },
   { path: "/schools", name: 'schools', component: Dashboard },
   { path: "/tables", name: 'tables', component: Dashboard },
@@ -20,10 +24,6 @@ const routes = [
   { path: "/statistics", name: 'statistics', component: Dashboard },
   { path: "/notifications", name: 'notifications', component: Dashboard },
   { path: "/tournaments", name: 'tournaments', component: Dashboard },
-
-  { path: '/stadiums/:id', name: 'stadiums', component: Dashboard},
-  { path: '/stadiums/create', name: 'stadiums', component: Dashboard},
-  { path: '/stadiums', name: 'stadiums', component: Dashboard}
 ]
 
 const router = createRouter({
