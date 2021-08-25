@@ -152,7 +152,6 @@ export default {
       setLoading()
       try {
         const { data: {data: stadiumItems, meta}} = await paginateStadiums(search, currentPage.value);
-        console.log(stadiumItems)
         setPagination(meta)
         stadiums.value = stadiumItems
       } catch (e) {

@@ -15,7 +15,10 @@ const routes = [
   { path: '/stadiums/create', name: 'stadiums-create', component: () => import('../views/stadiums/Create.vue')},
   { path: '/stadiums', name: 'stadiums', component: () => import('../views/stadiums/Index.vue')},
 
-  { path: "/leagues", name: 'leagues', component: Dashboard },
+  { path: "/leagues/:id", name: 'leagues-edit', component: () => import('../views/leagues/Edit.vue') },
+  { path: "/leagues/create", name: 'leagues-create', component: () => import('../views/leagues/Create.vue') },
+  { path: "/leagues", name: 'leagues', component: () => import('../views/leagues/Index.vue') },
+
   { path: "/schools", name: 'schools', component: Dashboard },
   { path: "/tables", name: 'tables', component: Dashboard },
   { path: "/calendar", name: 'calendar', component: Dashboard },

@@ -29,6 +29,7 @@
             <router-link class="menu-link" to="/leagues">
               <span class="menu-icon">
                 <span class="svg-icon svg-icon-2">
+                  <i class="fa fa-bolt" aria-hidden="true" style="color:white"></i>
                 </span>
               </span>
               <span class="menu-title">Лиги</span>
