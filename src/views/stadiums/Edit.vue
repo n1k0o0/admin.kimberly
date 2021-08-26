@@ -60,11 +60,8 @@ export default {
     let stadiumId = null
     let stadium = ref({});
 
-    const countries = computed(() => store.getters["general/GET_COUNTRIES"])
     const { loading, setLoaded, setLoading } = useLoadingState(false)
 
-    const selectedCountry = computed(() => store.getters["general/GET_COUNTRIES"].find((countryItem) => countryItem.id === stadium.value.country_id))
-    const cities = computed(() => selectedCountry.value?.cities)
     onMounted(async () => {
       try {
         stadiumId = route.params.id
