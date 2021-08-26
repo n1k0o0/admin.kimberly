@@ -69,6 +69,7 @@
             <router-link class="menu-link" to="/tournaments">
               <span class="menu-icon">
                 <span class="svg-icon svg-icon-2">
+                  <i class="fas fa-white fa-award" style="color:white"></i>
                 </span>
               </span>
               <span class="menu-title">Турниры</span>

@@ -19,6 +19,10 @@ const routes = [
   { path: "/leagues/create", name: 'leagues-create', component: () => import('../views/leagues/Create.vue') },
   { path: "/leagues", name: 'leagues', component: () => import('../views/leagues/Index.vue') },
 
+  { path: "/tournaments/:id", name: 'tournaments-edit', component: () => import('../views/tournaments/Edit.vue') },
+  { path: "/tournaments/create", name: 'tournaments-create', component: () => import('../views/tournaments/Create.vue') },
+  { path: "/tournaments", name: 'tournaments', component: () => import('../views/tournaments/Index.vue') },
+
   { path: "/schools", name: 'schools', component: Dashboard },
   { path: "/tables", name: 'tables', component: Dashboard },
   { path: "/calendar", name: 'calendar', component: Dashboard },
@@ -26,7 +30,6 @@ const routes = [
   { path: "/players", name: 'players', component: Dashboard },
   { path: "/statistics", name: 'statistics', component: Dashboard },
   { path: "/notifications", name: 'notifications', component: Dashboard },
-  { path: "/tournaments", name: 'tournaments', component: Dashboard },
 ]
 
 const router = createRouter({
