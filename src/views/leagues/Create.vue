@@ -12,40 +12,9 @@
         ></el-input>
       </el-col>
     </el-row>
-    <el-row class="mb-4">
-      <el-col :span="6">
-        <span>Выберите страну</span>
-        <el-select
-          class="d-block"
-          v-model="selectedCountryId"
-          placeholder="Страна"
-        >
-          <el-option
-            v-for="(country, key) in countries"
-            :key="country.id"
-            :value="country.id"
-            :label="country.name"
-          ></el-option>
-        </el-select>
-      </el-col>
-    </el-row>
-    <el-row class="mb-4">
-      <el-col :span="6">
-        <span>Выберите город</span>
-        <el-select
-          class="d-block"
-          v-model="newLeague.city_id"
-          placeholder="Город"
-        >
-          <el-option
-            v-for="(city, key) in selectedCountry.cities"
-            :key="city.id"
-            :value="city.id"
-            :label="city.name"
-          ></el-option>
-        </el-select>
-      </el-col>
-    </el-row>
+    <country-city-selectors
+      @city-selected="onCitySelected"
+    />
     <el-row>
       <el-col :span="6">
         <span>Добавить дивизион</span>
@@ -113,9 +82,11 @@ import { parseErrors } from "../../helpers";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import { createLeague } from "../../services/leagues/leagueService";
+import CountryCitySelectors from "../../components/common/CountryCitySelectors.vue";
 
 export default {
   name: "Create",
+  components: { CountryCitySelectors },
   setup() {
     const router = useRouter()
     const store = useStore()
@@ -129,10 +100,7 @@ export default {
       divisions: [],
     })
 
-    const countries = computed(() => store.getters["general/GET_COUNTRIES"])
-    const selectedCountryId = ref(null)
-    const selectedCountry = computed(() => countries.value.find((countryItem) => countryItem.id !== selectedCountryId))
-
+    const onCitySelected = (city) => newLeague.city_id = city.value?.id
     const onAddDivisionClicked = () => {
       const sameDivision = newLeague.divisions.find(divisionItem => divisionItem.name === newDivision.name)
       if (!sameDivision) {
@@ -159,11 +127,9 @@ export default {
 
     return {
       loading,
-      countries,
-      selectedCountryId,
-      selectedCountry,
       newDivision,
       newLeague,
+      onCitySelected,
       onCreateLeagueClicked,
       onAddDivisionClicked,
       onRemoveDivisionClicked,

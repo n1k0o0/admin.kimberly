@@ -12,40 +12,12 @@
         ></el-input>
       </el-col>
     </el-row>
-    <el-row class="mb-4">
-      <el-col :span="6">
-        <span>Выберите страну</span>
-        <el-select
-          class="d-block"
-          placeholder="Страна"
-          v-model="league.country_id"
-        >
-          <el-option
-            v-for="(country, key) in countries"
-            :key="country.id"
-            :value="country.id"
-            :label="country.name"
-          ></el-option>
-        </el-select>
-      </el-col>
-    </el-row>
-    <el-row class="mb-4">
-      <el-col :span="6">
-        <span>Выберите город</span>
-        <el-select
-          class="d-block"
-          placeholder="Город"
-          v-model="league.city_id"
-        >
-          <el-option
-            v-for="(city, key) in cities"
-            :key="city.id"
-            :value="city.id"
-            :label="city.name"
-          ></el-option>
-        </el-select>
-      </el-col>
-    </el-row>
+    <country-city-selectors
+      v-if="!loading"
+      @city-selected="onCitySelected"
+      :selected-country-id="league.country_id"
+      :selected-city-id="league.city_id"
+    />
     <el-row>
       <el-col :span="6">
         <add-division v-if="!updatingDivision.id" @add-division="onDivisionAdded" />
@@ -114,10 +86,11 @@ import { getLeague, updateLeague } from "../../services/leagues/leagueService";
 import { createDivision, removeDivision, updateDivision } from "../../services/divisions/divisionService";
 import { parseErrors } from "../../helpers";
 import AddDivision from "../../components/divisions/AddDivision.vue";
+import CountryCitySelectors from "../../components/common/CountryCitySelectors.vue";
 
 export default {
   name: "Edit",
-  components: { AddDivision },
+  components: { AddDivision, CountryCitySelectors },
   setup() {
     const route = useRoute()
     const router = useRouter()
@@ -130,9 +103,6 @@ export default {
       divisions: [],
     });
 
-    const countries = computed(() => store.getters["general/GET_COUNTRIES"])
-    const selectedCountry = computed(() => store.getters["general/GET_COUNTRIES"].find((countryItem) => countryItem.id === league.value.country_id))
-    const cities = computed(() => selectedCountry.value?.cities)
     onMounted(async () => {
       try {
         leagueId = route.params.id
@@ -163,6 +133,8 @@ export default {
       id: null,
       name: '',
     })
+
+    const onCitySelected = (city) => league.value.city_id = city.value?.id
 
     const onEditDivisionClicked = (division) => {
       updatingDivision.value.id = division.id
@@ -211,12 +183,10 @@ export default {
     }
 
     return {
-      selectedCountry,
-      countries,
-      cities,
       loading,
       league,
       updatingDivision,
+      onCitySelected,
       onUpdateLeagueClicked,
       onDivisionAdded,
       onEditDivisionClicked,
