@@ -12,40 +12,9 @@
         ></el-input>
       </el-col>
     </el-row>
-    <el-row class="mb-4">
-      <el-col :span="6">
-        <span>Выберите страну</span>
-        <el-select
-          class="d-block"
-          v-model="selectedCountryId"
-          placeholder="Страна"
-        >
-          <el-option
-            v-for="(country, key) in countries"
-            :key="country.id"
-            :value="country.id"
-            :label="country.name"
-          ></el-option>
-        </el-select>
-      </el-col>
-    </el-row>
-    <el-row class="mb-4">
-      <el-col :span="6">
-        <span>Выберите город</span>
-        <el-select
-          class="d-block"
-          v-model="newStadium.city_id"
-          placeholder="Город"
-        >
-          <el-option
-            v-for="(city, key) in selectedCountry.cities"
-            :key="city.id"
-            :value="city.id"
-            :label="city.name"
-          ></el-option>
-        </el-select>
-      </el-col>
-    </el-row>
+    <country-city-selectors
+      @city-selected="onCitySelected"
+    />
     <el-row class="my-4">
       <el-col :span="6">
         <span>Укажите адрес</span>
@@ -70,27 +39,26 @@
 </template>
 
 <script>
-import { computed, reactive, ref } from "vue";
+import { reactive } from "vue";
 import { useLoadingState } from "../../composables/common/useLoadingState";
 import { parseErrors } from "../../helpers";
 import { useRouter } from "vue-router";
 import { createStadium } from "../../services/stadiums/stadiums";
-import { useStore } from "vuex";
+import CountryCitySelectors from "../../components/common/CountryCitySelectors.vue";
 
 export default {
   name: "Create",
+  components: { CountryCitySelectors },
   setup() {
     const router = useRouter()
-    const store = useStore()
     const { loading, setLoaded, setLoading } = useLoadingState(false)
     const newStadium = reactive({
       title: '',
       city_id: '',
       address: '',
     })
-    const countries = computed(() => store.getters["general/GET_COUNTRIES"])
-    const selectedCountryId = ref(null)
-    const selectedCountry = computed(() => countries.value.find((countryItem) => countryItem.id !== selectedCountryId))
+
+    const onCitySelected = (city) => newStadium.city_id = city.value?.id
     const onCreateStadiumClicked = async () => {
       try {
         setLoading()
@@ -107,10 +75,8 @@ export default {
 
     return {
       loading,
-      countries,
-      selectedCountryId,
-      selectedCountry,
       newStadium,
+      onCitySelected,
       onCreateStadiumClicked,
     }
   },

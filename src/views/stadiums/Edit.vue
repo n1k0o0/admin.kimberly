@@ -12,40 +12,12 @@
         ></el-input>
       </el-col>
     </el-row>
-    <el-row class="mb-4">
-      <el-col :span="6">
-        <span>Выберите страну</span>
-        <el-select
-          class="d-block"
-          placeholder="Страна"
-          v-model="stadium.country_id"
-        >
-          <el-option
-            v-for="(country, key) in countries"
-            :key="country.id"
-            :value="country.id"
-            :label="country.name"
-          ></el-option>
-        </el-select>
-      </el-col>
-    </el-row>
-    <el-row class="mb-4">
-      <el-col :span="6">
-        <span>Выберите город</span>
-        <el-select
-          class="d-block"
-          placeholder="Город"
-          v-model="stadium.city_id"
-        >
-          <el-option
-            v-for="(city, key) in cities"
-            :key="city.id"
-            :value="city.id"
-            :label="city.name"
-          ></el-option>
-        </el-select>
-      </el-col>
-    </el-row>
+    <country-city-selectors
+      v-if="!loading"
+      @city-selected="onCitySelected"
+      :selected-country-id="stadium.country_id"
+      :selected-city-id="stadium.city_id"
+    />
     <el-row class="my-4">
       <el-col :span="6">
         <span>Укажите адрес</span>
@@ -75,9 +47,11 @@ import { useRoute, useRouter } from "vue-router";
 import { useLoadingState } from "../../composables/common/useLoadingState";
 import { getStadium, updateStadium } from "../../services/stadiums/stadiums";
 import { useStore } from "vuex";
+import CountryCitySelectors from "../../components/common/CountryCitySelectors.vue";
 
 export default {
   name: "Edit",
+  components: { CountryCitySelectors },
   setup() {
     const route = useRoute()
     const router = useRouter()
@@ -103,6 +77,8 @@ export default {
         setLoaded()
       }
     })
+
+    const onCitySelected = (city) => stadium.value.city_id = city.value?.id
     const onUpdateStadiumClicked = async () => {
       try {
         setLoading()
@@ -115,11 +91,9 @@ export default {
     }
 
     return {
-      selectedCountry,
-      countries,
-      cities,
       loading,
       stadium,
+      onCitySelected,
       onUpdateStadiumClicked,
     }
   },
