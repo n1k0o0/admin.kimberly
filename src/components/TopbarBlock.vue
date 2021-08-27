@@ -146,7 +146,6 @@
                   <a href="#" class="d-flex text-dark text-hover-primary align-items-center mb-5">
                     <!--begin::Symbol-->
                     <div class="symbol symbol-40px me-4">
-                      <img src="assets/media/avatars/150-1.jpg" alt=""/>
                     </div>
                     <!--end::Symbol-->
                     <!--begin::Title-->
@@ -161,7 +160,6 @@
                   <a href="#" class="d-flex text-dark text-hover-primary align-items-center mb-5">
                     <!--begin::Symbol-->
                     <div class="symbol symbol-40px me-4">
-                      <img src="assets/media/avatars/150-3.jpg" alt=""/>
                     </div>
                     <!--end::Symbol-->
                     <!--begin::Title-->
@@ -176,7 +174,6 @@
                   <a href="#" class="d-flex text-dark text-hover-primary align-items-center mb-5">
                     <!--begin::Symbol-->
                     <div class="symbol symbol-40px me-4">
-                      <img src="assets/media/avatars/150-8.jpg" alt=""/>
                     </div>
                     <!--end::Symbol-->
                     <!--begin::Title-->
@@ -191,7 +188,6 @@
                   <a href="#" class="d-flex text-dark text-hover-primary align-items-center mb-5">
                     <!--begin::Symbol-->
                     <div class="symbol symbol-40px me-4">
-                      <img src="assets/media/avatars/150-11.jpg" alt=""/>
                     </div>
                     <!--end::Symbol-->
                     <!--begin::Title-->
@@ -206,7 +202,6 @@
                   <a href="#" class="d-flex text-dark text-hover-primary align-items-center mb-5">
                     <!--begin::Symbol-->
                     <div class="symbol symbol-40px me-4">
-                      <img src="assets/media/avatars/150-12.jpg" alt=""/>
                     </div>
                     <!--end::Symbol-->
                     <!--begin::Title-->
@@ -225,8 +220,6 @@
                     <!--begin::Symbol-->
                     <div class="symbol symbol-40px me-4">
 																		<span class="symbol-label bg-light">
-																			<img class="w-20px h-20px" src="assets/media/svg/brand-logos/volicity-9.svg"
-                                           alt=""/>
 																		</span>
                     </div>
                     <!--end::Symbol-->
@@ -243,7 +236,6 @@
                     <!--begin::Symbol-->
                     <div class="symbol symbol-40px me-4">
 																		<span class="symbol-label bg-light">
-																			<img class="w-20px h-20px" src="assets/media/svg/brand-logos/tvit.svg" alt=""/>
 																		</span>
                     </div>
                     <!--end::Symbol-->
@@ -260,7 +252,6 @@
                     <!--begin::Symbol-->
                     <div class="symbol symbol-40px me-4">
 																		<span class="symbol-label bg-light">
-																			<img class="w-20px h-20px" src="assets/media/svg/misc/infography.svg" alt=""/>
 																		</span>
                     </div>
                     <!--end::Symbol-->
@@ -277,7 +268,6 @@
                     <!--begin::Symbol-->
                     <div class="symbol symbol-40px me-4">
 																		<span class="symbol-label bg-light">
-																			<img class="w-20px h-20px" src="assets/media/svg/brand-logos/leaf.svg" alt=""/>
 																		</span>
                     </div>
                     <!--end::Symbol-->
@@ -294,7 +284,6 @@
                     <!--begin::Symbol-->
                     <div class="symbol symbol-40px me-4">
 																		<span class="symbol-label bg-light">
-																			<img class="w-20px h-20px" src="assets/media/svg/brand-logos/tower.svg" alt=""/>
 																		</span>
                     </div>
                     <!--end::Symbol-->
@@ -1475,7 +1464,6 @@
                 <!--end::Section-->
                 <!--begin::Illustration-->
                 <div class="text-center px-4">
-                  <img class="mw-100 mh-200px" alt="metronic" src="assets/media/illustrations/alert.png"/>
                 </div>
                 <!--end::Illustration-->
               </div>
@@ -1730,7 +1718,6 @@
         <div class="cursor-pointer symbol symbol-30px symbol-md-40px" data-kt-menu-trigger="click"
              @click.stop="toggleMenu('user')"
              data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end" data-kt-menu-flip="bottom">
-          <img src="assets/media/avatars/150-26.jpg" alt="metronic"/>
         </div>
         <!--begin::Menu-->
         <div
@@ -1743,7 +1730,6 @@
             <div class="menu-content d-flex align-items-center px-3">
               <!--begin::Avatar-->
               <div class="symbol symbol-50px me-5">
-                <img alt="Logo" src="assets/media/avatars/150-26.jpg"/>
               </div>
               <!--end::Avatar-->
               <!--begin::Username-->
