@@ -4,7 +4,7 @@ export function getFormData(object) {
   return formData;
 }
 
-export const cleanFalsyFields = (obj) => Object.fromEntries(Object.entries(obj).filter(([_, v]) => v || v === '' ));
+export const cleanFalsyFields = (obj, onlyKeys=[]) => Object.fromEntries(Object.entries(obj).filter(([_, v]) => v || v === '' ));
 
 export function parseErrors (errors, flatt=true) {
   return errors

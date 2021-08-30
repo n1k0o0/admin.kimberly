@@ -1,5 +1,5 @@
 import api from "../api";
-import { cleanFalsyFields } from "../../helpers";
+import { cleanFalsyFields } from "@/helpers.js";
 
 const ENDPOINT = '/leagues'
 
@@ -32,4 +32,10 @@ export function updateLeague(id, fields) {
 
 export function removeLeague(id) {
   return api.delete(`${ENDPOINT}/${id}`)
+}
+
+export function loadLeagues(params) {
+  return api.get(`${ENDPOINT}`, {
+    params
+  })
 }

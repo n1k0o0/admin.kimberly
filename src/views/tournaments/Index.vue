@@ -9,8 +9,8 @@
         <el-row>
           <el-col :span="6">
             <el-select
-              multiple
               v-model="search.country_ids"
+              multiple
               placeholder="Страна"
             >
               <el-option
@@ -18,13 +18,13 @@
                 :key="country.id"
                 :value="country.id"
                 :label="country.name"
-              ></el-option>
+              />
             </el-select>
           </el-col>
           <el-col :span="6">
             <el-select
-              multiple
               v-model="search.city_ids"
+              multiple
               placeholder="Город"
             >
               <el-option
@@ -32,14 +32,14 @@
                 :key="city.id"
                 :value="city.id"
                 :label="city.name"
-              ></el-option>
+              />
             </el-select>
           </el-col>
         </el-row>
         <el-row>
           <el-button
-            @click="$router.push({name: 'tournaments-create'})"
             type="primary"
+            @click="$router.push({name: 'tournaments-create'})"
           >
             Создать
           </el-button>
@@ -47,8 +47,8 @@
       </el-row>
     </template>
     <el-table
-      :data="tournaments"
       v-loading="loading"
+      :data="tournaments"
       :empty-text="'Нет данных'"
     >
       <el-table-column
@@ -92,42 +92,42 @@
             >
               Редактировать
             </el-button>
-              <el-popconfirm
-                title="Вы действительно хотите удалить стадион?"
-                cancel-button-text="Отмена"
-                confirm-button-text="Да"
-                @confirm="onRemoveTournamentClicked(scope.row.id)"
-              >
-                <template #reference>
-                  <el-button
-                    type="danger"
-                  >
-                    Удалить
-                  </el-button>
-                </template>
-              </el-popconfirm>
+            <el-popconfirm
+              title="Вы действительно хотите удалить стадион?"
+              cancel-button-text="Отмена"
+              confirm-button-text="Да"
+              @confirm="onRemoveTournamentClicked(scope.row.id)"
+            >
+              <template #reference>
+                <el-button
+                  type="danger"
+                >
+                  Удалить
+                </el-button>
+              </template>
+            </el-popconfirm>
           </el-button-group>
         </template>
       </el-table-column>
     </el-table>
     <el-row justify="center">
-    <el-pagination
-      layout="prev, pager, next"
-      :hide-on-single-page="true"
-      @update:current-page="onCurrentPageUpdated"
-      v-bind="pagination"
-    ></el-pagination>
+      <el-pagination
+        layout="prev, pager, next"
+        :hide-on-single-page="true"
+        v-bind="pagination"
+        @update:current-page="onCurrentPageUpdated"
+      />
     </el-row>
   </el-card>
 </template>
 
 <script>
 import { computed, onMounted, reactive, ref, watch } from "vue";
-import { useLoadingState } from "../../composables/common/useLoadingState";
-import usePagination from "../../composables/common/usePagination";
+import { useLoadingState } from "@/composables/common/useLoadingState.js";
+import usePagination from "@/composables/common/usePagination";
 import { useStore } from "vuex";
-import { paginateTournaments, removeTournament } from "../../services/tournaments/tournaments";
-import { getPrintableTournamentType } from "../../services/tournaments/Tournament";
+import { paginateTournaments, removeTournament } from "@/services/tournaments/tournaments.js";
+import { getPrintableTournamentType } from "@/services/tournaments/Tournament.js";
 
 export default {
   name: "Index",
@@ -145,7 +145,7 @@ export default {
     const tournaments = ref([]);
 
     onMounted(async () => {
-      const { data: {data: tournamentItems, meta}} = await paginateTournaments();
+      const { data: { data: tournamentItems, meta } } = await paginateTournaments();
       setPagination(meta)
       tournaments.value = tournamentItems
       setLoaded()
@@ -154,7 +154,7 @@ export default {
     watch([search, currentPage], async () => {
       setLoading()
       try {
-        const { data: {data: tournamentItems, meta}} = await paginateTournaments(search, currentPage.value);
+        const { data: { data: tournamentItems, meta } } = await paginateTournaments(search, currentPage.value);
         setPagination(meta)
         tournaments.value = tournamentItems
       } catch (e) {
@@ -167,11 +167,11 @@ export default {
       try {
         setLoading()
         await removeTournament(tournamentId)
-        const { data: {data: tournamentItems, meta}} = await paginateTournaments(search, currentPage.value)
+        const { data: { data: tournamentItems, meta } } = await paginateTournaments(search, currentPage.value)
         tournaments.value = tournamentItems
         setPagination(meta)
-      } catch (e) {}
-      finally {
+      } catch (e) {
+      } finally {
         setLoaded()
       }
     }

@@ -1,105 +1,96 @@
-<template>
-  <el-row class="mb-4">
-    <el-col :span="6">
+<template class="country-city-selector">
+  <el-row>
+    <el-row class="country-city-selector__country">
       <span>Выберите страну</span>
+    </el-row>
+    <el-row>
       <el-select
-        class="d-block"
         v-model="selectedCountryId"
+        class="d-block"
         placeholder="Страна"
       >
         <el-option
-          v-for="(country, key) in countries"
+          v-for="country in availableCountries"
           :key="country.id"
           :value="country.id"
           :label="country.name"
-        ></el-option>
+        />
       </el-select>
-    </el-col>
-  </el-row>
-  <el-row class="mb-4">
-    <el-col :span="6">
+    </el-row>
+    <el-row class="country-city-selector__city">
       <span>Выберите город</span>
+    </el-row>
+    <el-row>
       <el-select
-        class="d-block"
         v-model="selectedCityId"
+        class="d-block"
         placeholder="Город"
       >
         <el-option
-          v-for="city in cities"
+          v-for="city in availableCities"
           :key="city.id"
           :value="city.id"
           :label="city.name"
-        ></el-option>
+        />
       </el-select>
-    </el-col>
+    </el-row>
   </el-row>
 </template>
 
 <script>
 import { computed, ref, watch } from "vue";
-import { useStore } from "vuex";
 
 export default {
   name: "CountryCitySelectors",
-  emits: ['city-selected'],
   props: {
-    selectedCountryId: {
-      required: false,
-      default: () => null,
+    countries: {
+      type: Array,
+      default: () => [],
     },
-    selectedCityId: {
-      required: false,
-      default: () => null,
+    countryId: {
+      type: Number,
+      default: null,
+    },
+    cityId: {
+      type: Number,
+      default: null,
     }
   },
-  setup(props, {emit}) {
-    const store = useStore()
+  emits: ['city-selected', 'country-selected'],
+  setup(props, { emit }) {
+    const availableCountries = computed(() => props.countries ?? []);
+    const availableCities = computed(() => selectedCountry.value ? selectedCountry.value.cities : []);
 
-    const countries = computed(() => store.getters["general/GET_COUNTRIES"])
-    const selectedCountryId = ref(props.selectedCountryId)
-    const selectedCityId = ref(props.selectedCountryId ? props.selectedCityId : null)
+    const selectedCountryId = ref(props.countryId);
+    const selectedCityId = ref(props.cityId);
 
-    const cities = computed(() => {
-      if (selectedCountry && selectedCountry.value?.cities) {
-        return selectedCountry.value.cities
-      }
+    const selectedCountry = computed(() => selectedCountryId.value ? availableCountries.value.find(countryItem => countryItem.id === selectedCountryId.value) : null);
+    const selectedCity = computed(() => selectedCityId.value && selectedCountry.value?.cities ? selectedCountry.value.cities.find(cityItem => cityItem.id === selectedCityId.value) ?? null : null);
 
-      return []
-    })
+    watch(selectedCountryId, () => selectedCityId.value = null);
 
-    const selectedCountry = computed(() => {
-      if (selectedCountryId.value) {
-        return countries.value.find(countryItem => countryItem.id === selectedCountryId.value)
-      }
-
-      return null
-    })
-    watch(selectedCountry, () => {
-      selectedCityId.value = null
-    })
-
-    const selectedCity = computed(() => {
-      if (selectedCountry.value) {
-        return selectedCountry.value.cities.find(cityItem => cityItem.id === selectedCityId.value) ?? null
-      }
-
-      return null
-    })
-    watch(selectedCity, () => {
-      emit('city-selected', selectedCity)
-    })
+    watch(selectedCountry, (country) => emit('country-selected', country));
+    watch(selectedCity, (city) => emit('city-selected', city));
 
     return {
-      countries,
-      cities,
+      availableCountries,
+      availableCities,
       selectedCountry,
       selectedCountryId,
       selectedCityId,
-    }
+    };
   }
-}
+};
 </script>
 
-<style scoped>
+<style lang="scss">
+.country-city-selector {
+  &__country {
 
+  }
+
+  &__city {
+
+  }
+}
 </style>

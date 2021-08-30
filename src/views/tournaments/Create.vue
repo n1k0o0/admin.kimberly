@@ -7,9 +7,9 @@
       <el-col :span="6">
         <span>Укажите название</span>
         <el-input
-          placeholder="Название"
           v-model="newTournament.name"
-        ></el-input>
+          placeholder="Название"
+        />
       </el-col>
     </el-row>
     <country-city-selectors
@@ -19,23 +19,25 @@
       <el-col :span="6">
         <span>Укажите дату и время начала</span>
         <el-date-picker
-          placeholder="Дата и время начала"
           v-model="newTournament.started_at"
-        ></el-date-picker>
+          placeholder="Дата и время начала"
+        />
       </el-col>
     </el-row>
     <el-row class="my-4">
       <el-col :span="6">
         <span>Укажите дату и время окончания</span>
         <el-date-picker
-          placeholder="Дата и время окончания"
           v-model="newTournament.ended_at"
-        ></el-date-picker>
+          placeholder="Дата и время окончания"
+        />
       </el-col>
     </el-row>
     <el-row class="my-3 flex-row-reverse">
       <el-button-group>
-        <el-button @click="$router.push({name: 'tournaments'})">Отменить</el-button>
+        <el-button @click="$router.push({name: 'tournaments'})">
+          Отменить
+        </el-button>
         <el-button
           type="primary"
           @click="onCreateTournamentClicked"
@@ -48,13 +50,13 @@
 </template>
 
 <script>
-import { computed, reactive, ref } from "vue";
-import { useLoadingState } from "../../composables/common/useLoadingState";
-import { parseErrors } from "../../helpers";
+import { computed, reactive } from "vue";
+import { useLoadingState } from "@/composables/common/useLoadingState.js";
+import { parseErrors } from "@/helpers.js";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
-import { createTournament } from "../../services/tournaments/tournaments";
-import CountryCitySelectors from "../../components/common/CountryCitySelectors.vue";
+import { createTournament } from "@/services/tournaments/tournaments.js";
+import CountryCitySelectors from "@/components/common/CountryCitySelectors.vue";
 
 export default {
   name: "Create",
@@ -75,7 +77,7 @@ export default {
       try {
         setLoading()
         const { data } = await createTournament(newTournament)
-        await router.push({name: 'tournaments'})
+        await router.push({ name: 'tournaments' })
       } catch (e) {
         const errors = parseErrors(e.response.data.errors)
         console.log(errors)

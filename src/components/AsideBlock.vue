@@ -45,16 +45,16 @@
               <span class="menu-title">Внутренние пользователи</span>
             </router-link>
           </div>
-          <div class="menu-item">
-            <router-link class="menu-link" to="/tournaments">
-              <span class="menu-icon">
-                <span class="svg-icon svg-icon-2">
-                  <i class="fas fa-globe-europe" style="color:white"></i>
-                </span>
-              </span>
-              <span class="menu-title">Страны и города</span>
-            </router-link>
-          </div>
+<!--          <div class="menu-item">-->
+<!--            <router-link class="menu-link" to="/tournaments">-->
+<!--              <span class="menu-icon">-->
+<!--                <span class="svg-icon svg-icon-2">-->
+<!--                  <i class="fas fa-globe-europe" style="color:white"></i>-->
+<!--                </span>-->
+<!--              </span>-->
+<!--              <span class="menu-title">Страны и города</span>-->
+<!--            </router-link>-->
+<!--          </div>-->
           <div class="menu-item">
             <router-link class="menu-link" to="/stadiums">
               <span class="menu-icon">
@@ -79,6 +79,7 @@
             <router-link class="menu-link" to="/schools">
               <span class="menu-icon">
                 <span class="svg-icon svg-icon-2">
+                  <i class="fas fa-white fa-graduation-cap"></i>
                 </span>
               </span>
               <span class="menu-title">Школы</span>
@@ -160,10 +161,16 @@
   .aside {
     background-color: $base-color-blue;
   }
+  a.router-link-active {
+    background-color: $base-color-orange;
+  }
   .aside-menu .menu-item {
     position: relative;
     .menu-title, .company-title {
       color: $base-color-white !important;
+    }
+    .menu-link:hover {
+      color: $base-color-orange !important;
     }
   }
 </style>
