@@ -58,33 +58,33 @@ export default {
   },
   emits: ['league-selected', 'division-selected', 'change'],
   setup(props, { emit }) {
-    const availableLeagues = computed(() => props.leagues ?? [])
-    const availableDivisions = computed(() => selectedLeague.value ? selectedLeague.value.divisions : [])
+    const availableLeagues = computed(() => props.leagues ?? []);
+    const availableDivisions = computed(() => selectedLeague.value ? selectedLeague.value.divisions : []);
 
-    const selectedLeagueId = ref(props.leagueId)
-    const selectedDivisionId = ref(props.divisionId)
+    const selectedLeagueId = ref(props.leagueId);
+    const selectedDivisionId = ref(props.divisionId);
 
-    const selectedLeague = computed(() => selectedLeagueId.value ? availableLeagues.value.find(leagueItem => leagueItem.id === selectedLeagueId.value) : null)
-    const selectedDivision = computed(() => selectedDivisionId.value && selectedLeague.value?.divisions ? selectedLeague.value.divisions.find(divisionItems => divisionItems.id === selectedDivisionId.value) ?? null : null)
+    const selectedLeague = computed(() => selectedLeagueId.value ? availableLeagues.value.find(leagueItem => leagueItem.id === selectedLeagueId.value) : null);
+    const selectedDivision = computed(() => selectedDivisionId.value && selectedLeague.value?.divisions ? selectedLeague.value.divisions.find(divisionItems => divisionItems.id === selectedDivisionId.value) ?? null : null);
 
-    watch(selectedLeagueId, () => selectedDivisionId.value = null)
+    watch(selectedLeagueId, () => selectedDivisionId.value = null);
 
     watch([selectedLeague, selectedDivision], () => emit('change', {
       league: selectedLeague,
       division: selectedDivision,
-    }))
+    }));
 
-    watch(selectedLeague, (league) => emit('league-selected', league ?? null))
-    watch(selectedDivision, (division) => emit('division-selected', division ?? null))
+    watch(selectedLeague, (league) => emit('league-selected', league ?? null));
+    watch(selectedDivision, (division) => emit('division-selected', division ?? null));
 
     return {
       availableLeagues,
       availableDivisions,
       selectedLeagueId,
       selectedDivisionId,
-    }
+    };
   }
-}
+};
 </script>
 
 <style scoped lang="scss">

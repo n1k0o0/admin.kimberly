@@ -1,9 +1,9 @@
 <template>
   <el-row>
-    <el-col :span="12">
+    <el-col :span="8">
       <school-list @school-selected="onSelectedSchool" />
     </el-col>
-    <el-col :span="12">
+    <el-col :span="16">
       <router-view />
     </el-col>
   </el-row>

@@ -6,8 +6,9 @@
     <el-row>
       <el-select
         v-model="selectedCountryId"
-        class="d-block"
+        class="d-block w-100"
         placeholder="Страна"
+        clearable
       >
         <el-option
           v-for="country in availableCountries"
@@ -23,8 +24,9 @@
     <el-row>
       <el-select
         v-model="selectedCityId"
-        class="d-block"
+        class="d-block w-100"
         placeholder="Город"
+        clearable
       >
         <el-option
           v-for="city in availableCities"

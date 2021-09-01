@@ -1,16 +1,12 @@
 import { createStore } from 'vuex'
 import general from './modules/general'
 import auth from './modules/auth'
+import leagues from "@/store/modules/leagues.js";
 
 const store = createStore({ /* options */ })
 
-// register a module `myModule`
 store.registerModule('auth', auth)
 store.registerModule('general', general)
-//
-// // register a nested module `nested/myModule`
-// store.registerModule(['nested', 'myModule'], {
-//     // ...
-// })
+store.registerModule('leagues', leagues)
 
 export default store;

@@ -9,3 +9,7 @@ export const cleanFalsyFields = (obj, onlyKeys=[]) => Object.fromEntries(Object.
 export function parseErrors (errors, flatt=true) {
   return errors
 }
+
+export function debounce(func, timeout) {
+
+}
