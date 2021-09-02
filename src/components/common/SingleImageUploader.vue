@@ -13,7 +13,7 @@
     action="#"
     list-type="picture-card"
   >
-    <i class="el-icon-plus" />
+    <i class="el-icon-plus avatar-uploader-icon" />
   </el-upload>
 </template>
 
@@ -52,5 +52,8 @@ export default {
 <style>
 .single-image-uploader.hide-upload div.el-upload.el-upload--picture-card {
   display: none;
+}
+.el-icon-plus.avatar-uploader-icon {
+  color: #8c939d !important;
 }
 </style>

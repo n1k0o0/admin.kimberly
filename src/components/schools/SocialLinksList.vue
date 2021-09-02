@@ -1,9 +1,8 @@
 <template>
   <el-table
     class="social-links-table"
-    :data="coaches"
+    :data="socialLinks"
     :empty-text="'Нет данных'"
-    @row-click="onSocialLinkClicked"
   >
     <el-table-column
       label="Сервис"
@@ -17,9 +16,33 @@
       prop="link"
     >
       <template #default="scope">
-        <a :href="scope.row.country.link">
-          {{ scope.row.country.link }}
+        <a :href="scope.row.link">
+          {{ scope.row.link }}
         </a>
+      </template>
+    </el-table-column>
+    <el-table-column
+      label="Управление"
+    >
+      <template #default="scope">
+        <el-button
+          type="primary"
+          icon="el-icon-edit"
+          @click="handleSocialLinkEditClicked(scope.row)"
+        />
+        <el-popconfirm
+          title="Вы действительно хотите удалить команду?"
+          cancel-button-text="Отмена"
+          confirm-button-text="Да"
+          @confirm="handleSocialLinkRemoveClicked(scope.row)"
+        >
+          <template #reference>
+            <el-button
+              type="danger"
+              icon="el-icon-delete"
+            />
+          </template>
+        </el-popconfirm>
       </template>
     </el-table-column>
   </el-table>
@@ -36,12 +59,15 @@ export default {
       default: () => [],
     }
   },
-  emits: ['social-links-clicked'],
-  setup(_, {emit}) {
-    const onSocialLinkClicked = (row) => emit('social-links-clicked', row)
+  emits: ['edit-social-link-clicked', 'remove-social-link-clicked'],
+  setup(props, {emit}) {
+    console.log(props.socialLinks);
+    const handleSocialLinkEditClicked = (socialLink) => emit('edit-social-link-clicked', socialLink);
+    const handleSocialLinkRemoveClicked = (socialLink) => emit('remove-social-link-clicked', socialLink);
     return {
       getPrintableSocialLinkService,
-      onSocialLinkClicked
+      handleSocialLinkEditClicked,
+      handleSocialLinkRemoveClicked,
     }
   }
 };

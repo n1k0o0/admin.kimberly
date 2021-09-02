@@ -47,11 +47,12 @@ export default {
       default: () => [],
     }
   },
-  emits: ['remove-coach-clicked', 'edit-coach-removed'],
+emits: ['edit-coach', 'remove-coach'],
+
   setup(_, { emit }) {
     const getCoachFullName = (coach) => `${ coach.last_name } ${ coach.first_name } ${ coach.patronymic }`;
-    const onEditCoachClicked = (coach) => emit('edit-coach-clicked', coach);
-    const onRemoveCoachClicked = (coach) => emit('remove-coach-clicked', coach);
+    const onEditCoachClicked = (coach) => emit('edit-coach', coach);
+    const onRemoveCoachClicked = (coach) => emit('remove-coach', coach);
     return {
       getCoachFullName,
       onEditCoachClicked,

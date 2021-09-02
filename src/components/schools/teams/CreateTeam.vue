@@ -1,21 +1,34 @@
 <template>
-  <el-row>
-    <el-col>
-      <league-and-division-selectors
-        :leagues="leagues"
-        @league-selected="onLeagueSelected"
-        @division-selected="onDivisionSelected"
-      />
-    </el-col>
-    <el-col>
-      <team-color-picker @color-selected="onTeamColorClicked" />
-    </el-col>
-    <el-col>
-      <el-button @click="onCreateTeamClicked">
-        Добавить
-      </el-button>
-    </el-col>
-  </el-row>
+  <el-dialog
+    :destroy-on-close="true"
+    :model-value="visible"
+    :width="'30%'"
+    title="Создание команды"
+  >
+    <el-row>
+      <el-col :span="24">
+        <el-col>
+          <league-and-division-selectors
+            :leagues="leagues"
+            @league-selected="onLeagueSelected"
+            @division-selected="onDivisionSelected"
+          />
+        </el-col>
+        <el-col>
+          <team-color-picker @color-selected="onTeamColorClicked" />
+        </el-col>
+      </el-col>
+    </el-row>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="$emit('close')">Отмена</el-button>
+        <el-button
+          type="primary"
+          @click="onCreateTeamClicked"
+        >Создать</el-button>
+      </span>
+    </template>
+  </el-dialog>
 </template>
 
 <script>
@@ -30,12 +43,16 @@ export default {
     LeagueAndDivisionSelectors,
   },
   props: {
+    visible: {
+      type: Boolean,
+      default: false,
+    },
     leagues: {
       type: Array,
       default: () => []
     },
   },
-  emits: ['team-created'],
+  emits: ['team-created', 'close'],
   setup(_, { emit }) {
     const team = reactive({
       league_id: null,

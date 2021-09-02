@@ -66,10 +66,11 @@ export default {
       default: () => [],
     }
   },
-  emits: ['team-clicked', 'edit-coach-clicked', 'remove-coach-clicked'],
+  emits: ['edit-team', 'remove-team'],
+
   setup(_, { emit }) {
-    const handleTeamEditClicked = (team) => emit('edit-coach-clicked', team);
-    const handleTeamRemoveClicked = (team) => emit('remove-coach-clicked', team);
+    const handleTeamEditClicked = (team) => emit('edit-team', team);
+    const handleTeamRemoveClicked = (team) => emit('remove-team', team);
     return {
       getPrintableColor,
       handleTeamEditClicked,

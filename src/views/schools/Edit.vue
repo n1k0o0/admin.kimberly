@@ -3,32 +3,6 @@
     v-loading="loading"
     class="schools-edit"
   >
-    <template #header>
-      <el-card>
-        <el-row
-          class="mb-5 flex-row-reverse "
-        >
-          <span class="schools-edit__status">
-            {{ getPrintableSchoolStatus(school.status) }}
-          </span>
-        </el-row>
-        <el-row>
-          <el-col :span="2">
-            <el-avatar
-              class="avatar"
-              :size="50"
-              :icon="'fas fa-white fa-user'"
-              :src="school?.avatar?.url"
-            />
-          </el-col>
-          <el-col :span="10">
-            {{ school.name }}
-            <el-rate :value="3" />
-            1 из 100 в городе {{ school.city?.name }}
-          </el-col>
-        </el-row>
-      </el-card>
-    </template>
     <el-row>
       <el-col :span="12">
         <el-row class="mb-5">
@@ -68,8 +42,9 @@
         <el-row class="mb-5">
           <div class="d-block ">
             <span class="d-block h4">Количество филиалов</span>
-            <el-input-number
+            <el-input
               v-model="school.branch_count"
+              type="number"
               placeholder="Количество филиалов"
               @input="onSchoolBranchCountChanged"
             />
@@ -89,30 +64,40 @@
       </el-col>
     </el-row>
     <el-row class="mb-5">
-      <el-col :span="6">
-        <span class="d-block h4">Социальные сети</span>
-        <social-links-list :social-links="school.social_links" />
-      </el-col>
-    </el-row>
-    <el-row class="mb-5">
-      <el-col :span="8">
-        <span class="d-block h4">Команды</span>
-        <teams-table :teams="school.teams" />
-        <span class="d-block h4">Добавить команду</span>
-        <create-team
-          :leagues="availableLeagues"
-          @team-created="onTeamCreated"
+      <el-col :span="10">
+        <el-divider content-position="left">
+          <span class="d-block h4">Социальные сети</span>
+        </el-divider>
+        <social-links-list
+          :social-links="school.social_links"
+          :edit-social-link-clicked="handleEditSocialLinkClicked"
+          :remove-social-link-clicked="handleRemoveSocialLinkClicked"
         />
       </el-col>
     </el-row>
     <el-row class="mb-5">
-      <el-col :span="8">
-        <span class="d-block h4">Тренера</span>
-        <coaches-table :coaches="school.coaches" />
-        <span class="d-block h4">Добавить тренера</span>
-        <create-coach
-          class="flex-row"
-          @coach-created="onCoachCreated"
+      <el-col :span="10">
+        <el-divider content-position="left">
+          <span class="d-block h4">Команды</span>
+        </el-divider>
+        <teams
+          :teams="school.teams"
+          @create-team="handleTeamCreated"
+          @edit-team="handleTeamEdited"
+          @remove-team="handleTeamRemoved"
+        />
+      </el-col>
+    </el-row>
+    <el-row class="mb-5">
+      <el-col :span="10">
+        <el-divider content-position="left">
+          <span class="d-block h4">Тренера</span>
+        </el-divider>
+        <coaches
+          :coaches="school.coaches"
+          @create-coach="handleCoachCreated"
+          @edit-coach="handleCoachEdited"
+          @remove-coach="handleCoachRemoved"
         />
       </el-col>
     </el-row>
@@ -131,36 +116,29 @@ import { computed, onMounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import { useLoadingState } from "@/composables/common/useLoadingState.js";
 import { getSchool, updateSchool, uploadSchoolAvatar } from "@/services/schools/schools.js";
-import CoachesTable from "@/components/schools/CoachesTable.vue";
-import TeamsTable from "@/components/schools/TeamsTable.vue";
 import { getPrintableSchoolStatus } from "@/services/schools/School.js";
-import CreateTeam from "@/components/schools/CreateTeam.vue";
-import CreateCoach from "@/components/schools/CreateCoach.vue";
-import { createTeam } from "@/services/schools/teams/teams.js";
-import { createCoach } from "@/services/schools/coaches/coaches.js";
-import SocialLinksList from "@/components/schools/SocialLinksList.vue";
+import { createTeam, removeTeam } from "@/services/schools/teams/teams.js";
+import { createCoach, removeCoach } from "@/services/schools/coaches/coaches.js";
 import useCountryAndCity from "@/composables/useCountryAndCity.js";
 import SingleImageUploader from "@/components/common/SingleImageUploader.vue";
+import Coaches from "@/components/schools/coaches/Coaches.vue";
+import Teams from "@/components/schools/teams/Teams.vue";
 
 export default {
   name: "Edit",
   components: {
+    Teams,
+    Coaches,
     SingleImageUploader,
-    SocialLinksList,
-    CreateCoach,
-    CreateTeam,
-    TeamsTable,
-    CoachesTable
   },
   setup() {
-    const route = useRoute();
-
-    let school = ref({});
-
-    let schoolId = computed(() => route.params.id);
     const { loading, setLoaded, setLoading } = useLoadingState(false);
+    const route = useRoute();
+    let schoolId = computed(() => route.params.id);
+    let school = ref({});
     const { selectedCity } = useCountryAndCity();
     const availableLeagues = computed(() => selectedCity.value?.leagues ?? []);
+
     onMounted(async () => {
       try {
         schoolId = route.params.id;
@@ -209,22 +187,11 @@ export default {
     const onSchoolEmailChanged = () => updateSchoolFields({ email: school.value.email });
     const onSchoolBranchCountChanged = () => updateSchoolFields({ branch_count: school.value.branch_count });
 
-    const onTeamCreated = async (team) => {
+    const handleTeamCreated = async (team) => {
       try {
         setLoading();
         const { data } = await createTeam(schoolId, team);
         school.value.teams.push(data);
-      } catch (e) {
-        console.log(e);
-      } finally {
-        setLoaded();
-      }
-    };
-    const onCoachCreated = async (coach) => {
-      try {
-        setLoading();
-        const { data } = await createCoach(schoolId, coach);
-        school.value.coaches.push(data);
       } catch (e) {
         console.log(e);
       } finally {
@@ -248,6 +215,62 @@ export default {
       }
     };
 
+    const handleSocialLinkEdited = (socialLink) => {
+
+    }
+    const handleSocialLinkRemoved = async (socialLink) => {
+
+    }
+
+    const handleTeamEdited = async (team) => {
+
+    }
+    const handleTeamRemoved = async (team) => {
+      try {
+        setLoading();
+        await removeTeam(team.id);
+      } catch (e) {
+        console.log(e);
+      } finally {
+        setLoaded();
+      }
+    }
+
+    const handleCoachCreated = async (coach) => {
+      try {
+        setLoading();
+        const { data } = await createCoach(schoolId, coach);
+        school.value.coaches.push(data);
+      } catch (e) {
+        console.log(e);
+      } finally {
+        setLoaded();
+      }
+    };
+
+    const handleCoachEdited = async (coach) => {
+      try {
+        setLoading();
+        const { data } = await updateCoach(coach.id, coach);
+        school.value.coaches.push(data);
+      } catch (e) {
+        console.log(e);
+      } finally {
+        setLoaded();
+      }
+    }
+    const handleCoachRemoved = async (coach) => {
+      try {
+        setLoading();
+        const { data } = await removeCoach(coach.id);
+        school.value.coaches.push(data);
+      } catch (e) {
+        console.log(e);
+      } finally {
+        setLoaded();
+      }
+    }
+
     return {
       getPrintableSchoolStatus,
       availableLeagues,
@@ -262,8 +285,14 @@ export default {
       onSchoolEmailChanged,
       onSchoolCountrySelected,
       onSchoolCitySelected,
-      onTeamCreated,
-      onCoachCreated,
+      handleTeamCreated,
+      handleCoachCreated,
+      handleSocialLinkEdited,
+      handleSocialLinkRemoved,
+      handleTeamEdited,
+      handleTeamRemoved,
+      handleCoachEdited,
+      handleCoachRemoved,
     };
   },
 };

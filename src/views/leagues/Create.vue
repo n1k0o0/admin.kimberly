@@ -116,6 +116,7 @@ export default {
       try {
         setLoading();
         const { data } = await createLeague(newLeague);
+        // TODO добавлять в стор к городу
         await router.push({ name: 'leagues' });
       } catch (e) {
         const errors = parseErrors(e.response.data.errors);

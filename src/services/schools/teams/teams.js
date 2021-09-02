@@ -10,7 +10,7 @@ export function createTeam(school_id, fields) {
 }
 
 export function removeTeam(team_id) {
-
+  return api.delete(`${ ENDPOINT }/${ team_id }`);
 }
 
 export function updateTeam(team_id, fields) {
