@@ -43,6 +43,7 @@
 import { onBeforeMount, onMounted, reactive } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
+import useLocalStorage from "@/composables/common/useLocalStorage.js";
 
 const store = useStore();
 const router = useRouter();
@@ -62,6 +63,8 @@ onBeforeMount(() => {
 })
 
 const login = () => {
+  useLocalStorage('selected_country').removeValue();
+  useLocalStorage('selected_city').removeValue();
   store.dispatch('auth/LOGIN', data.form)
 }
 

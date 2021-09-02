@@ -18,12 +18,12 @@
               class="avatar"
               :size="50"
               :icon="'fas fa-white fa-user'"
-              :src="school?.avatar"
+              :src="school?.avatar?.url"
             />
           </el-col>
           <el-col :span="10">
             {{ school.name }}
-            <el-rate :value="3"/>
+            <el-rate :value="3" />
             1 из 100 в городе {{ school.city?.name }}
           </el-col>
         </el-row>
@@ -31,74 +31,73 @@
     </template>
     <el-row>
       <el-col :span="12">
-        <el-row>
-          <span>Название школы</span>
+        <el-row class="mb-5">
+          <span class="d-block h4">Название школы</span>
           <el-input
             v-model="school.name"
             placeholder="Название школы"
             @input="onSchoolNameChanged"
           />
-          <country-city-selectors
-            v-if="!loading"
-            :countries="availableCountries"
-            class="d-block w-100"
-            :city-id="school.city_id"
-            :country-id="school.country_id"
-            @country-selected="onSchoolCountrySelected"
-            @city-selected="onSchoolCitySelected"
+        </el-row>
+        <el-row class="mb-5">
+          <span class="d-block h4">Описание школы</span>
+          <el-input
+            v-model="school.description"
+            type="textarea"
+            :rows="2"
+            placeholder="Please input"
+            @input="onSchoolDescriptionChanged"
           />
-          <div class="d-block w-100">
-            <span class="d-block">Количество филиалов</span>
+        </el-row>
+        <el-row class="mb-5">
+          <span class="d-block h4">Email</span>
+          <el-input
+            v-model="school.email"
+            placeholder="Email"
+            @input="onSchoolEmailChanged"
+          />
+        </el-row>
+        <el-row class="mb-5">
+          <span class="d-block h4">Телефон</span>
+          <el-input
+            v-model="school.phone"
+            placeholder="Телефон"
+            @input="onSchoolPhoneChanged"
+          />
+        </el-row>
+        <el-row class="mb-5">
+          <div class="d-block ">
+            <span class="d-block h4">Количество филиалов</span>
             <el-input-number
               v-model="school.branch_count"
               placeholder="Количество филиалов"
               @input="onSchoolBranchCountChanged"
             />
           </div>
-          <div class="d-block w-100">
-            <el-upload
-              action="#"
-              :auto-upload="false"
-            >
-              <template #default>
-                <i class="fas fa-paperclip"/>
-                <span>&nbsp;Загрузить логотип</span>
-              </template>
-            </el-upload>
-          </div>
+        </el-row>
+        <el-row
+          class="flex-column"
+        >
+          <span class="d-block h4">Аватар</span>
+          <single-image-uploader
+            :image="school.avatar"
+            :hide-upload-icon="school.avatar"
+            :on-remove="handleAvatarRemoved"
+            :on-change="handleAvatarChanged"
+          />
         </el-row>
       </el-col>
-      <el-col :span="12">
-        <span class="d-block">Email</span>
-        <el-input
-          v-model="school.email"
-          placeholder="Email"
-          @input="onSchoolEmailChanged"
-        />
-        <span class="d-block">Телефон</span>
-        <el-input
-          v-model="school.phone"
-          placeholder="Телефон"
-          @input="onSchoolPhoneChanged"
-        />
-        <span class="d-block">Описание школы</span>
-        <el-input
-          v-model="school.description"
-          type="textarea"
-          :rows="2"
-          placeholder="Please input"
-          @input="onSchoolDescriptionChanged"
-        />
-      </el-col>
-    </el-row>
-    <el-row>
-      <span class="d-block h4">Социальные сети</span>
-      <social-links-list :social-links="school.social_links"/>
     </el-row>
     <el-row class="mb-5">
-      <el-col :span="24">
+      <el-col :span="6">
+        <span class="d-block h4">Социальные сети</span>
+        <social-links-list :social-links="school.social_links" />
+      </el-col>
+    </el-row>
+    <el-row class="mb-5">
+      <el-col :span="8">
         <span class="d-block h4">Команды</span>
-        <teams-table :teams="school.teams"/>
+        <teams-table :teams="school.teams" />
         <span class="d-block h4">Добавить команду</span>
         <create-team
           :leagues="availableLeagues"
@@ -107,16 +106,14 @@
       </el-col>
     </el-row>
     <el-row class="mb-5">
-      <el-col :span="24">
+      <el-col :span="8">
         <span class="d-block h4">Тренера</span>
-        <coaches-table :coaches="school.coaches"/>
+        <coaches-table :coaches="school.coaches" />
         <span class="d-block h4">Добавить тренера</span>
-        <el-col :span="8">
-          <create-coach
-            class="flex-row"
-            @coach-created="onCoachCreated"
-          />
-        </el-col>
+        <create-coach
+          class="flex-row"
+          @coach-created="onCoachCreated"
+        />
       </el-col>
     </el-row>
     <el-row class="my-3 flex-row-reverse">
@@ -133,33 +130,36 @@
 import { computed, onMounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import { useLoadingState } from "@/composables/common/useLoadingState.js";
-import CountryCitySelectors from "@/components/common/CountryCitySelectors.vue";
-import { getSchool, updateSchool } from "@/services/schools/schools.js";
+import { getSchool, updateSchool, uploadSchoolAvatar } from "@/services/schools/schools.js";
 import CoachesTable from "@/components/schools/CoachesTable.vue";
 import TeamsTable from "@/components/schools/TeamsTable.vue";
-import { useStore } from "vuex";
 import { getPrintableSchoolStatus } from "@/services/schools/School.js";
 import CreateTeam from "@/components/schools/CreateTeam.vue";
 import CreateCoach from "@/components/schools/CreateCoach.vue";
 import { createTeam } from "@/services/schools/teams/teams.js";
 import { createCoach } from "@/services/schools/coaches/coaches.js";
 import SocialLinksList from "@/components/schools/SocialLinksList.vue";
+import useCountryAndCity from "@/composables/useCountryAndCity.js";
+import SingleImageUploader from "@/components/common/SingleImageUploader.vue";
 
 export default {
   name: "Edit",
-  components: { SocialLinksList, CreateCoach, CreateTeam, TeamsTable, CoachesTable, CountryCitySelectors },
+  components: {
+    SingleImageUploader,
+    SocialLinksList,
+    CreateCoach,
+    CreateTeam,
+    TeamsTable,
+    CoachesTable
+  },
   setup() {
     const route = useRoute();
-    const store = useStore();
 
     let school = ref({});
 
     let schoolId = computed(() => route.params.id);
     const { loading, setLoaded, setLoading } = useLoadingState(false);
-
-    const availableCountries = computed(() => store.getters["general/GET_COUNTRIES"]);
-    const selectedCountry = computed(() => availableCountries.value.find(countryItem => countryItem.id === school.value.country_id));
-    const selectedCity = computed(() => selectedCountry.value?.cities.find(cityItem => cityItem.id === school.value.city_id));
+    const { selectedCity } = useCountryAndCity();
     const availableLeagues = computed(() => selectedCity.value?.leagues ?? []);
     onMounted(async () => {
       try {
@@ -167,7 +167,6 @@ export default {
         setLoading();
         const { data } = await getSchool(schoolId);
         school.value = data;
-        console.log(school.value);
       } catch (e) {
         console.log(e);
       } finally {
@@ -233,14 +232,29 @@ export default {
       }
     };
 
+    const handleAvatarRemoved = async (file) => {
+      school.value.avatar = null;
+    };
+
+    const handleAvatarChanged = async (file, fileList) => {
+      try {
+        setLoading();
+        const { data } = await uploadSchoolAvatar(schoolId, file.raw);
+        school.value.avatar = file;
+      } catch (e) {
+        console.log(e);
+      } finally {
+        setLoaded();
+      }
+    };
+
     return {
       getPrintableSchoolStatus,
-      selectedCountry,
-      selectedCity,
-      availableCountries,
       availableLeagues,
       loading,
       school,
+      handleAvatarRemoved,
+      handleAvatarChanged,
       onSchoolNameChanged,
       onSchoolDescriptionChanged,
       onSchoolPhoneChanged,

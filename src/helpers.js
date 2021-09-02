@@ -13,3 +13,9 @@ export function parseErrors (errors, flatt=true) {
 export function debounce(func, timeout) {
 
 }
+
+export function objectToFormData(obj) {
+  const formData = new FormData;
+
+  return formData;
+}

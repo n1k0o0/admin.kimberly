@@ -27,10 +27,22 @@ export function getSchool(id) {
   return api.get(`${ ENDPOINT }/${ id }`);
 }
 
-export function updateSchool(id, fields) {
-  return api.put(`${ ENDPOINT }/${ id }`, cleanFalsyFields(fields));
+export function updateSchool(schoolId, fields) {
+  return api.put(`${ ENDPOINT }/${ schoolId }`, cleanFalsyFields(fields));
 }
 
 export function removeSchool(id) {
-  return api.delete(`${ ENDPOINT }/${ id }`);
+  return api.delete(`${ ENDPOINT }/${ schoolId }`);
+}
+
+export function uploadSchoolAvatar(schoolId, file) {
+  const formData = new FormData();
+  formData.append("_method", "PUT");
+  formData.append('avatar', file);
+
+  return api.post(`${ ENDPOINT }/${ schoolId }`, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  });
 }

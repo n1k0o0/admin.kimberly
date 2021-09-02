@@ -42,7 +42,7 @@
           <el-button
             type="primary"
             icon="el-icon-edit"
-            @click="$router.push({ name: 'schools-edit', params: { id: schoolId } })"
+            @click="$router.push({ name: 'schools-edit', params: { id: scope.row.id } })"
           />
           <el-popconfirm
             title="Вы действительно хотите удалить стадион?"

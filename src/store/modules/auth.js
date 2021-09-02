@@ -58,8 +58,6 @@ const actions = {
     await api.post(import.meta.env.VITE_BASE_API_URL + '/logout').then(() => {
       window.location.href = '/auth';
     });
-    useLocalStorage('selected_country').removeValue();
-    useLocalStorage('selected_city').removeValue();
   },
 
   async LOAD_TEST({ commit, state }) {
