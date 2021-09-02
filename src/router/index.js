@@ -35,14 +35,8 @@ const routes = [
   },
   { path: "/tournaments", name: 'tournaments', component: () => import('../views/tournaments/Index.vue') },
 
-  {
-    path: "/schools", name: 'schools', component: () => import('@/views/schools/Index.vue'),
-    children: [
-      {
-        path: ':id', name: 'schools-edit', component: () => import('@/views/schools/Edit.vue')
-      }
-    ]
-  },
+  { path: '/schools/:id', name: 'schools-edit', component: () => import('@/views/schools/Edit.vue') },
+  { path: "/schools", name: 'schools', component: () => import('@/views/schools/Index.vue'), },
 
   { path: "/tables", name: 'tables', component: Dashboard },
   { path: "/calendar", name: 'calendar', component: Dashboard },
@@ -50,6 +44,7 @@ const routes = [
   { path: "/players", name: 'players', component: Dashboard },
   { path: "/statistics", name: 'statistics', component: Dashboard },
   { path: "/notifications", name: 'notifications', component: Dashboard },
+  { path: "/users", name: 'users', component: Dashboard },
 ];
 
 const router = createRouter({

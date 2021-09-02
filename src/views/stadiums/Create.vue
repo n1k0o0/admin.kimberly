@@ -7,26 +7,25 @@
       <el-col :span="6">
         <span>Укажите название</span>
         <el-input
-          placeholder="Название"
           v-model="newStadium.title"
-        ></el-input>
+          placeholder="Название"
+        />
       </el-col>
     </el-row>
-    <country-city-selectors
-      @city-selected="onCitySelected"
-    />
     <el-row class="my-4">
       <el-col :span="6">
         <span>Укажите адрес</span>
         <el-input
-          placeholder="Адрес"
           v-model="newStadium.address"
-        ></el-input>
+          placeholder="Адрес"
+        />
       </el-col>
     </el-row>
     <el-row class="my-3 flex-row-reverse">
       <el-button-group>
-        <el-button @click="$router.push({name: 'stadiums'})">Отменить</el-button>
+        <el-button @click="$router.push({name: 'stadiums'})">
+          Отменить
+        </el-button>
         <el-button
           type="primary"
           @click="onCreateStadiumClicked"
@@ -40,47 +39,46 @@
 
 <script>
 import { reactive } from "vue";
-import { useLoadingState } from "../../composables/common/useLoadingState";
-import { parseErrors } from "../../helpers";
+import { useLoadingState } from "@/composables/common/useLoadingState.js";
+import { parseErrors } from "@/helpers.js";
 import { useRouter } from "vue-router";
-import { createStadium } from "../../services/stadiums/stadiums";
-import CountryCitySelectors from "../../components/common/CountryCitySelectors.vue";
+import { createStadium } from "@/services/stadiums/stadiums.js";
+import useCountryAndCity from "@/composables/useCountryAndCity.js";
 
 export default {
   name: "Create",
-  components: { CountryCitySelectors },
   setup() {
-    const router = useRouter()
-    const { loading, setLoaded, setLoading } = useLoadingState(false)
+    const router = useRouter();
+    const { selectedCityId } = useCountryAndCity();
+    const { loading, setLoaded, setLoading } = useLoadingState(false);
     const newStadium = reactive({
       title: '',
-      city_id: '',
+      city_id: selectedCityId,
       address: '',
-    })
+    });
 
-    const onCitySelected = (city) => newStadium.city_id = city.value?.id
+    const onCitySelected = (city) => newStadium.city_id = city.value?.id;
     const onCreateStadiumClicked = async () => {
       try {
-        setLoading()
-        const { data } = await createStadium(newStadium)
-        await router.push({name: 'stadiums'})
+        setLoading();
+        const { data } = await createStadium(newStadium);
+        await router.push({ name: 'stadiums' });
       } catch (e) {
-        const errors = parseErrors(e.response.data.errors)
-        console.log(errors)
+        const errors = parseErrors(e.response.data.errors);
+        console.log(errors);
+      } finally {
+        setLoaded();
       }
-      finally {
-        setLoaded()
-      }
-    }
+    };
 
     return {
       loading,
       newStadium,
       onCitySelected,
       onCreateStadiumClicked,
-    }
+    };
   },
-}
+};
 </script>
 
 <style scoped>

@@ -10,12 +10,13 @@
           <el-col :span="6">
             <el-input
               v-model="search.login"
-              placeholder="Логин"/>
+              placeholder="Логин"
+            />
           </el-col>
           <el-col :span="6">
             <el-select
-              multiple
               v-model="search.types"
+              multiple
               placeholder="Тип пользователя"
             >
               <el-option
@@ -23,30 +24,30 @@
                 :key="key"
                 :value="key"
                 :label="type"
-              ></el-option>
+              />
             </el-select>
           </el-col>
           <el-col :span="6">
             <el-date-picker
               v-model="search.created_at_start"
               type="date"
-              @change="onCreatedAtStartChanged"
               placeholder="Создан от"
+              @change="onCreatedAtStartChanged"
             />
           </el-col>
           <el-col :span="6">
             <el-date-picker
               v-model="search.created_at_end"
               placeholder="Создан по"
-              @change="onCreatedAtEndChanged"
               type="date"
+              @change="onCreatedAtEndChanged"
             />
           </el-col>
         </el-row>
         <el-row>
           <el-button
-            @click="$router.push({name: 'internal-users-create'})"
             type="primary"
+            @click="$router.push({name: 'internal-users-create'})"
           >
             Создать
           </el-button>
@@ -54,8 +55,8 @@
       </el-row>
     </template>
     <el-table
-      :data="users"
       v-loading="loading"
+      :data="users"
       :empty-text="'Нет данных'"
     >
       <el-table-column
@@ -72,8 +73,7 @@
       <el-table-column
         label="Полное имя"
         :prop="'full_name'"
-      >
-      </el-table-column>
+      />
       <el-table-column
         prop="created_at"
         label="Дата создания"
@@ -84,42 +84,36 @@
       </el-table-column>
       <el-table-column
         label="Управление"
-
       >
         <template #default="scope">
-          <el-button-group>
-            <el-button
-              type="success"
-              @click="$router.push({name: 'internal-users-edit', params: {id: scope.row.id}})"
-            >
-              Редактировать
-            </el-button>
-              <el-popconfirm
-                title="Вы действительно хотите удалить пользователя?"
-                cancel-button-text="Отмена"
-                confirm-button-text="Да"
-                @confirm="onRemoveInternalUserClicked(scope.row.id)"
-              >
-                <template #reference>
-                  <el-button
-                    type="danger"
-                  >
-                    Удалить
-                  </el-button>
-                </template>
-              </el-popconfirm>
-
-          </el-button-group>
+          <el-button
+            type="primary"
+            icon="el-icon-edit"
+            @click="$router.push({name: 'internal-users-edit', params: {id: scope.row.id}})"
+          />
+          <el-popconfirm
+            title="Вы действительно хотите удалить пользователя?"
+            cancel-button-text="Отмена"
+            confirm-button-text="Да"
+            @confirm="onRemoveInternalUserClicked(scope.row.id)"
+          >
+            <template #reference>
+              <el-button
+                type="danger"
+                icon="el-icon-delete"
+              />
+            </template>
+          </el-popconfirm>
         </template>
       </el-table-column>
     </el-table>
     <el-row justify="center">
-    <el-pagination
-      layout="prev, pager, next"
-      :hide-on-single-page="true"
-      @update:current-page="onCurrentPageUpdated"
-      v-bind="pagination"
-    ></el-pagination>
+      <el-pagination
+        layout="prev, pager, next"
+        :hide-on-single-page="true"
+        v-bind="pagination"
+        @update:current-page="onCurrentPageUpdated"
+      />
     </el-row>
   </el-card>
 </template>

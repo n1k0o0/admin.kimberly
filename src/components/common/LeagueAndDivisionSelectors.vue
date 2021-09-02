@@ -1,39 +1,37 @@
 <template>
-  <el-row class="country-city-selector__league">
-    <span>Выберите лигу</span>
-  </el-row>
-  <el-row>
-    <el-select
-      v-model="selectedLeagueId"
-      class="d-block"
-      placeholder="Лига"
-    >
-      <el-option
-        v-for="(league) in availableLeagues"
-        :key="league.id"
-        :value="league.id"
-        :label="league.name"
+  <el-row class="country-city-selector">
+    <el-col class="country-city-selector__league">
+      <span class="d-block">Выберите лигу</span>
+      <el-select
+        v-model="selectedLeagueId"
+        class="d-block"
+        placeholder="Лига"
+      >
+        <el-option
+          v-for="(league) in availableLeagues"
+          :key="league.id"
+          :value="league.id"
+          :label="league.name"
+          no-data-text="Нет данных"
+        />
+      </el-select>
+    </el-col>
+    <el-col class="country-city-selector__division">
+      <span>Выберите дивизион</span>
+      <el-select
+        v-model="selectedDivisionId"
+        class="d-block"
+        placeholder="Дивизион"
         no-data-text="Нет данных"
-      />
-    </el-select>
-  </el-row>
-  <el-row class="country-city-selector__division">
-    <span>Выберите дивизион</span>
-  </el-row>
-  <el-row>
-    <el-select
-      v-model="selectedDivisionId"
-      class="d-block"
-      placeholder="Дивизион"
-      no-data-text="Нет данных"
-    >
-      <el-option
-        v-for="division in availableDivisions"
-        :key="division.id"
-        :value="division.id"
-        :label="division.name"
-      />
-    </el-select>
+      >
+        <el-option
+          v-for="division in availableDivisions"
+          :key="division.id"
+          :value="division.id"
+          :label="division.name"
+        />
+      </el-select>
+    </el-col>
   </el-row>
 </template>
 

@@ -7,23 +7,18 @@
       <el-col :span="6">
         <span>Укажите название</span>
         <el-input
-          placeholder="Название"
           v-model="tournament.name"
-        ></el-input>
+          placeholder="Название"
+        />
       </el-col>
     </el-row>
-    <country-city-selectors
-      v-if="!loading"
-      @city-selected="onCitySelected"
-      :selected-country-id="tournament.country_id"
-      :selected-city-id="tournament.city_id"
-    />
+
     <el-row>
       <el-col :span="6">
         <span>Укажите дату и время начала</span>
         <el-date-picker
           v-model="tournament.started_at"
-        ></el-date-picker>
+        />
       </el-col>
     </el-row>
     <el-row class="my-4">
@@ -31,12 +26,14 @@
         <span>Укажите дату и время окончания</span>
         <el-date-picker
           v-model="tournament.ended_at"
-        ></el-date-picker>
+        />
       </el-col>
     </el-row>
     <el-row class="my-3 flex-row-reverse">
       <el-button-group>
-        <el-button @click="$router.push({name: 'tournaments'})">Отменить</el-button>
+        <el-button @click="$router.push({name: 'tournaments'})">
+          Отменить
+        </el-button>
         <el-button
           type="primary"
           @click="onUpdateTournamentClicked"
@@ -51,14 +48,12 @@
 <script>
 import { onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { useLoadingState } from "../../composables/common/useLoadingState";
-import { getTournament, updateTournament } from "../../services/tournaments/tournaments";
-import { getPrintableTournaments } from "../../services/tournaments/Tournament";
-import CountryCitySelectors from "../../components/common/CountryCitySelectors.vue";
+import { useLoadingState } from "@/composables/common/useLoadingState.js";
+import { getTournament, updateTournament } from "@/services/tournaments/tournaments.js";
+import { getPrintableTournaments } from "@/services/tournaments/Tournament.js";
 
 export default {
   name: "Edit",
-  components: { CountryCitySelectors },
   setup() {
     const route = useRoute()
     const router = useRouter()
@@ -90,7 +85,6 @@ export default {
         setLoaded()
       }
     }
-    const onCitySelected = (city) => tournament.value.city_id = city.value?.id
 
     const printableTypes = getPrintableTournaments()
 
@@ -98,7 +92,6 @@ export default {
       printableTypes,
       loading,
       tournament,
-      onCitySelected,
       onUpdateTournamentClicked,
     }
   },

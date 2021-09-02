@@ -7,24 +7,26 @@
       <el-col :span="6">
         <span>Укажите название</span>
         <el-input
-          placeholder="Название"
           v-model="newLeague.name"
-        ></el-input>
+          placeholder="Название"
+        />
       </el-col>
     </el-row>
-    <country-city-selectors
-      @city-selected="onCitySelected"
-    />
     <el-row>
       <el-col :span="6">
         <span>Добавить дивизион</span>
         <el-row class="mb-5">
           <el-input
-            class="w-75"
             v-model="newDivision.name"
+            class="w-75"
             @keyup.enter="onAddDivisionClicked"
           />
-          <el-button class="w-25" @click="onAddDivisionClicked">Добавить</el-button>
+          <el-button
+            class="w-25"
+            @click="onAddDivisionClicked"
+          >
+            Добавить
+          </el-button>
         </el-row>
         <el-table
           :data="newLeague.divisions"
@@ -49,9 +51,8 @@
                     <template #reference>
                       <el-button
                         type="danger"
-                      >
-                        Удалить
-                      </el-button>
+                        icon="el-icon-delete"
+                      />
                     </template>
                   </el-popconfirm>
                 </el-button-group>
@@ -63,7 +64,9 @@
     </el-row>
     <el-row class="my-3 flex-row-reverse">
       <el-button-group>
-        <el-button @click="$router.push({name: 'leagues'})">Отменить</el-button>
+        <el-button @click="$router.push({name: 'leagues'})">
+          Отменить
+        </el-button>
         <el-button
           type="primary"
           @click="onCreateLeagueClicked"
@@ -76,66 +79,62 @@
 </template>
 
 <script>
-import { computed, reactive, ref } from "vue";
-import { useLoadingState } from "../../composables/common/useLoadingState";
-import { parseErrors } from "../../helpers";
+import { reactive } from "vue";
+import { useLoadingState } from "@/composables/common/useLoadingState.js";
+import { parseErrors } from "@/helpers.js";
 import { useRouter } from "vue-router";
-import { useStore } from "vuex";
-import { createLeague } from "../../services/leagues/leagueService";
-import CountryCitySelectors from "../../components/common/CountryCitySelectors.vue";
+import { createLeague } from "@/services/leagues/leagueService.js";
+import useCountryAndCity from "@/composables/useCountryAndCity.js";
 
 export default {
   name: "Create",
-  components: { CountryCitySelectors },
   setup() {
-    const router = useRouter()
-    const store = useStore()
-    const { loading, setLoaded, setLoading } = useLoadingState(false)
+    const router = useRouter();
+    const { loading, setLoaded, setLoading } = useLoadingState(false);
+    const { selectedCity } = useCountryAndCity();
     const newDivision = reactive({
       name: ''
-    })
+    });
     const newLeague = reactive({
       name: '',
-      city_id: '',
+      city_id: selectedCity.value.id,
       divisions: [],
-    })
+    });
 
-    const onCitySelected = (city) => newLeague.city_id = city.value?.id
     const onAddDivisionClicked = () => {
-      const sameDivision = newLeague.divisions.find(divisionItem => divisionItem.name === newDivision.name)
+      const sameDivision = newLeague.divisions.find(divisionItem => divisionItem.name === newDivision.name);
       if (!sameDivision) {
-        newLeague.divisions.push({ ...newDivision })
+        newLeague.divisions.push({ ...newDivision });
       }
-      newDivision.name = ''
-    }
+      newDivision.name = '';
+    };
     const onRemoveDivisionClicked = (division) => newLeague.divisions.splice(
       newLeague.divisions.find((divisionItem) => divisionItem === division),
       1
-    )
+    );
     const onCreateLeagueClicked = async () => {
       try {
-        setLoading()
-        const { data } = await createLeague(newLeague)
-        await router.push({ name: 'leagues' })
+        setLoading();
+        const { data } = await createLeague(newLeague);
+        await router.push({ name: 'leagues' });
       } catch (e) {
-        const errors = parseErrors(e.response.data.errors)
-        console.log(errors)
+        const errors = parseErrors(e.response.data.errors);
+        console.log(errors);
       } finally {
-        setLoaded()
+        setLoaded();
       }
-    }
+    };
 
     return {
       loading,
       newDivision,
       newLeague,
-      onCitySelected,
       onCreateLeagueClicked,
       onAddDivisionClicked,
       onRemoveDivisionClicked,
-    }
+    };
   },
-}
+};
 </script>
 
 <style scoped>

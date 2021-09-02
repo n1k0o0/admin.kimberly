@@ -7,27 +7,32 @@
       <el-col :span="6">
         <span>Укажите название</span>
         <el-input
-          placeholder="Название"
           v-model="league.name"
-        ></el-input>
+          placeholder="Название"
+        />
       </el-col>
     </el-row>
-    <country-city-selectors
-      v-if="!loading"
-      @city-selected="onCitySelected"
-      :selected-country-id="league.country_id"
-      :selected-city-id="league.city_id"
-    />
     <el-row>
       <el-col :span="6">
-        <add-division v-if="!updatingDivision.id" @add-division="onDivisionAdded" />
-        <el-row class="mb-5" v-if="updatingDivision.id">
+        <add-division
+          v-if="!updatingDivision.id"
+          @add-division="onDivisionAdded"
+        />
+        <el-row
+          v-if="updatingDivision.id"
+          class="mb-5"
+        >
           <el-input
-            class="w-75"
             v-model="updatingDivision.name"
+            class="w-75"
             @keyup.enter="onUpdateDivisionClicked"
           />
-          <el-button class="w-25" @click="onUpdateDivisionClicked">Обновить</el-button>
+          <el-button
+            class="w-25"
+            @click="onUpdateDivisionClicked"
+          >
+            Обновить
+          </el-button>
         </el-row>
         <el-table
           :data="league.divisions"
@@ -43,9 +48,9 @@
             >
               <template #default="scope">
                 <el-button
-                  @click="onEditDivisionClicked(scope.row)"
                   icon="fas fa-white fa-edit"
                   type="primary"
+                  @click="onEditDivisionClicked(scope.row)"
                 />
                 <el-popconfirm
                   title="Убрать дивизион?"
@@ -54,7 +59,10 @@
                   @confirm="onRemoveDivisionClicked(scope.row)"
                 >
                   <template #reference>
-                    <el-button icon="fa fa-white fa-times" type="danger"/>
+                    <el-button
+                      icon="el-icon-delete"
+                      type="danger"
+                    />
                   </template>
                 </el-popconfirm>
               </template>
@@ -65,7 +73,9 @@
     </el-row>
     <el-row class="my-3 flex-row-reverse">
       <el-button-group>
-        <el-button @click="$router.push({name: 'leagues'})">Отменить</el-button>
+        <el-button @click="$router.push({name: 'leagues'})">
+          Отменить
+        </el-button>
         <el-button
           type="primary"
           @click="onUpdateLeagueClicked"
@@ -80,21 +90,18 @@
 <script>
 import { computed, onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { useLoadingState } from "../../composables/common/useLoadingState";
-import { useStore } from "vuex";
-import { getLeague, updateLeague } from "../../services/leagues/leagueService";
-import { createDivision, removeDivision, updateDivision } from "../../services/divisions/divisionService";
-import { parseErrors } from "../../helpers";
-import AddDivision from "../../components/divisions/AddDivision.vue";
-import CountryCitySelectors from "../../components/common/CountryCitySelectors.vue";
+import { useLoadingState } from "@/composables/common/useLoadingState.js";
+import { getLeague, updateLeague } from "@/services/leagues/leagueService.js";
+import { createDivision, removeDivision, updateDivision } from "@/services/divisions/divisionService.js";
+import { parseErrors } from "@/helpers.js";
+import AddDivision from "@/components/divisions/AddDivision.vue";
 
 export default {
   name: "Edit",
-  components: { AddDivision, CountryCitySelectors },
+  components: { AddDivision },
   setup() {
     const route = useRoute()
     const router = useRouter()
-    const store = useStore()
     const { loading, setLoaded, setLoading } = useLoadingState(false)
 
     let leagueId = null
@@ -134,8 +141,6 @@ export default {
       name: '',
     })
 
-    const onCitySelected = (city) => league.value.city_id = city.value?.id
-
     const onEditDivisionClicked = (division) => {
       updatingDivision.value.id = division.id
       updatingDivision.value.name = division.name
@@ -158,7 +163,6 @@ export default {
     }
 
     const onRemoveDivisionClicked = async (division) => {
-      console.log(division)
       try {
         const { data } = await removeDivision(division.id);
         const divisionIndex = league.value.divisions.findIndex(divisionItem => divisionItem.id === division.id)
@@ -186,7 +190,6 @@ export default {
       loading,
       league,
       updatingDivision,
-      onCitySelected,
       onUpdateLeagueClicked,
       onDivisionAdded,
       onEditDivisionClicked,

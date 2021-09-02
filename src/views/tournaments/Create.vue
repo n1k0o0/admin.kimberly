@@ -12,9 +12,6 @@
         />
       </el-col>
     </el-row>
-    <country-city-selectors
-      @city-selected="onCitySelected"
-    />
     <el-row class="my-4">
       <el-col :span="6">
         <span>Укажите дату и время начала</span>
@@ -56,45 +53,43 @@ import { parseErrors } from "@/helpers.js";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import { createTournament } from "@/services/tournaments/tournaments.js";
-import CountryCitySelectors from "@/components/common/CountryCitySelectors.vue";
+import useCountryAndCity from "@/composables/useCountryAndCity.js";
 
 export default {
   name: "Create",
-  components: { CountryCitySelectors },
   setup() {
-    const router = useRouter()
-    const store = useStore()
-    const { loading, setLoaded, setLoading } = useLoadingState(false)
+    const router = useRouter();
+    const store = useStore();
+    const { loading, setLoaded, setLoading } = useLoadingState(false);
+    const { selectedCityId } = useCountryAndCity();
     const newTournament = reactive({
       name: '',
-      city_id: '',
+      city_id: selectedCityId.value,
       started_at: null,
       ended_at: null,
-    })
-    const countries = computed(() => store.getters["general/GET_COUNTRIES"])
-    const onCitySelected = (city) => newTournament.city_id = city.value?.id
+    });
+    const countries = computed(() => store.getters["general/GET_COUNTRIES"]);
     const onCreateTournamentClicked = async () => {
       try {
-        setLoading()
-        const { data } = await createTournament(newTournament)
-        await router.push({ name: 'tournaments' })
+        setLoading();
+        const { data } = await createTournament(newTournament);
+        await router.push({ name: 'tournaments' });
       } catch (e) {
-        const errors = parseErrors(e.response.data.errors)
-        console.log(errors)
+        const errors = parseErrors(e.response.data.errors);
+        console.log(errors);
       } finally {
-        setLoaded()
+        setLoaded();
       }
-    }
+    };
 
     return {
       loading,
-      onCitySelected,
       countries,
       newTournament,
       onCreateTournamentClicked,
-    }
+    };
   },
-}
+};
 </script>
 
 <style scoped>
