@@ -85,26 +85,25 @@
 </template>
 
 <script>
-import { computed, onMounted, reactive, ref, watch } from "vue";
-import { useLoadingState } from "../../composables/common/useLoadingState";
-import usePagination from "../../composables/common/usePagination";
-import { paginateStadiums, removeStadium } from "../../services/stadiums/stadiums";
-import { useStore } from "vuex";
+import { onMounted, reactive, ref, watch } from "vue";
+import { useLoadingState } from "@/composables/common/useLoadingState.js";
+import usePagination from "@/composables/common/usePagination";
+import { paginateStadiums, removeStadium } from "@/services/stadiums/stadiums.js";
+import useCountryAndCity from "@/composables/useCountryAndCity.js";
 
 export default {
   name: "Index",
   setup() {
-    const store = useStore()
     const { loading, setLoaded, setLoading } = useLoadingState(true)
     const { pagination, setPagination, currentPage } = usePagination()
-    const countries = computed(() => store.getters["general/GET_COUNTRIES"])
+    const { selectedCityId } = useCountryAndCity()
     const search = reactive({
-
+      city_id: selectedCityId,
     })
     const stadiums = ref([]);
 
     onMounted(async () => {
-      const { data: {data: stadiumItems, meta}} = await paginateStadiums();
+      const { data: {data: stadiumItems, meta}} = await paginateStadiums(search);
       setPagination(meta)
       stadiums.value = stadiumItems
       setLoaded()
@@ -137,7 +136,6 @@ export default {
     const onCurrentPageUpdated = (page) => currentPage.value = page
 
     return {
-      countries,
       search,
       stadiums,
       loading,

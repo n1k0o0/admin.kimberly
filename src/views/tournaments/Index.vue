@@ -93,17 +93,18 @@
 import { onMounted, reactive, ref, watch } from "vue";
 import { useLoadingState } from "@/composables/common/useLoadingState.js";
 import usePagination from "@/composables/common/usePagination";
-import { useStore } from "vuex";
 import { paginateTournaments, removeTournament } from "@/services/tournaments/tournaments.js";
 import { getPrintableTournamentType } from "@/services/tournaments/Tournament.js";
+import useCountryAndCity from "@/composables/useCountryAndCity.js";
 
 export default {
   name: "Index",
   setup() {
     const { loading, setLoaded, setLoading } = useLoadingState(true);
     const { pagination, setPagination, currentPage } = usePagination();
+    const { selectedCityId } = useCountryAndCity();
     const search = reactive({
-
+      city_id: selectedCityId,
     });
     const tournaments = ref([]);
 

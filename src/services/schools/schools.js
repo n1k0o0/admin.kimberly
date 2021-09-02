@@ -34,7 +34,3 @@ export function updateSchool(id, fields) {
 export function removeSchool(id) {
   return api.delete(`${ ENDPOINT }/${ id }`);
 }
-
-export function getSchools() {
-
-}

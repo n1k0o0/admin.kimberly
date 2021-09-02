@@ -1,5 +1,5 @@
-import api from "../api";
-import { cleanFalsyFields } from "../../helpers";
+import api from "@/services/api.js";
+import { cleanFalsyFields } from "@/helpers.js";
 
 const ENDPOINT = '/stadiums'
 

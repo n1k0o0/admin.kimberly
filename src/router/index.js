@@ -19,8 +19,8 @@ const routes = [
   },
   { path: "/internal-users", name: 'internal-users', component: () => import('../views/internal_users/Index.vue') },
 
-  { path: '/stadiums/:id', name: 'stadiums-edit', component: () => import('../views/stadiums/Edit.vue') },
-  { path: '/stadiums/create', name: 'stadiums-create', component: () => import('../views/stadiums/Create.vue') },
+  { path: '/stadiums/:id', name: 'stadiums-edit', component: () => import('@/views/stadiums/Edit.vue') },
+  { path: '/stadiums/create', name: 'stadiums-create', component: () => import('@/views/stadiums/Create.vue') },
   { path: '/stadiums', name: 'stadiums', component: () => import('../views/stadiums/Index.vue') },
 
   { path: "/leagues/:id", name: 'leagues-edit', component: () => import('../views/leagues/Edit.vue') },
@@ -28,12 +28,8 @@ const routes = [
   { path: "/leagues", name: 'leagues', component: () => import('../views/leagues/Index.vue') },
 
   { path: "/tournaments/:id", name: 'tournaments-edit', component: () => import('../views/tournaments/Edit.vue') },
-  {
-    path: "/tournaments/create",
-    name: 'tournaments-create',
-    component: () => import('../views/tournaments/Create.vue')
-  },
-  { path: "/tournaments", name: 'tournaments', component: () => import('../views/tournaments/Index.vue') },
+  { path: "/tournaments/create", name: 'tournaments-create', component: () => import('@/views/tournaments/Create.vue') },
+  { path: "/tournaments", name: 'tournaments', component: () => import('@/views/tournaments/Index.vue') },
 
   { path: '/schools/:id', name: 'schools-edit', component: () => import('@/views/schools/Edit.vue') },
   { path: "/schools", name: 'schools', component: () => import('@/views/schools/Index.vue'), },

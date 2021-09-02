@@ -72,13 +72,11 @@
 </template>
 
 <script>
-import { useStore } from "vuex";
 import { useLoadingState } from "@/composables/common/useLoadingState";
 import usePagination from "@/composables/common/usePagination";
 import { computed, onMounted, reactive, ref, watch } from "vue";
 import LeagueAndDivisionSelectors from "@/components/common/LeagueAndDivisionSelectors.vue";
-import { paginateSchools } from "@/services/schools/schools.js";
-import { useRouter } from "vue-router";
+import { paginateSchools, removeSchool } from "@/services/schools/schools.js";
 import useCountryAndCity from "@/composables/useCountryAndCity.js";
 
 export default {
@@ -86,26 +84,23 @@ export default {
   components: { LeagueAndDivisionSelectors },
   emits: ['school-selected'],
   setup() {
-    const store = useStore();
-    const router = useRouter();
-    const { selectedCountryId, selectedCity, selectedCityId } = useCountryAndCity();
+    const { selectedCity, selectedCityId } = useCountryAndCity();
     const { loading, setLoaded, setLoading } = useLoadingState(true);
     const { pagination, setPagination, currentPage } = usePagination();
-    const availableCountries = computed(() => store.getters["general/GET_COUNTRIES"]);
     const availableLeagues = computed(() => selectedCity.value?.leagues);
     const schools = ref([]);
 
     const search = reactive({
       search: '',
-      country_id: selectedCountryId.value,
-      city_id: selectedCityId.value,
+      city_id: selectedCityId,
       league_id: null,
       division_id: null,
     });
 
     onMounted(async () => {
       try {
-        const { data: { data: schoolItems, meta } } = await paginateSchools();
+        setLoading();
+        const { data: { data: schoolItems, meta } } = await paginateSchools(search);
         setPagination(meta);
         schools.value = schoolItems;
       } catch (e) {
@@ -113,11 +108,21 @@ export default {
         setLoaded();
       }
     });
-
+    const onRemoveSchoolClicked = async (schoolId) => {
+      try {
+        setLoading();
+        await removeSchool(schoolId);
+        const { data: { data: schoolItems, meta } } = await paginateSchools(search, currentPage.value);
+        setPagination(meta);
+        schools.value = schoolItems;
+      } catch (e) {
+      } finally {
+        setLoaded();
+      }
+    };
     const onLeagueSelected = (league) => search.league_id = league.id;
     const onDivisionSelected = (division) => search.division_id = division.id;
     const onCurrentPageUpdated = (page) => currentPage.value = page;
-    const onRemoveSchoolClicked = (schoolId) => console.log(schoolId);
     watch([search, currentPage], async () => {
       setLoading();
       try {
@@ -133,7 +138,6 @@ export default {
     return {
       search,
       loading,
-      availableCountries,
       availableLeagues,
       schools,
       pagination,
