@@ -15,6 +15,7 @@
   />
   <edit-team
     :visible="showEditTeamDialog"
+    :leagues="availableLeagues"
     :team="selectedTeam"
     @close="showEditTeamDialog = false"
     @team-edited="handleTeamEdited"
@@ -32,6 +33,10 @@ export default {
   name: "Teams",
   components: { CreateTeam, EditTeam, TeamsTable },
   props: {
+    league: {
+      type: Array,
+      default: () => [],
+    },
     teams: {
       type: Array,
       default: () => [],
@@ -46,7 +51,6 @@ export default {
 
     const selectedTeam = ref(null);
     const handleCreateTeamClicked = (team) => {
-      console.log(team);
       emit('create-team', team);
       showCreateTeamDialog.value = false;
     };

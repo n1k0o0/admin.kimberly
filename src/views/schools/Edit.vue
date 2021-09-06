@@ -68,11 +68,11 @@
         <el-divider content-position="left">
           <span class="d-block h4">Социальные сети</span>
         </el-divider>
-        <social-links-list
-          :social-links="school.social_links"
-          :edit-social-link-clicked="handleEditSocialLinkClicked"
-          :remove-social-link-clicked="handleRemoveSocialLinkClicked"
-        />
+<!--        <social-links-list-->
+<!--          :social-links="school.social_links"-->
+<!--          :edit-social-link-clicked="handleEditSocialLinkClicked"-->
+<!--          :remove-social-link-clicked="handleRemoveSocialLinkClicked"-->
+<!--        />-->
       </el-col>
     </el-row>
     <el-row class="mb-5">
@@ -117,12 +117,13 @@ import { useRoute } from "vue-router";
 import { useLoadingState } from "@/composables/common/useLoadingState.js";
 import { getSchool, updateSchool, uploadSchoolAvatar } from "@/services/schools/schools.js";
 import { getPrintableSchoolStatus } from "@/services/schools/School.js";
-import { createTeam, removeTeam } from "@/services/schools/teams/teams.js";
-import { createCoach, removeCoach } from "@/services/schools/coaches/coaches.js";
+import { createTeam, removeTeam, updateTeam } from "@/services/schools/teams/teams.js";
+import { createCoach, removeCoach, updateCoach } from "@/services/schools/coaches/coaches.js";
 import useCountryAndCity from "@/composables/useCountryAndCity.js";
 import SingleImageUploader from "@/components/common/SingleImageUploader.vue";
 import Coaches from "@/components/schools/coaches/Coaches.vue";
 import Teams from "@/components/schools/teams/Teams.vue";
+import { removeInArray, replaceInArray } from "@/helpers.js";
 
 export default {
   name: "Edit",
@@ -187,18 +188,6 @@ export default {
     const onSchoolEmailChanged = () => updateSchoolFields({ email: school.value.email });
     const onSchoolBranchCountChanged = () => updateSchoolFields({ branch_count: school.value.branch_count });
 
-    const handleTeamCreated = async (team) => {
-      try {
-        setLoading();
-        const { data } = await createTeam(schoolId, team);
-        school.value.teams.push(data);
-      } catch (e) {
-        console.log(e);
-      } finally {
-        setLoaded();
-      }
-    };
-
     const handleAvatarRemoved = async (file) => {
       school.value.avatar = null;
     };
@@ -222,13 +211,35 @@ export default {
 
     }
 
-    const handleTeamEdited = async (team) => {
+    const handleTeamCreated = async (team) => {
+      try {
+        setLoading();
+        const { data } = await createTeam(schoolId, team);
+        school.value.teams.push(data);
+      } catch (e) {
+        console.log(e);
+      } finally {
+        setLoaded();
+      }
+    };
 
+    const handleTeamEdited = async (team) => {
+      try {
+        setLoading();
+        const { data } = await updateTeam(team.value.id, team.value);
+        replaceInArray(school.value.teams, (teamItem) => teamItem.id === team.value.id, data);
+      } catch (e) {
+        console.log(e);
+      } finally {
+        setLoaded();
+      }
     }
+
     const handleTeamRemoved = async (team) => {
       try {
         setLoading();
         await removeTeam(team.id);
+        removeInArray(school.value.teams, (teamItem) => teamItem.id === team.id);
       } catch (e) {
         console.log(e);
       } finally {
@@ -251,19 +262,20 @@ export default {
     const handleCoachEdited = async (coach) => {
       try {
         setLoading();
-        const { data } = await updateCoach(coach.id, coach);
-        school.value.coaches.push(data);
+        const { data } = await updateCoach(coach.value.id, coach.value);
+        replaceInArray(school.value.coaches, (coachItem) => coachItem.id === coach.value.id, data);
       } catch (e) {
         console.log(e);
       } finally {
         setLoaded();
       }
     }
+
     const handleCoachRemoved = async (coach) => {
       try {
         setLoading();
-        const { data } = await removeCoach(coach.id);
-        school.value.coaches.push(data);
+        await removeCoach(coach.id);
+        removeInArray(school.value.coaches, (coachItem) => coachItem.id === coach.id);
       } catch (e) {
         console.log(e);
       } finally {

@@ -14,5 +14,5 @@ export function removeTeam(team_id) {
 }
 
 export function updateTeam(team_id, fields) {
-
+  return api.put(`${ ENDPOINT }/${ team_id }`, fields);
 }

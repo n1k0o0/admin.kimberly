@@ -52,7 +52,7 @@ export default {
     }
 
     const handleRemoveCoachClicked = (coach) => emit('remove-coach', coach);
-    const handleCoachEdited = (coach) => emit('remove-coach', coach);
+    const handleCoachEdited = (coach) => emit('edit-coach', coach);
 
     return {
       selectedCoach,

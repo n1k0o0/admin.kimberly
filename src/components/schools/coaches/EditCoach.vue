@@ -3,6 +3,7 @@
     :destroy-on-close="true"
     :model-value="visible"
     :width="'30%'"
+    :before-close="handleClose"
     title="Редактирование тренера"
   >
     <el-row>
@@ -30,14 +31,14 @@
         <el-button
           type="primary"
           @click="handleCoachEditClicked"
-        >Создать</el-button>
+        >Обновить</el-button>
       </span>
     </template>
   </el-dialog>
 </template>
 
 <script>
-import { reactive, ref } from "vue";
+import { ref, watch } from "vue";
 
 export default {
   name: "EditCoach",
@@ -48,17 +49,23 @@ export default {
     },
     coach: {
       type: Object,
-      required: true,
+      default: null,
     }
   },
   emits: ['close', 'coach-edited'],
-  setup(props, {emit}) {
-    console.log(props.coach);
-    const editedCoach = ref(props.coach)
-    console.log(editedCoach.value);
-    const handleCoachEditClicked = () => console.log(editedCoach)
+  setup(props, { emit }) {
+    const editedCoach = ref({});
+    watch(() => props.coach, () => editedCoach.value = { ...props.coach });
+
+    const handleCoachEditClicked = () => {
+      emit('coach-edited', editedCoach);
+      handleClose();
+    };
+    const handleClose = () => emit('close');
+
     return {
       editedCoach,
+      handleClose,
       handleCoachEditClicked,
     };
   }

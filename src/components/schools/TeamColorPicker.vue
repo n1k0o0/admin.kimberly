@@ -22,9 +22,15 @@ import { ref } from "vue";
 
 export default {
   name: "TeamColorPicker",
+  props: {
+    colorId: {
+      type: Number,
+      default: null,
+    }
+  },
   emits: ['color-selected'],
-  setup(_, { emit }) {
-    const selectedColorId = ref(null);
+  setup(props, { emit }) {
+    const selectedColorId = ref(props.colorId);
     const colors = ref([
       {
         id: 1,

@@ -14,8 +14,22 @@ export function debounce(func, timeout) {
 
 }
 
-export function objectToFormData(obj) {
+export function objectToFormData(obj, fillable=[]) {
   const formData = new FormData;
 
   return formData;
+}
+
+export function replaceInArray(arr, search, replaceBy) {
+  const replacedIndex = arr.findIndex(search);
+  if (replacedIndex !== -1) {
+    arr.splice(replacedIndex, 1, replaceBy);
+  }
+}
+
+export function removeInArray(arr, search) {
+  const replacedIndex = arr.findIndex(search);
+  if (replacedIndex !== -1) {
+    arr.splice(replacedIndex, 1);
+  }
 }

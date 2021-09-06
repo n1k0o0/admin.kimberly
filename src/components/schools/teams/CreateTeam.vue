@@ -4,6 +4,7 @@
     :model-value="visible"
     :width="'30%'"
     title="Создание команды"
+    :before-close="handleClose"
   >
     <el-row>
       <el-col :span="24">
@@ -32,7 +33,7 @@
 </template>
 
 <script>
-import { reactive } from "vue";
+import { ref } from "vue";
 import LeagueAndDivisionSelectors from "@/components/common/LeagueAndDivisionSelectors.vue";
 import TeamColorPicker from "@/components/schools/TeamColorPicker.vue";
 
@@ -49,21 +50,36 @@ export default {
     },
     leagues: {
       type: Array,
-      default: () => []
+      default: () => [],
     },
   },
   emits: ['team-created', 'close'],
   setup(_, { emit }) {
-    const team = reactive({
+    const team = ref({
       league_id: null,
       division_id: null,
       color_id: null,
     });
 
-    const onLeagueSelected = (league) => team.league_id = league.id;
-    const onDivisionSelected = (division) => team.division_id = division?.id ?? null;
-    const onTeamColorClicked = (color) => team.color_id = color.id;
-    const onCreateTeamClicked = () => emit('team-created', team);
+    const onLeagueSelected = (league) => team.value.league_id = league.id;
+    const onDivisionSelected = (division) => team.value.division_id = division?.id ?? null;
+    const onTeamColorClicked = (color) => team.value.color_id = color.id;
+    const onCreateTeamClicked = () => {
+      emit('team-created', team.value);
+      clearFields();
+    };
+    const clearFields = () => {
+      team.value = {
+        league_id: null,
+        division_id: null,
+        color_id: null,
+      };
+    }
+
+    const handleClose = () => {
+      clearFields();
+      emit('close');
+    }
 
     return {
       team,
@@ -71,6 +87,7 @@ export default {
       onDivisionSelected,
       onTeamColorClicked,
       onCreateTeamClicked,
+      handleClose,
     };
   }
 };

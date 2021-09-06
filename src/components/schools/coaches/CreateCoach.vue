@@ -4,6 +4,7 @@
     :model-value="visible"
     :width="'30%'"
     title="Создание тренера"
+    :before-close="handleClose"
   >
     <el-row>
       <el-col :span="24">
@@ -49,16 +50,34 @@ export default {
   },
   emits: ['coach-created', 'close'],
   setup(_, { emit }) {
-    const coach = reactive({
+    const coach = ref({
       last_name: '',
       first_name: '',
       patronymic: '',
     });
 
-    const onCreateCoachClicked = () => emit('coach-created', coach);
+    const clearFields = () => {
+      coach.value = {
+        last_name: '',
+        first_name: '',
+        patronymic: '',
+      };
+    };
+
+    const onCreateCoachClicked = () => {
+      emit('coach-created', coach.value);
+      clearFields();
+    };
+
+    const handleClose = () => {
+      clearFields();
+      emit('close');
+    };
+
     return {
       coach,
       onCreateCoachClicked,
+      handleClose,
     };
   }
 };
