@@ -31,7 +31,7 @@
           @click="handleSocialLinkEditClicked(scope.row)"
         />
         <el-popconfirm
-          title="Вы действительно хотите удалить команду?"
+          title="Вы действительно хотите удалить ссылку?"
           cancel-button-text="Отмена"
           confirm-button-text="Да"
           @confirm="handleSocialLinkRemoveClicked(scope.row)"
@@ -52,23 +52,23 @@
 import { getPrintableSocialLinkService } from "@/services/common/social-links/SocialLink.js";
 
 export default {
-  name: "SocialLinksList",
+  name: "SocialLinksTable",
   props: {
     socialLinks: {
       type: Array,
       default: () => [],
     }
   },
-  emits: ['edit-social-link-clicked', 'remove-social-link-clicked'],
-  setup(props, {emit}) {
-    console.log(props.socialLinks);
-    const handleSocialLinkEditClicked = (socialLink) => emit('edit-social-link-clicked', socialLink);
-    const handleSocialLinkRemoveClicked = (socialLink) => emit('remove-social-link-clicked', socialLink);
+  emits: ['edit-social-link', 'remove-social-link'],
+  setup(_, {emit}) {
+    const handleSocialLinkEditClicked = (socialLink) => emit('edit-social-link', socialLink);
+    const handleSocialLinkRemoveClicked = (socialLink) => emit('remove-social-link', socialLink);
+
     return {
       getPrintableSocialLinkService,
       handleSocialLinkEditClicked,
       handleSocialLinkRemoveClicked,
-    }
+    };
   }
 };
 </script>

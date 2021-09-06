@@ -51,8 +51,8 @@ export default {
       showEditCoachDialog.value = true;
     }
 
-    const handleRemoveCoachClicked = (coach) => emit('remove-coach', coach);
     const handleCoachEdited = (coach) => emit('edit-coach', coach);
+    const handleRemoveCoachClicked = (coach) => emit('remove-coach', coach);
 
     return {
       selectedCoach,

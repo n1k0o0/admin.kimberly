@@ -22,7 +22,7 @@ export default {
   name: "SingleImageUploader",
   props: {
     image: {
-      type: Array,
+      type: Object,
       default: null,
     },
     hideUploadIcon: {

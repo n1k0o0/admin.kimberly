@@ -56,7 +56,7 @@
           <span class="d-block h4">Аватар</span>
           <single-image-uploader
             :image="school.avatar"
-            :hide-upload-icon="school.avatar"
+            :hide-upload-icon="!!school.avatar"
             :on-remove="handleAvatarRemoved"
             :on-change="handleAvatarChanged"
           />
@@ -68,11 +68,12 @@
         <el-divider content-position="left">
           <span class="d-block h4">Социальные сети</span>
         </el-divider>
-<!--        <social-links-list-->
-<!--          :social-links="school.social_links"-->
-<!--          :edit-social-link-clicked="handleEditSocialLinkClicked"-->
-<!--          :remove-social-link-clicked="handleRemoveSocialLinkClicked"-->
-<!--        />-->
+        <social-links
+          :social-links="school.social_links"
+          @create-social-link="handleSocialLinkCreated"
+          @edit-social-link="handleSocialLinkEdited"
+          @remove-social-link="handleSocialLinkRemoved"
+        />
       </el-col>
     </el-row>
     <el-row class="mb-5">
@@ -123,13 +124,16 @@ import useCountryAndCity from "@/composables/useCountryAndCity.js";
 import SingleImageUploader from "@/components/common/SingleImageUploader.vue";
 import Coaches from "@/components/schools/coaches/Coaches.vue";
 import Teams from "@/components/schools/teams/Teams.vue";
+import SocialLinks from "@/components/schools/social_links/SocialLinks.vue";
 import { removeInArray, replaceInArray } from "@/helpers.js";
+import { createSocialLink, removeSocialLink, updateSocialLink } from "@/services/schools/social-links/socialLinks.js";
 
 export default {
   name: "Edit",
   components: {
     Teams,
     Coaches,
+    SocialLinks,
     SingleImageUploader,
   },
   setup() {
@@ -195,7 +199,7 @@ export default {
     const handleAvatarChanged = async (file, fileList) => {
       try {
         setLoading();
-        const { data } = await uploadSchoolAvatar(schoolId, file.raw);
+        await uploadSchoolAvatar(schoolId, file.raw);
         school.value.avatar = file;
       } catch (e) {
         console.log(e);
@@ -204,12 +208,41 @@ export default {
       }
     };
 
-    const handleSocialLinkEdited = (socialLink) => {
+    const handleSocialLinkCreated = async (socialLink) => {
+      try {
+        setLoading();
+        const { data } = await createSocialLink(schoolId, socialLink);
+        school.value.social_links.push(data);
+      } catch (e) {
+        console.log(e);
+      } finally {
+        setLoaded();
+      }
+    };
 
-    }
+    const handleSocialLinkEdited = async (socialLink) => {
+      try {
+        setLoading();
+        const { data } = await updateSocialLink(socialLink.value.id, socialLink.value);
+        replaceInArray(school.value.social_links, (socialLinkItem) => socialLinkItem.id === socialLink.value.id, data);
+      } catch (e) {
+        console.log(e);
+      } finally {
+        setLoaded();
+      }
+    };
+
     const handleSocialLinkRemoved = async (socialLink) => {
-
-    }
+      try {
+        setLoading();
+        await removeSocialLink(socialLink.id);
+        removeInArray(school.value.social_links, (socialLinkItem) => socialLinkItem.id === socialLink.id);
+      } catch (e) {
+        console.log(e);
+      } finally {
+        setLoaded();
+      }
+    };
 
     const handleTeamCreated = async (team) => {
       try {
@@ -297,12 +330,13 @@ export default {
       onSchoolEmailChanged,
       onSchoolCountrySelected,
       onSchoolCitySelected,
-      handleTeamCreated,
-      handleCoachCreated,
+      handleSocialLinkCreated,
       handleSocialLinkEdited,
       handleSocialLinkRemoved,
+      handleTeamCreated,
       handleTeamEdited,
       handleTeamRemoved,
+      handleCoachCreated,
       handleCoachEdited,
       handleCoachRemoved,
     };
