@@ -35,7 +35,7 @@
 <script>
 import { ref } from "vue";
 import LeagueAndDivisionSelectors from "@/components/common/LeagueAndDivisionSelectors.vue";
-import TeamColorPicker from "@/components/schools/TeamColorPicker.vue";
+import TeamColorPicker from "@/components/common/TeamColorPicker.vue";
 
 export default {
   name: "CreateTeam",

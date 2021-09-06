@@ -10,7 +10,7 @@
       <el-option
         v-for="color in colors"
         :key="color.id"
-        :label="color.color"
+        :label="color.name"
         :value="color.id"
       />
     </el-select>
@@ -35,16 +35,19 @@ export default {
       {
         id: 1,
         color: 'red',
+        name: 'красный',
         rgb: '#ff0000'
       },
       {
         id: 2,
         color: 'green',
+        name: 'зеленый',
         rgb: '#00ff00'
       },
       {
         id: 3,
         color: 'blue',
+        name: 'синий',
         rgb: '#0000ff'
       },
     ]);
