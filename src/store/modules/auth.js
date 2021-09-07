@@ -40,7 +40,7 @@ const mutations = {
 const actions = {
 
   async GET_AUTH_ME({ commit, state }, payload) {
-    const response = await api.post('/auth/me');
+    const response = await api.post('/internal_users/me');
     if (response) {
       commit('SET_AUTH', response.data.user);
       commit('general/SET_COUNTRIES', response.data.countries, { root: true });
@@ -49,13 +49,17 @@ const actions = {
 
   async LOGIN({ commit, state }, payload) {
     await api.get(import.meta.env.VITE_BASE_API_URL + '/sanctum/csrf-cookie');
-    await api.post(import.meta.env.VITE_BASE_API_URL + '/login', payload).then(() => {
+    await api.post(import.meta.env.VITE_BASE_API_URL + '/api/internal_users/issue-token', payload).then(({ data }) => {
+      localStorage.setItem('token', data.access_token);
       window.location.href = '/';
     });
   },
 
   async LOGOUT({ commit, state }) {
-    await api.post(import.meta.env.VITE_BASE_API_URL + '/logout').then(() => {
+    await api.post(import.meta.env.VITE_BASE_API_URL + '/api/internal_users/revoke-token').then(() => {
+      localStorage.removeItem('token');
+      localStorage.removeItem('selected_country');
+      localStorage.removeItem('selected_city');
       window.location.href = '/auth';
     });
   },
