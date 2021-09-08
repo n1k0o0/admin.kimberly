@@ -49,14 +49,14 @@ const actions = {
 
   async LOGIN({ commit, state }, payload) {
     await api.get(import.meta.env.VITE_BASE_API_URL + '/sanctum/csrf-cookie');
-    await api.post(import.meta.env.VITE_BASE_API_URL + '/api/internal_users/issue-token', payload).then(({ data }) => {
+    await api.post('internal_users/issue-token', payload).then(({ data }) => {
       localStorage.setItem('token', data.access_token);
       window.location.href = '/';
     });
   },
 
   async LOGOUT({ commit, state }) {
-    await api.post(import.meta.env.VITE_BASE_API_URL + '/api/internal_users/revoke-token').then(() => {
+    await api.post('internal_users/revoke-token').then(() => {
       localStorage.removeItem('token');
       localStorage.removeItem('selected_country');
       localStorage.removeItem('selected_city');
