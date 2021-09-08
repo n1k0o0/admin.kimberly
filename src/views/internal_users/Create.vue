@@ -7,8 +7,8 @@
       <el-col :span="6">
         <span>Тип пользователя</span>
         <el-select
-          class="d-block"
           v-model="newUser.type"
+          class="d-block"
           placeholder="Тип пользователя"
         >
           <el-option
@@ -16,7 +16,7 @@
             :key="key"
             :value="key"
             :label="type"
-          ></el-option>
+          />
         </el-select>
       </el-col>
     </el-row>
@@ -24,60 +24,62 @@
       <el-col :span="6">
         <span>Придумайте логин</span>
         <el-input
-          placeholder="Логин"
           v-model="newUser.login"
-        ></el-input>
+          placeholder="Логин"
+        />
       </el-col>
     </el-row>
     <el-row class="my-4">
       <el-col :span="6">
         <span>Придумайте пароль</span>
         <el-input
-          placeholder="Пароль"
           v-model="newUser.password"
+          placeholder="Пароль"
           type="password"
-        ></el-input>
+        />
       </el-col>
     </el-row>
     <el-row class="my-4">
       <el-col :span="6">
         <span>Укажите фамилию</span>
         <el-input
-          placeholder="Фамилия"
           v-model="newUser.last_name"
-        ></el-input>
+          placeholder="Фамилия"
+        />
       </el-col>
     </el-row>
     <el-row class="my-4">
       <el-col :span="6">
         <span>Укажите имя</span>
         <el-input
-          placeholder="Имя"
           v-model="newUser.first_name"
-        ></el-input>
+          placeholder="Имя"
+        />
       </el-col>
     </el-row>
     <el-row class="my-4">
       <el-col :span="6">
         <span>Укажите отчество</span>
         <el-input
+          v-model="newUser.patronymic"
           placeholder="Отчество"
-          v-model="newUser.middle_name"
-        ></el-input>
+        />
       </el-col>
     </el-row>
     <el-row class="my-4">
       <el-col :span="6">
         <span>Укажите телефонный номер</span>
         <el-input
-          placeholder="Телефонный номер"
           v-model="newUser.phone"
-        ></el-input>
+          placeholder="Телефонный номер"
+        />
       </el-col>
     </el-row>
     <el-row class="my-3 flex-row-reverse">
       <el-button-group>
-        <el-button @click="$router.push({name: 'internal-users'})">Отменить</el-button>
+        <el-button @click="$router.push({name: 'internal-users'})">
+          Отменить
+        </el-button>
         <el-button
           type="primary"
           @click="onCreateInternalUserClicked"
@@ -91,50 +93,48 @@
 
 <script>
 import { reactive } from "vue";
-import { getPrintableInternalUserTypes } from "../../services/internal-users/InternalUser";
-import { createInternalUser } from "../../services/internal-users/internalUsers";
-import { useLoadingState } from "../../composables/common/useLoadingState";
-import { parseErrors } from "../../helpers";
+import { getPrintableInternalUserTypes } from "@/services/internal-users/InternalUser.js";
+import { createInternalUser } from "@/services/internal-users/internalUsers.js";
+import { useLoadingState } from "@/composables/common/useLoadingState.js";
+import { parseErrors } from "@/helpers.js";
 import { useRouter } from "vue-router";
 
 export default {
   name: "Create",
   setup() {
-    const internalUserTypes = getPrintableInternalUserTypes()
-    const { loading, setLoaded, setLoading } = useLoadingState(false)
+    const internalUserTypes = getPrintableInternalUserTypes();
+    const { loading, setLoaded, setLoading } = useLoadingState(false);
     const newUser = reactive({
       login: '',
       password: '',
       first_name: '',
       last_name: '',
-      middle_name: '',
+      patronymic: '',
       phone: '',
       type: null,
-    })
-    const router = useRouter()
+    });
+    const router = useRouter();
     const onCreateInternalUserClicked = async () => {
       try {
-        setLoading()
-        const { data } = await createInternalUser(newUser)
-        await router.push({name: 'internal-users'})
+        setLoading();
+        const { data } = await createInternalUser(newUser);
+        await router.push({ name: 'internal-users' });
       } catch (e) {
-        const errors = parseErrors(e.response.data.errors)
-        console.log(errors)
+        const errors = parseErrors(e.response.data.errors);
+        console.log(errors);
+      } finally {
+        setLoaded();
       }
-      finally {
-        setLoaded()
-      }
-
-    }
+    };
 
     return {
       newUser,
       internalUserTypes,
       onCreateInternalUserClicked,
       loading,
-    }
+    };
   },
-}
+};
 </script>
 
 <style scoped>

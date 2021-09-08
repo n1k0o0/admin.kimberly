@@ -34,13 +34,24 @@ const routes = [
   { path: '/schools/:id', name: 'schools-edit', component: () => import('@/views/schools/Edit.vue') },
   { path: "/schools", name: 'schools', component: () => import('@/views/schools/Index.vue'), },
 
+  {
+    path: "/users/:id",
+    name: 'users-edit',
+    component: () => import('@/views/users/Edit.vue')
+  },
+  {
+    path: "/users/create",
+    name: 'users-create',
+    component: () => import('@/views/users/Create.vue')
+  },
+  { path: "/users", name: 'users', component: () => import('@/views/users/Index.vue') },
+
   { path: "/tables", name: 'tables', component: Dashboard },
   { path: "/calendar", name: 'calendar', component: Dashboard },
   { path: "/results", name: 'results', component: Dashboard },
   { path: "/players", name: 'players', component: Dashboard },
   { path: "/statistics", name: 'statistics', component: Dashboard },
   { path: "/notifications", name: 'notifications', component: Dashboard },
-  { path: "/users", name: 'users', component: Dashboard },
 ];
 
 const router = createRouter({

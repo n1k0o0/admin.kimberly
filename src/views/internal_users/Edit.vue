@@ -7,8 +7,8 @@
       <el-col :span="6">
         <span>Тип пользователя</span>
         <el-select
-          class="d-block"
           v-model="user.type"
+          class="d-block"
           placeholder="Тип пользователя"
         >
           <el-option
@@ -16,7 +16,7 @@
             :key="key"
             :value="key"
             :label="type"
-          ></el-option>
+          />
         </el-select>
       </el-col>
     </el-row>
@@ -24,60 +24,62 @@
       <el-col :span="6">
         <span>Логин</span>
         <el-input
-          placeholder="Логин"
           v-model="user.login"
-        ></el-input>
+          placeholder="Логин"
+        />
       </el-col>
     </el-row>
     <el-row class="my-4">
       <el-col :span="6">
         <span>Фамилия</span>
         <el-input
-          placeholder="Фамилия"
           v-model="user.last_name"
-        ></el-input>
+          placeholder="Фамилия"
+        />
       </el-col>
     </el-row>
     <el-row class="my-4">
       <el-col :span="6">
         <span>Имя</span>
         <el-input
-          placeholder="Имя"
           v-model="user.first_name"
-        ></el-input>
+          placeholder="Имя"
+        />
       </el-col>
     </el-row>
     <el-row class="my-4">
       <el-col :span="6">
         <span>Отчество</span>
         <el-input
+          v-model="user.patronymic"
           placeholder="Отчество"
-          v-model="user.middle_name"
-        ></el-input>
+        />
       </el-col>
     </el-row>
     <el-row class="my-4">
       <el-col :span="6">
         <span>Телефонный номер</span>
         <el-input
-          placeholder="Телефонный номер"
           v-model="user.phone"
-        ></el-input>
+          placeholder="Телефонный номер"
+        />
       </el-col>
     </el-row>
     <el-row class="my-4">
       <el-col :span="6">
         <span>Новый пароль</span>
         <el-input
-          placeholder="Пароль"
           v-model="newPassword"
+          placeholder="Пароль"
           type="password"
-        ></el-input>
+        />
       </el-col>
     </el-row>
     <el-row class="my-3 flex-row-reverse">
       <el-button-group>
-        <el-button @click="$router.push({name: 'internal-users'})">Отменить</el-button>
+        <el-button @click="$router.push({name: 'internal-users'})">
+          Отменить
+        </el-button>
         <el-button
           type="primary"
           @click="onUpdateInternalUserClicked"
@@ -90,45 +92,45 @@
 </template>
 
 <script>
-import { getInternalUser, paginateInternalUsers, updateInternalUser } from "../../services/internal-users/internalUsers";
-import { onMounted, reactive, ref } from "vue";
+import { onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { getPrintableInternalUserTypes } from "../../services/internal-users/InternalUser";
-import { useLoadingState } from "../../composables/common/useLoadingState";
+import { getInternalUser, updateInternalUser } from "@/services/internal-users/internalUsers.js";
+import { getPrintableInternalUserTypes } from "@/services/internal-users/InternalUser.js";
+import { useLoadingState } from "@/composables/common/useLoadingState.js";
 
 export default {
   name: "Edit",
   setup() {
-    let internalUserId = null
+    let internalUserId = null;
     let user = ref({});
     const newPassword = ref('');
-    const route = useRoute()
-    const router = useRouter()
+    const route = useRoute();
+    const router = useRouter();
 
-    const { loading, setLoaded, setLoading } = useLoadingState(false)
+    const { loading, setLoaded, setLoading } = useLoadingState(false);
     onMounted(async () => {
       try {
-        internalUserId = route.params.id
-        setLoading()
-        const {data} = await getInternalUser(internalUserId)
-        user.value = data
+        internalUserId = route.params.id;
+        setLoading();
+        const { data } = await getInternalUser(internalUserId);
+        user.value = data;
       } catch (e) {
       } finally {
-        setLoaded()
+        setLoaded();
       }
-    })
+    });
     const onUpdateInternalUserClicked = async () => {
       try {
-        setLoading()
-        await updateInternalUser(internalUserId, user.value)
-        await router.push({ name: 'internal-users' })
+        setLoading();
+        await updateInternalUser(internalUserId, user.value);
+        await router.push({ name: 'internal-users' });
       } catch (e) {
       } finally {
-        setLoaded()
+        setLoaded();
       }
-    }
+    };
 
-    const internalUserTypes = getPrintableInternalUserTypes()
+    const internalUserTypes = getPrintableInternalUserTypes();
 
     return {
       newPassword,
@@ -136,9 +138,9 @@ export default {
       user,
       onUpdateInternalUserClicked,
       internalUserTypes,
-    }
+    };
   },
-}
+};
 </script>
 
 <style scoped>

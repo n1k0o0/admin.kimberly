@@ -1,7 +1,9 @@
 import api from "../api";
-import { cleanFalsyFields } from "../../helpers";
+import { cleanFalsyFields } from "@/helpers.js";
 
 const ENDPOINT = '/internal_users'
+
+const fillable = [];
 
 export async function paginateInternalUsers(search=null, page = 1, limit = 10) {
   let params = {
