@@ -1,7 +1,9 @@
-import api from "../api";
-import { cleanFalsyFields } from "../../helpers";
+import api from "@/services/api.js";
+import { cleanFalsyFields } from "@/helpers.js";
 
 const ENDPOINT = '/tournaments'
+
+const fillable = [];
 
 export function paginateTournaments(search, page = 1, limit = 10) {
   let params = {
@@ -22,14 +24,18 @@ export function createTournament(fields) {
   return api.post(`${ENDPOINT}`, fields)
 }
 
-export function getTournament(id) {
-  return api.get(`${ENDPOINT}/${id}`)
+export function getTournament(tournamentId) {
+  return api.get(`${ENDPOINT}/${tournamentId}`)
 }
 
-export function updateTournament(id, fields) {
-  return api.put(`${ENDPOINT}/${id}`, cleanFalsyFields(fields))
+export function updateTournament(tournamentId, fields) {
+  return api.put(`${ENDPOINT}/${tournamentId}`, cleanFalsyFields(fields))
 }
 
-export function removeTournament(id) {
-  return api.delete(`${ENDPOINT}/${id}`)
+export function removeTournament(tournamentId) {
+  return api.delete(`${ENDPOINT}/${tournamentId}`)
+}
+
+export function updateTournamentStatus(tournamentId, status) {
+  return api.put(`${ ENDPOINT }/${ tournamentId }/status`, cleanFalsyFields({status}, fillable));
 }

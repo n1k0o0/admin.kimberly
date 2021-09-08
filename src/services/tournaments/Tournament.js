@@ -1,21 +1,22 @@
-export const TournamentTypes = {
-  admin: 'admin',
-  jury: 'jury',
-}
+export const TournamentStatuses = {
+  not_started: 'not_started',
+  current: 'current',
+  archived: 'archived',
+};
 
-export function getPrintableTournaments() {
+export function getPrintableTournamentStatuses() {
   return {
-    NOT_STARTED: 'Не начат',
-    CURRENT: 'Текущий',
-    STARTED: 'Архивирован',
-  }
+    not_started: 'Не начат',
+    current: 'Текущий',
+    archived: 'Архивирован',
+  };
 }
 
-export function getPrintableTournamentType(type) {
-  const types = getPrintableTournaments()
+export function getPrintableTournamentStatus(type) {
+  const types = getPrintableTournamentStatuses();
   if (types.hasOwnProperty(type)) {
-    return types[type]
+    return types[type];
   }
 
-  return ''
+  return '';
 }
