@@ -6,7 +6,7 @@
         :gutter="2"
         justify="space-between"
       >
-        <el-row/>
+        <el-row />
         <el-row>
           <el-select
             v-model="user.status"
@@ -106,14 +106,30 @@
         />
       </el-col>
     </el-row>
+    <el-divider content-position="left">
+      <span class="d-block h4">Пароль</span>
+    </el-divider>
     <el-row class="my-4">
       <el-col :span="6">
-        <span class="d-block h4">Новый пароль</span>
         <el-input
           v-model="newPassword"
-          placeholder="Пароль"
-          type="password"
+          placeholder="Новый пароль"
+          show-password
         />
+      </el-col>
+      <el-col :span="4">
+        <el-popconfirm
+          title="Обновить пароль?"
+          cancel-button-text="Отмена"
+          confirm-button-text="Да"
+          @confirm="handleUpdatePassword"
+        >
+          <template #reference>
+            <el-button>
+              Обновить пароль
+            </el-button>
+          </template>
+        </el-popconfirm>
       </el-col>
     </el-row>
     <el-row class="my-3 flex-row-reverse">
@@ -147,6 +163,8 @@ export default {
     const userStatuses = getPrintableUserStatuses();
     const userTypes = getPrintableUserTypes();
 
+    const newPassword = ref("");
+
     const { loading, setLoaded, setLoading } = useLoadingState(false);
     onMounted(async () => {
       try {
@@ -176,7 +194,7 @@ export default {
     const handleUserLastNameChanged = () => updateUserFields({ last_name: user.value.last_name });
     const handleUserPatronymicChanged = () => updateUserFields({ patronymic: user.value.patronymic });
     const handleUserStatusChanged = () => updateUserFields({ status: user.value.status });
-
+    const handleUpdatePassword = () => updateUserFields({ password: newPassword.value });
     const handleAvatarRemoved = async (file) => {
       user.value.avatar = null;
     };
@@ -194,6 +212,11 @@ export default {
     };
 
     return {
+      loading,
+      userTypes,
+      userStatuses,
+      user,
+      newPassword,
       handleAvatarRemoved,
       handleAvatarChanged,
       handleUserPhoneChanged,
@@ -202,10 +225,7 @@ export default {
       handleUserLastNameChanged,
       handleUserPatronymicChanged,
       handleUserStatusChanged,
-      loading,
-      user,
-      userTypes,
-      userStatuses,
+      handleUpdatePassword,
     };
   },
 };

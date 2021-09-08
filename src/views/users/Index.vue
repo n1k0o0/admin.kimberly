@@ -10,7 +10,7 @@
           <el-col :span="6">
             <el-input
               v-model="search.login"
-              placeholder="Логин"
+              placeholder="Email"
             />
           </el-col>
           <el-col :span="6">
@@ -59,6 +59,19 @@
         label="Полное имя"
         :prop="'full_name'"
       />
+      <el-table-column
+        label="Школа"
+      >
+        <template #default="scope">
+          <router-link
+            v-if="scope.row.school"
+            class="menu-link"
+            :to="`/schools/${scope.row.school.id}`"
+          >
+            Школа {{ scope.row.school.name }}
+          </router-link>
+        </template>
+      </el-table-column>
       <el-table-column
         label="Тип"
       >

@@ -38,8 +38,8 @@
               <el-option
                 v-for="country in countries"
                 :value="country.id"
-                :label="country.name"
                 :key="country.id"
+                :label="country.name"
               >
               </el-option>
             </el-select>
