@@ -1,12 +1,12 @@
 export const SchoolStatuses = {
-  MODERATION: 'MODERATION',
-  PUBLISHED: 'PUBLISHED',
+  moderation: 'moderation',
+  published: 'published',
 };
 
 export function getPrintableSchoolStatuses() {
   return {
-    MODERATION: 'На модерации',
-    PUBLISHED: 'Опубликована',
+    moderation: 'На модерации',
+    published: 'Опубликована',
   };
 }
 

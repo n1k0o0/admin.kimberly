@@ -46,3 +46,7 @@ export function uploadSchoolAvatar(schoolId, file) {
     }
   });
 }
+
+export function updateSchoolStatus(schoolId, status) {
+  return api.put(`${ ENDPOINT }/${ schoolId }/status`, cleanFalsyFields({status}));
+}

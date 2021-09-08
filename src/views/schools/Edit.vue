@@ -3,6 +3,30 @@
     v-loading="loading"
     class="schools-edit"
   >
+    <template #header>
+      <el-row
+        :gutter="2"
+        justify="space-between"
+      >
+        <el-row>
+          <span class="d-block h4">Редактирование школы</span>
+        </el-row>
+        <el-row v-if="school.status === SchoolStatuses.moderation">
+          <el-popconfirm
+            title="Опубликовать школу?"
+            cancel-button-text="Отмена"
+            confirm-button-text="Да"
+            @confirm="handlePublishSchoolClicked"
+          >
+            <template #reference>
+              <el-button type="primary">
+                Опубликовать
+              </el-button>
+            </template>
+          </el-popconfirm>
+        </el-row>
+      </el-row>
+    </template>
     <el-row>
       <el-col :span="12">
         <el-row class="mb-5">
@@ -116,8 +140,8 @@
 import { computed, onMounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import { useLoadingState } from "@/composables/common/useLoadingState.js";
-import { getSchool, updateSchool, uploadSchoolAvatar } from "@/services/schools/schools.js";
-import { getPrintableSchoolStatus } from "@/services/schools/School.js";
+import { getSchool, updateSchool, updateSchoolStatus, uploadSchoolAvatar } from "@/services/schools/schools.js";
+import { getPrintableSchoolStatus, SchoolStatuses } from "@/services/schools/School.js";
 import { createTeam, removeTeam, updateTeam } from "@/services/schools/teams/teams.js";
 import { createCoach, removeCoach, updateCoach } from "@/services/schools/coaches/coaches.js";
 import useCountryAndCity from "@/composables/useCountryAndCity.js";
@@ -266,7 +290,7 @@ export default {
       } finally {
         setLoaded();
       }
-    }
+    };
 
     const handleTeamRemoved = async (team) => {
       try {
@@ -278,7 +302,7 @@ export default {
       } finally {
         setLoaded();
       }
-    }
+    };
 
     const handleCoachCreated = async (coach) => {
       try {
@@ -302,7 +326,7 @@ export default {
       } finally {
         setLoaded();
       }
-    }
+    };
 
     const handleCoachRemoved = async (coach) => {
       try {
@@ -314,9 +338,22 @@ export default {
       } finally {
         setLoaded();
       }
-    }
+    };
+
+    const handlePublishSchoolClicked = async () => {
+      try {
+        setLoading();
+        await updateSchoolStatus(schoolId, SchoolStatuses.published);
+        school.value.status = 'published';
+      } catch (e) {
+        console.log(e);
+      } finally {
+        setLoaded();
+      }
+    };
 
     return {
+      SchoolStatuses,
       getPrintableSchoolStatus,
       availableLeagues,
       loading,
@@ -339,6 +376,7 @@ export default {
       handleCoachCreated,
       handleCoachEdited,
       handleCoachRemoved,
+      handlePublishSchoolClicked,
     };
   },
 };
