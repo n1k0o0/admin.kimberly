@@ -39,11 +39,6 @@ const routes = [
     name: 'users-edit',
     component: () => import('@/views/users/Edit.vue')
   },
-  {
-    path: "/users/create",
-    name: 'users-create',
-    component: () => import('@/views/users/Create.vue')
-  },
   { path: "/users", name: 'users', component: () => import('@/views/users/Index.vue') },
 
   { path: "/tables", name: 'tables', component: Dashboard },
