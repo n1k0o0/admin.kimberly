@@ -4,22 +4,52 @@ export function getFormData(object) {
   return formData;
 }
 
-export const cleanFalsyFields = (obj, onlyKeys=[]) => Object.fromEntries(Object.entries(obj).filter(([_, v]) => v || v === '' ));
+export const cleanFalsyFields = (obj, onlyKeys = []) => Object.fromEntries(Object.entries(obj).filter(([_, v]) => v || v === ''));
 
-export function parseErrors (errors, flatt=true) {
-  return errors
+export function parseErrors(errors, flatt = true) {
+  return errors;
 }
 
+/**
+ *
+ * @param func
+ * @param timeout
+ */
 export function debounce(func, timeout) {
 
 }
 
-export function objectToFormData(obj, fillable=[]) {
-  const formData = new FormData;
+/**
+ *
+ * @param {Object} obj
+ * @param {Array|null} fillable
+ * @returns {FormData}
+ */
+export function convertObjectToFormData(obj, fillable = null) {
+  const allowedKeys = fillable ? getAllowedKeysInObject(obj, fillable) : Object.keys(obj);
 
-  return formData;
+  return allowedKeys.reduce((formData, key) => {
+    formData.append(key, obj[key]);
+    return formData;
+  }, new FormData);
 }
 
+/**
+ *
+ * @param {Object} obj
+ * @param {Array} allowedKeys
+ * @returns {string[]}
+ */
+export function getAllowedKeysInObject(obj, allowedKeys) {
+  return Object.keys(obj).filter((key) => allowedKeys.includes(key));
+}
+
+/**
+ *
+ * @param arr
+ * @param search
+ * @param replaceBy
+ */
 export function replaceInArray(arr, search, replaceBy) {
   const replacedIndex = arr.findIndex(search);
   if (replacedIndex !== -1) {
@@ -27,6 +57,11 @@ export function replaceInArray(arr, search, replaceBy) {
   }
 }
 
+/**
+ *
+ * @param arr
+ * @param search
+ */
 export function removeInArray(arr, search) {
   const replacedIndex = arr.findIndex(search);
   if (replacedIndex !== -1) {

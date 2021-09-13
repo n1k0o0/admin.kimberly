@@ -43,9 +43,6 @@ export default {
       type: Function,
     },
   },
-  setup(props) {
-    console.log(props.image);
-  },
 }
 </script>
 

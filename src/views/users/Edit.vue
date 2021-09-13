@@ -195,7 +195,7 @@ export default {
     const handleUserPatronymicChanged = () => updateUserFields({ patronymic: user.value.patronymic });
     const handleUserStatusChanged = () => updateUserFields({ status: user.value.status });
     const handleUpdatePassword = () => updateUserFields({ password: newPassword.value });
-    const handleAvatarRemoved = async (file) => {
+    const handleAvatarRemoved = (file) => {
       user.value.avatar = null;
     };
 
