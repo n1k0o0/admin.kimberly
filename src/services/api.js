@@ -28,6 +28,14 @@ api.interceptors.response.use(undefined, (error) => {
     }
     return;
   }
+  if (error.response && error.response.status === 403) {
+    ElNotification({type: 'error', title: 'Ошибка авторизации', message: 'Нет прав на совершение действия'})
+    return;
+  }
+  if (error.response && error.response.status === 404) {
+    ElNotification({type: 'error', title: '404', message: 'Ресурс отсутствует'})
+    return;
+  }
   if (error.response && error.response.status === 500) {
     ElNotification({type: 'error', title: 'Ошибка', message: 'Обратитесь к разработчикам.'})
     return;

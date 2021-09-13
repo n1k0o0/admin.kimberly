@@ -186,7 +186,7 @@ export default {
       async schoolId => {
         try {
           setLoading();
-          const { data } = await getSchool(schoolId);
+          const { data } = await getSchool(route.params.id);
           school.value = data;
         } catch (e) {
           console.log(e);

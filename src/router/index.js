@@ -5,19 +5,7 @@ import Dashboard from "../views/Index.vue";
 
 const routes = [
   { path: "/auth/", name: "auth", component: Auth, },
-  { path: "/dashboard", name: "dashboard", component: () => import('../views/internal_users/Index.vue'), },
-
-  {
-    path: "/internal-users/:id",
-    name: 'internal-users-edit',
-    component: () => import('../views/internal_users/Edit.vue')
-  },
-  {
-    path: "/internal-users/create",
-    name: 'internal-users-create',
-    component: () => import('../views/internal_users/Create.vue')
-  },
-  { path: "/internal-users", name: 'internal-users', component: () => import('../views/internal_users/Index.vue') },
+  { path: "/dashboard", name: "dashboard", component: Dashboard, },
 
   { path: '/stadiums/:id', name: 'stadiums-edit', component: () => import('@/views/stadiums/Edit.vue') },
   { path: '/stadiums/create', name: 'stadiums-create', component: () => import('@/views/stadiums/Create.vue') },
@@ -31,8 +19,22 @@ const routes = [
   { path: "/tournaments/create", name: 'tournaments-create', component: () => import('@/views/tournaments/Create.vue') },
   { path: "/tournaments", name: 'tournaments', component: () => import('@/views/tournaments/Index.vue') },
 
-  { path: '/schools/:id', name: 'schools-edit', component: () => import('@/views/schools/Edit.vue') },
-  { path: "/schools", name: 'schools', component: () => import('@/views/schools/Index.vue'), },
+  { path: "/calendar", name: 'calendar', component: import('@/views/calendar/Index.vue') },
+
+  // { path: "/games/create", name: 'games-create', component: import('@/views/games/Create.vue') },
+  // { path: "/games/:id", name: 'games-edit', component: import('@/views/games/Edit.vue') },
+
+  {
+    path: "/internal-users/:id",
+    name: 'internal-users-edit',
+    component: () => import('../views/internal_users/Edit.vue')
+  },
+  {
+    path: "/internal-users/create",
+    name: 'internal-users-create',
+    component: () => import('../views/internal_users/Create.vue')
+  },
+  { path: "/internal-users", name: 'internal-users', component: () => import('../views/internal_users/Index.vue') },
 
   {
     path: "/users/:id",
@@ -41,11 +43,11 @@ const routes = [
   },
   { path: "/users", name: 'users', component: () => import('@/views/users/Index.vue') },
 
-  { path: "/tables", name: 'tables', component: Dashboard },
-  { path: "/calendar", name: 'calendar', component: Dashboard },
-  { path: "/results", name: 'results', component: Dashboard },
-  { path: "/players", name: 'players', component: Dashboard },
-  { path: "/statistics", name: 'statistics', component: Dashboard },
+  { path: '/schools/:id', name: 'schools-edit', component: () => import('@/views/schools/Edit.vue') },
+  { path: "/schools", name: 'schools', component: () => import('@/views/schools/Index.vue'), },
+
+  { path: "/results", name: 'results', component: () => import('@/views/results/Index.vue')},
+
   { path: "/notifications", name: 'notifications', component: Dashboard },
 ];
 

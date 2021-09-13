@@ -46,9 +46,9 @@ export function getAllowedKeysInObject(obj, allowedKeys) {
 
 /**
  *
- * @param arr
- * @param search
- * @param replaceBy
+ * @param {Array} arr
+ * @param {Function} search
+ * @param {any} replaceBy
  */
 export function replaceInArray(arr, search, replaceBy) {
   const replacedIndex = arr.findIndex(search);
@@ -59,8 +59,8 @@ export function replaceInArray(arr, search, replaceBy) {
 
 /**
  *
- * @param arr
- * @param search
+ * @param {Array} arr
+ * @param {Function} search
  */
 export function removeInArray(arr, search) {
   const replacedIndex = arr.findIndex(search);
