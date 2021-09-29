@@ -1,27 +1,116 @@
 <template>
   <el-card>
     <template #header>
+      <h3>Календарь</h3>
       <el-row
-        :gutter="2"
-        justify="space-between"
+        :gutter="20"
       >
-        <el-row />
-        <el-row>
+        <el-col :span="5">
+          <el-select
+            v-model="search.leagues"
+            multiple
+            placeholder="Лига"
+          >
+            <el-option
+              v-for="(league) in leagues"
+              :key="league.id"
+              :label="league.name"
+              :value="league.id"
+            />
+          </el-select>
+        </el-col>
+        <el-col :span="5">
+          <el-select
+            v-model="search.divisions"
+            multiple
+            placeholder="Дивизион"
+            :disabled="!search.leagues || !search.leagues.length"
+          >
+            <el-option
+              v-for="(division) in divisions"
+              :key="division.id"
+              :label="division.name"
+              :value="division.id"
+            />
+          </el-select>
+        </el-col>
+        <el-col :span="5">
+          <el-select
+            v-model="search.teams"
+            multiple
+            placeholder="Команда"
+            :disabled="!search.divisions || !search.divisions.length"
+          >
+            <el-option
+              v-for="(team) in teams"
+              :key="team.id"
+              :label="team.name"
+              :value="team.id"
+            />
+          </el-select>
+        </el-col>
+        <el-col :span="5">
+          <el-select
+            v-model="search.tournaments"
+            multiple
+            placeholder="Турнир"
+          >
+            <el-option
+              v-for="(tournament) in tournaments"
+              :key="tournament.id"
+              :label="tournament.name"
+              :value="tournament.id"
+            />
+          </el-select>
+        </el-col>
+        <el-col :span="4">
+          <el-select
+            v-model="search.stadiums"
+            multiple
+            placeholder="Стадион"
+          >
+            <el-option
+              v-for="(stadium) in stadiums"
+              :key="stadium.id"
+              :label="stadium.title"
+              :value="stadium.id"
+            />
+          </el-select>
+        </el-col>
+      </el-row>
+      <el-row
+        :gutter="20"
+        justify="end"
+        style="margin-top: 15px;"
+      >
+        <el-col :span="3">
+          <el-button
+            type="primary"
+            @click="searchGames"
+          >
+            Поиск
+          </el-button>
+        </el-col>
+        <el-col :span="3">
           <el-button
             type="primary"
             @click="$router.push({name: 'game-create'})"
           >
             Создать
           </el-button>
-        </el-row>
+        </el-col>
       </el-row>
     </template>
-    <games :games="[]" />
+    <games
+      :games="games"
+      @remove-game="onRemoveGameClicked($event)"
+    />
     <el-row justify="center">
       <el-pagination
-        layout="prev, pager, next"
         :hide-on-single-page="true"
+        layout="prev, pager, next"
         v-bind="pagination"
+        :current-page="currentPage"
         @update:current-page="onCurrentPageUpdated"
       />
     </el-row>
@@ -29,13 +118,17 @@
 </template>
 
 <script>
-import { onMounted, reactive, ref, watch } from "vue";
-import { useLoadingState } from "@/composables/common/useLoadingState.js";
-import usePagination from "@/composables/common/usePagination.js";
-import { paginateTournaments, removeTournament } from "@/services/tournaments/tournaments.js";
-import { getPrintableTournamentStatus } from "@/services/tournaments/Tournament.js";
-import useCountryAndCity from "@/composables/useCountryAndCity.js";
-import Games from "@/components/games/Games.vue";
+import { onMounted, reactive, ref, watch, computed } from "vue";
+import { useLoadingState }                           from "@/composables/common/useLoadingState.js";
+import usePagination                                 from "@/composables/common/usePagination.js";
+import { paginateTournaments }                            from "@/services/tournaments/tournaments.js";
+import { paginateLeagues }                                from "@/services/leagues/leagueService.js";
+import { paginateStadiums }                               from "@/services/stadiums/stadiums.js";
+import { paginateGames , removeGame}                             from "@/services/games/gameService.js";
+import { getPrintableTournamentStatus }              from "@/services/tournaments/Tournament.js";
+import { getTeams }                                  from "@/services/schools/teams/teams.js";
+import useCountryAndCity                             from "@/composables/useCountryAndCity.js";
+import Games                                         from "@/components/games/Games.vue";
 
 export default {
   name: "Index",
@@ -48,32 +141,100 @@ export default {
       city_id: selectedCityId,
     });
     const tournaments = ref([]);
+    const leagues = ref([])
+    const stadiums = ref([])
+    const games = ref([])
+    const teams = ref([])
 
     onMounted(async () => {
-      const { data: { data: tournamentItems, meta } } = await paginateTournaments();
-      setPagination(meta);
-      tournaments.value = tournamentItems;
-      setLoaded();
-    });
+      const { data: { data: tournamentItems } } = await paginateTournaments(search,null,0)
+      const { data: { data: leagueItems } } = await paginateLeagues(search,null,0);
+      const { data: {data: stadiumItems}} = await paginateStadiums(search,null,0);
 
-    watch([search, currentPage], async () => {
-      setLoading();
-      try {
-        const { data: { data: tournamentItems, meta } } = await paginateTournaments(search, currentPage.value);
-        setPagination(meta);
-        tournaments.value = tournamentItems;
-      } catch (e) {
-      } finally {
-        setLoaded();
+      leagues.value = leagueItems;
+      stadiums.value = stadiumItems;
+      tournaments.value = tournamentItems
+
+      setLoaded()
+    })
+
+    watch(
+      () => search.leagues,
+      (newName, prevName) => {
+        if (search.leagues && search.leagues.length){
+
+          if(search.divisions && search.divisions.length){
+            search.divisions = search.divisions.filter( function( el ) {
+              return divisions.value.map(e => e.id).indexOf(el) !==-1;
+            } );
+          }
+
+        }else{
+          search.divisions=[]
+        }
+      },
+    );
+    watch(
+      () => search.divisions,
+      async(newName, prevName) => {
+        if (search.divisions && search.divisions.length){
+          const { data: { data: teamItems,  } } = await getTeams(search, null,0);
+          teams.value = teamItems;
+          if(search.teams && search.teams.length){
+            search.teams = search.teams.filter( function( el ) {
+              return teams.value.map(e => e.id).indexOf(el) !==-1;
+            } );
+          }
+        }else{
+          teams.value=[]
+          search.teams=[]
+        }
+      },
+    );
+    watch(
+      () => search.city_id,
+      async(newName, prevName) => {
+        const { data: { data: tournamentItems } } = await paginateTournaments(search,null,0)
+        const { data: { data: leagueItems } } = await paginateLeagues(search,null,0);
+        const { data: {data: stadiumItems}} = await paginateStadiums(search,null,0);
+
+        leagues.value = leagueItems;
+        stadiums.value = stadiumItems;
+        tournaments.value = tournamentItems
+        search.leagues=[]
+        search.stadiums=[]
+        search.tournaments=[]
+        games.value=[]
+        setPagination({current_page:0,total:0,per_page:0})
+      },
+    );
+
+    watch([ currentPage], async () => {
+      setLoading()
+      if (currentPage.value>0){
+        try {
+          setLoading()
+          const { data: { data: gameItems, meta } } = await paginateGames(search, currentPage.value);
+          games.value = gameItems;
+          setPagination(meta);
+        } catch (e) {
+        } finally {
+          setLoaded()
+        }
       }
-    });
+    })
 
-    const onRemoveTournamentClicked = async (tournamentId) => {
+    const divisions = computed(
+      () => leagues.value.filter(league => search.leagues.includes(league.id)).map(function(lg){
+        return lg.divisions;
+      }).flat()
+    )
+
+    const searchGames = async () => {
       try {
-        setLoading();
-        await removeTournament(tournamentId);
-        const { data: { data: tournamentItems, meta } } = await paginateTournaments(search, currentPage.value);
-        tournaments.value = tournamentItems;
+        setLoading()
+        const { data: { data: gameItems, meta } } = await paginateGames(search);
+        games.value = gameItems;
         setPagination(meta);
       } catch (e) {
       } finally {
@@ -81,19 +242,51 @@ export default {
       }
     };
     const onCurrentPageUpdated = (page) => currentPage.value = page;
+    const updateOnChangeSearch =  () => {
+      try {
+        setLoading();
+        search.leagues = search.leagues.filter( function( el ) {
+          return leagues.value.map(e => e.id).indexOf( el ) !== -1;
+        } );
+        search.divisions = search.divisions.filter( function( el ) {
+          return divisions.value.map(e => e.id).indexOf( el ) !== -1;
+        } );
+      } catch (e) {
+      } finally {
+        setLoaded();
+      }
+    };
+    const onRemoveGameClicked = async (game) => {
+      try {
+        setLoading();
+        await removeGame(game.id);
+        const { data: { data: gameItems, meta } } = await paginateGames(search);
+        games.value = gameItems;
+        setPagination(meta);
+      } catch (e) {
+      } finally {
+        setLoaded();
+      }
+    };
 
     return {
       getPrintableTournamentStatus,
       search,
+      searchGames,
       tournaments,
+      leagues,
+      divisions,
+      stadiums,
+      games,
+      teams,
       loading,
-      onRemoveTournamentClicked,
       onCurrentPageUpdated,
+      onRemoveGameClicked,
       pagination,
       currentPage,
-    };
+    }
   },
-};
+}
 </script>
 
 <style scoped>

@@ -5,25 +5,46 @@
     :empty-text="'Нет данных'"
   >
     <el-table-column
-      prop="id"
-      label="id"
-    />
+      label="Team 1"
+    >
+      <template #default="scope">
+        {{ scope.row.team_1.name }}
+      </template>
+    </el-table-column>
     <el-table-column
-      prop="name"
-      label="Название"
-    />
+      label="Team 2"
+    >
+      <template #default="scope">
+        {{ scope.row.team_2.name }}
+      </template>
+    </el-table-column>
+    <el-table-column
+      label="Лига"
+    >
+      <template #default="scope">
+        {{ scope.row.league.name }}
+      </template>
+    </el-table-column>
+    <el-table-column
+      label="Стадион"
+    >
+      <template #default="scope">
+        {{ scope.row.stadium.title }}
+      </template>
+    </el-table-column>
+
     <el-table-column
       label="Страна"
     >
       <template #default="scope">
-        {{ scope.row.country.name }}
+        {{ scope.row.stadium.country.name }}
       </template>
     </el-table-column>
     <el-table-column
-      label="Город"
+      label="Турнир"
     >
       <template #default="scope">
-        {{ scope.row.city.name }}
+        {{ scope.row.tournament.name }}
       </template>
     </el-table-column>
     <el-table-column
@@ -31,7 +52,7 @@
       label="Статус"
     >
       <template #default="scope">
-        {{ getPrintableTournamentStatus(scope.row.status) }}
+        {{ tournamentStatus(scope.row.status) }}
       </template>
     </el-table-column>
     <el-table-column
@@ -44,7 +65,7 @@
           @click="$emit('edit-game', scope.row)"
         />
         <el-popconfirm
-          title="Вы действительно хотите удалить стадион?"
+          title="Вы действительно хотите удалить игру?"
           cancel-button-text="Отмена"
           confirm-button-text="Да"
           @confirm="$emit('remove-game', scope.row)"
@@ -62,6 +83,7 @@
 </template>
 
 <script>
+import { getPrintableTournamentStatus } from "@/services/tournaments/Tournament.js";
 export default {
   name: "Games",
   props: {
@@ -72,7 +94,10 @@ export default {
   },
 emits: ['remove-game', 'edit-game'],
   setup() {
-    return {}
+    const tournamentStatus = (type)=>getPrintableTournamentStatus(type)
+    return {
+      tournamentStatus
+    }
   }
 };
 </script>

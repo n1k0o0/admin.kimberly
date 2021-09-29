@@ -1,21 +1,13 @@
 import api from "../api";
 import { cleanFalsyFields } from "@/helpers.js";
 
-const ENDPOINT = '/leagues'
+const ENDPOINT = '/games'
 
-export function paginateLeagues(search, page = 1, limit = 10) {
-  let params
-  if (limit){
-     params = {
-      page,
-      limit,
-    }
-  }else {
-     params = {
-      page,
-    }
+export function paginateGames(search, page = 1, limit = 10) {
+  let params = {
+    page,
+    limit,
   }
-
   if (search) {
     params = {...params, ...cleanFalsyFields(search)}
   }
@@ -25,23 +17,23 @@ export function paginateLeagues(search, page = 1, limit = 10) {
   })
 }
 
-export function createLeague(fields) {
+export function createGame(fields) {
   return api.post(`${ENDPOINT}`, fields)
 }
 
-export function getLeague(id) {
+export function getGame(id) {
   return api.get(`${ENDPOINT}/${id}`)
 }
 
-export function updateLeague(id, fields) {
+export function updateGame(id, fields) {
   return api.put(`${ENDPOINT}/${id}`, cleanFalsyFields(fields))
 }
 
-export function removeLeague(id) {
+export function removeGame(id) {
   return api.delete(`${ENDPOINT}/${id}`)
 }
 
-export function loadLeagues(params) {
+export function loadGames(params) {
   return api.get(`${ENDPOINT}`, {
     params
   })

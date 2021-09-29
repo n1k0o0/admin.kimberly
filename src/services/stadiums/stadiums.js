@@ -4,9 +4,16 @@ import { cleanFalsyFields } from "@/helpers.js";
 const ENDPOINT = '/stadiums'
 
 export function paginateStadiums(search, page = 1, limit = 10) {
-  let params = {
-    page,
-    limit,
+  let params
+  if (limit){
+    params = {
+      page,
+      limit,
+    }
+  }else {
+    params = {
+      page,
+    }
   }
 
   if (search) {
