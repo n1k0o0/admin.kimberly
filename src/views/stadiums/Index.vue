@@ -6,7 +6,7 @@
         :gutter="2"
         justify="space-between"
       >
-        <el-row />
+        <el-row/>
         <el-row>
           <el-button
             type="primary"
@@ -23,12 +23,12 @@
       :empty-text="'Нет данных'"
     >
       <el-table-column
-        prop="id"
         label="id"
+        prop="id"
       />
       <el-table-column
-        prop="title"
         label="Название"
+        prop="title"
       />
       <el-table-column
         label="Страна"
@@ -45,28 +45,28 @@
         </template>
       </el-table-column>
       <el-table-column
-        prop="address"
         label="Адрес"
+        prop="address"
       />
       <el-table-column
         label="Управление"
       >
         <template #default="scope">
           <el-button
-            type="primary"
             icon="el-icon-edit"
+            type="primary"
             @click="$router.push({name: 'stadiums-edit', params: {id: scope.row.id}})"
           />
           <el-popconfirm
-            title="Вы действительно хотите удалить стадион?"
             cancel-button-text="Отмена"
             confirm-button-text="Да"
+            title="Вы действительно хотите удалить стадион?"
             @confirm="onRemoveStadiumClicked(scope.row.id)"
           >
             <template #reference>
               <el-button
-                type="danger"
                 icon="el-icon-delete"
+                type="danger"
               />
             </template>
           </el-popconfirm>
@@ -75,8 +75,8 @@
     </el-table>
     <el-row justify="center">
       <el-pagination
-        layout="prev, pager, next"
         :hide-on-single-page="true"
+        layout="prev, pager, next"
         v-bind="pagination"
         @update:current-page="onCurrentPageUpdated"
       />
@@ -85,25 +85,26 @@
 </template>
 
 <script>
-import { onMounted, reactive, ref, watch } from "vue";
-import { useLoadingState } from "@/composables/common/useLoadingState.js";
-import usePagination from "@/composables/common/usePagination";
-import { paginateStadiums, removeStadium } from "@/services/stadiums/stadiums.js";
-import useCountryAndCity from "@/composables/useCountryAndCity.js";
+import { onMounted, reactive, ref, watch } from 'vue'
+import { useLoadingState } from '@/composables/common/useLoadingState.js'
+import usePagination from '@/composables/common/usePagination'
+import { paginateStadiums, removeStadium } from '@/services/stadiums/stadiums.js'
+import useCountryAndCity from '@/composables/useCountryAndCity.js'
 
 export default {
-  name: "Index",
-  setup() {
+  name: 'Index',
+  setup () {
     const { loading, setLoaded, setLoading } = useLoadingState(true)
     const { pagination, setPagination, currentPage } = usePagination()
-    const { selectedCityId } = useCountryAndCity()
+    const { selectedCityId, selectedCountryId } = useCountryAndCity()
     const search = reactive({
       city_id: selectedCityId,
+      country_id: selectedCountryId,
     })
-    const stadiums = ref([]);
+    const stadiums = ref([])
 
     onMounted(async () => {
-      const { data: {data: stadiumItems, meta}} = await paginateStadiums(search);
+      const { data: { data: stadiumItems, meta } } = await paginateStadiums(search)
       setPagination(meta)
       stadiums.value = stadiumItems
       setLoaded()
@@ -112,7 +113,7 @@ export default {
     watch([search, currentPage], async () => {
       setLoading()
       try {
-        const { data: {data: stadiumItems, meta}} = await paginateStadiums(search, currentPage.value);
+        const { data: { data: stadiumItems, meta } } = await paginateStadiums(search, currentPage.value)
         setPagination(meta)
         stadiums.value = stadiumItems
       } catch (e) {
@@ -125,11 +126,10 @@ export default {
       try {
         setLoading()
         await removeStadium(stadiumId)
-        const { data: {data: stadiumItems, meta}} = await paginateStadiums(search, currentPage.value)
+        const { data: { data: stadiumItems, meta } } = await paginateStadiums(search, currentPage.value)
         stadiums.value = stadiumItems
         setPagination(meta)
-      } catch (e) {}
-      finally {
+      } catch (e) {} finally {
         setLoaded()
       }
     }

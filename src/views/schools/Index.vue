@@ -16,8 +16,8 @@
           <span class="d-block">Поиск по названию</span>
           <el-input
             v-model="search.name"
-            placeholder="Поиск"
             clearable
+            placeholder="Поиск"
           />
         </el-col>
       </el-row>
@@ -28,32 +28,32 @@
       :empty-text="'Нет данных'"
     >
       <el-table-column
-        prop="id"
         label="id"
+        prop="id"
       />
       <el-table-column
-        prop="name"
         label="Название"
+        prop="name"
       />
       <el-table-column
         label="Управление"
       >
         <template #default="scope">
           <el-button
-            type="primary"
             icon="el-icon-edit"
+            type="primary"
             @click="$router.push({ name: 'schools-edit', params: { id: scope.row.id } })"
           />
           <el-popconfirm
-            title="Вы действительно хотите удалить стадион?"
             cancel-button-text="Отмена"
             confirm-button-text="Да"
+            title="Вы действительно хотите удалить стадион?"
             @confirm="onRemoveSchoolClicked(scope.row.id)"
           >
             <template #reference>
               <el-button
-                type="danger"
                 icon="el-icon-delete"
+                type="danger"
               />
             </template>
           </el-popconfirm>
@@ -62,8 +62,8 @@
     </el-table>
     <el-row justify="center">
       <el-pagination
-        layout="prev, pager, next"
         :hide-on-single-page="true"
+        layout="prev, pager, next"
         v-bind="pagination"
         @update:current-page="onCurrentPageUpdated"
       />
@@ -72,68 +72,69 @@
 </template>
 
 <script>
-import { useLoadingState } from "@/composables/common/useLoadingState";
-import usePagination from "@/composables/common/usePagination";
-import { computed, onMounted, reactive, ref, watch } from "vue";
-import LeagueAndDivisionSelectors from "@/components/common/LeagueAndDivisionSelectors.vue";
-import { paginateSchools, removeSchool } from "@/services/schools/schools.js";
-import useCountryAndCity from "@/composables/useCountryAndCity.js";
+import { useLoadingState } from '@/composables/common/useLoadingState'
+import usePagination from '@/composables/common/usePagination'
+import { computed, onMounted, reactive, ref, watch } from 'vue'
+import LeagueAndDivisionSelectors from '@/components/common/LeagueAndDivisionSelectors.vue'
+import { paginateSchools, removeSchool } from '@/services/schools/schools.js'
+import useCountryAndCity from '@/composables/useCountryAndCity.js'
 
 export default {
-  name: "SchoolList",
+  name: 'SchoolList',
   components: { LeagueAndDivisionSelectors },
   emits: ['school-selected'],
-  setup() {
-    const { selectedCity, selectedCityId } = useCountryAndCity();
-    const { loading, setLoaded, setLoading } = useLoadingState(true);
-    const { pagination, setPagination, currentPage } = usePagination();
-    const availableLeagues = computed(() => selectedCity.value?.leagues);
-    const schools = ref([]);
+  setup () {
+    const { selectedCity, selectedCityId, selectedCountryId } = useCountryAndCity()
+    const { loading, setLoaded, setLoading } = useLoadingState(true)
+    const { pagination, setPagination, currentPage } = usePagination()
+    const availableLeagues = computed(() => selectedCity.value?.leagues)
+    const schools = ref([])
 
     const search = reactive({
       search: '',
       city_id: selectedCityId,
+      country_id: selectedCountryId,
       league_id: null,
       division_id: null,
-    });
+    })
 
     onMounted(async () => {
       try {
-        setLoading();
-        const { data: { data: schoolItems, meta } } = await paginateSchools(search);
-        setPagination(meta);
-        schools.value = schoolItems;
+        setLoading()
+        const { data: { data: schoolItems, meta } } = await paginateSchools(search)
+        setPagination(meta)
+        schools.value = schoolItems
       } catch (e) {
       } finally {
-        setLoaded();
+        setLoaded()
       }
-    });
+    })
     const onRemoveSchoolClicked = async (schoolId) => {
       try {
-        setLoading();
-        await removeSchool(schoolId);
-        const { data: { data: schoolItems, meta } } = await paginateSchools(search, currentPage.value);
-        setPagination(meta);
-        schools.value = schoolItems;
+        setLoading()
+        await removeSchool(schoolId)
+        const { data: { data: schoolItems, meta } } = await paginateSchools(search, currentPage.value)
+        setPagination(meta)
+        schools.value = schoolItems
       } catch (e) {
       } finally {
-        setLoaded();
+        setLoaded()
       }
-    };
-    const onLeagueSelected = (league) => search.league_id = league.id;
-    const onDivisionSelected = (division) => search.division_id = division.id;
-    const onCurrentPageUpdated = (page) => currentPage.value = page;
+    }
+    const onLeagueSelected = (league) => search.league_id = league.id
+    const onDivisionSelected = (division) => search.division_id = division.id
+    const onCurrentPageUpdated = (page) => currentPage.value = page
     watch([search, currentPage], async () => {
-      setLoading();
+      setLoading()
       try {
-        const { data: { data: schoolItems, meta } } = await paginateSchools(search, currentPage.value);
-        setPagination(meta);
-        schools.value = schoolItems;
+        const { data: { data: schoolItems, meta } } = await paginateSchools(search, currentPage.value)
+        setPagination(meta)
+        schools.value = schoolItems
       } catch (e) {
       } finally {
-        setLoaded();
+        setLoaded()
       }
-    });
+    })
 
     return {
       search,
@@ -146,9 +147,9 @@ export default {
       onCurrentPageUpdated,
       onLeagueSelected,
       onDivisionSelected,
-    };
+    }
   },
-};
+}
 </script>
 
 <style scoped>

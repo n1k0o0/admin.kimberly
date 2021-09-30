@@ -1,8 +1,8 @@
 <template>
   <div
     id="kt_header"
-    style=""
     class="header align-items-stretch"
+    style=""
   >
     <div class="container-fluid d-flex align-items-stretch justify-content-between">
       <div
@@ -15,32 +15,32 @@
         >
           <span class="svg-icon svg-icon-2x mt-1">
             <svg
+              height="24px"
+              version="1.1"
+              viewBox="0 0 24 24"
+              width="24px"
               xmlns="http://www.w3.org/2000/svg"
               xmlns:xlink="http://www.w3.org/1999/xlink"
-              width="24px"
-              height="24px"
-              viewBox="0 0 24 24"
-              version="1.1"
             >
               <g
-                stroke="none"
-                stroke-width="1"
                 fill="none"
                 fill-rule="evenodd"
+                stroke="none"
+                stroke-width="1"
               >
                 <rect
+                  height="24"
+                  width="24"
                   x="0"
                   y="0"
-                  width="24"
-                  height="24"
                 />
                 <rect
                   fill="#000000"
-                  x="4"
-                  y="5"
-                  width="16"
                   height="3"
                   rx="1.5"
+                  width="16"
+                  x="4"
+                  y="5"
                 />
                 <path
                   d="M5.5,15 L18.5,15 C19.3284271,15 20,15.6715729 20,16.5 C20,17.3284271 19.3284271,18 18.5,18 L5.5,18 C4.67157288,18 4,17.3284271 4,16.5 C4,15.6715729 4.67157288,15 5.5,15 Z M5.5,10 L18.5,10 C19.3284271,10 20,10.6715729 20,11.5 C20,12.3284271 19.3284271,13 18.5,13 L5.5,13 C4.67157288,13 4,12.3284271 4,11.5 C4,10.6715729 4.67157288,10 5.5,10 Z"
@@ -54,8 +54,8 @@
       </div>
       <div class="d-flex align-items-center flex-grow-1 flex-lg-grow-0">
         <a
-          href="../../demo1/dist/index.html"
           class="d-lg-none"
+          href="../../demo1/dist/index.html"
         />
       </div>
       <div class="d-flex align-items-stretch justify-content-between flex-lg-grow-1">
@@ -66,17 +66,17 @@
           <div
             class="header-menu align-items-stretch"
             data-kt-drawer="true"
-            data-kt-drawer-name="header-menu"
             data-kt-drawer-activate="{default: true, lg: false}"
-            data-kt-drawer-overlay="true"
-            data-kt-drawer-width="{default:'200px', '300px': '250px'}"
             data-kt-drawer-direction="end"
+            data-kt-drawer-name="header-menu"
+            data-kt-drawer-overlay="true"
             data-kt-drawer-toggle="#kt_header_menu_mobile_toggle"
+            data-kt-drawer-width="{default:'200px', '300px': '250px'}"
             data-kt-swapper="true"
             data-kt-swapper-mode="prepend"
             data-kt-swapper-parent="{default: '#kt_body', lg: '#kt_header_nav'}"
           >
-            <el-row class="p-3">
+            <el-row :gutter="20" class="p-3">
               <el-col :span="12">
                 <el-select
                   v-model="selectedCountryId"
@@ -85,8 +85,8 @@
                   <el-option
                     v-for="country in countries"
                     :key="country.id"
-                    :value="country.id"
                     :label="country.name"
+                    :value="country.id"
                   />
                 </el-select>
               </el-col>
@@ -99,15 +99,15 @@
                   <el-option
                     v-for="city in selectedCountry.cities"
                     :key="city.id"
-                    :value="city.id"
                     :label="city.name"
+                    :value="city.id"
                   />
                 </el-select>
               </el-col>
             </el-row>
           </div>
         </div>
-        <TopbarBlock />
+        <TopbarBlock/>
       </div>
     </div>
   </div>
@@ -116,8 +116,9 @@
 <script setup>
 import { onMounted, reactive, } from 'vue'
 import { useStore } from 'vuex'
-import useCountryAndCity from "../composables/useCountryAndCity";
+import useCountryAndCity from '../composables/useCountryAndCity'
 import TopbarBlock from './TopbarBlock.vue'
+
 const data = reactive({
   headerMenu: {},
   subMenu: {},
@@ -128,7 +129,7 @@ const { selectedCountry, selectedCountryId, selectedCityId, countries, cities } 
 
 const toggleDropdown = (type) => {
   if (!type) {
-    data.headerMenu = {};
+    data.headerMenu = {}
     return
   }
   data.headerMenu[type] = !data.headerMenu[type]
@@ -136,7 +137,7 @@ const toggleDropdown = (type) => {
 
 const toggleSubmenu = (type) => {
   if (!type) {
-    this.subMenu = [];
+    this.subMenu = []
   } else {
     if (type !== 'rooms' && type !== 'categories') {
       this.subMenu = []

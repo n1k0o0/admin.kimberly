@@ -6,8 +6,7 @@
         :gutter="2"
         justify="space-between"
       >
-        <el-row>
-        </el-row>
+        <el-row />
         <el-row>
           <el-button
             type="primary"
@@ -24,12 +23,12 @@
       :empty-text="'Нет данных'"
     >
       <el-table-column
-        prop="id"
         label="id"
+        prop="id"
       />
       <el-table-column
-        prop="name"
         label="Название"
+        prop="name"
       />
       <el-table-column
         label="Страна"
@@ -46,8 +45,8 @@
         </template>
       </el-table-column>
       <el-table-column
-        prop="status"
         label="Статус"
+        prop="status"
       >
         <template #default="scope">
           {{ getPrintableTournamentStatus(scope.row.status) }}
@@ -58,20 +57,20 @@
       >
         <template #default="scope">
           <el-button
-            type="primary"
             icon="el-icon-edit"
+            type="primary"
             @click="$router.push({name: 'tournaments-edit', params: {id: scope.row.id}})"
           />
           <el-popconfirm
-            title="Вы действительно хотите удалить стадион?"
             cancel-button-text="Отмена"
             confirm-button-text="Да"
+            title="Вы действительно хотите удалить стадион?"
             @confirm="onRemoveTournamentClicked(scope.row.id)"
           >
             <template #reference>
               <el-button
-                type="danger"
                 icon="el-icon-delete"
+                type="danger"
               />
             </template>
           </el-popconfirm>
@@ -80,8 +79,8 @@
     </el-table>
     <el-row justify="center">
       <el-pagination
-        layout="prev, pager, next"
         :hide-on-single-page="true"
+        layout="prev, pager, next"
         v-bind="pagination"
         @update:current-page="onCurrentPageUpdated"
       />
@@ -90,56 +89,56 @@
 </template>
 
 <script>
-import { onMounted, reactive, ref, watch } from "vue";
-import { useLoadingState } from "@/composables/common/useLoadingState.js";
-import usePagination from "@/composables/common/usePagination.js";
-import { paginateTournaments, removeTournament } from "@/services/tournaments/tournaments.js";
-import { getPrintableTournamentStatus } from "@/services/tournaments/Tournament.js";
-import useCountryAndCity from "@/composables/useCountryAndCity.js";
+import { onMounted, reactive, ref, watch } from 'vue'
+import { useLoadingState } from '@/composables/common/useLoadingState.js'
+import usePagination from '@/composables/common/usePagination.js'
+import { paginateTournaments, removeTournament } from '@/services/tournaments/tournaments.js'
+import { getPrintableTournamentStatus } from '@/services/tournaments/Tournament.js'
+import useCountryAndCity from '@/composables/useCountryAndCity.js'
 
 export default {
-  name: "Index",
-  setup() {
-    const { loading, setLoaded, setLoading } = useLoadingState(true);
-    const { pagination, setPagination, currentPage } = usePagination();
-    const { selectedCityId } = useCountryAndCity();
+  name: 'Index',
+  setup () {
+    const { loading, setLoaded, setLoading } = useLoadingState(true)
+    const { pagination, setPagination, currentPage } = usePagination()
+    const { selectedCityId } = useCountryAndCity()
     const search = reactive({
       city_id: selectedCityId,
-    });
-    const tournaments = ref([]);
+    })
+    const tournaments = ref([])
 
     onMounted(async () => {
-      const { data: { data: tournamentItems, meta } } = await paginateTournaments();
-      setPagination(meta);
-      tournaments.value = tournamentItems;
-      setLoaded();
-    });
+      const { data: { data: tournamentItems, meta } } = await paginateTournaments(search, currentPage.value)
+      setPagination(meta)
+      tournaments.value = tournamentItems
+      setLoaded()
+    })
 
     watch([search, currentPage], async () => {
-      setLoading();
+      setLoading()
       try {
-        const { data: { data: tournamentItems, meta } } = await paginateTournaments(search, currentPage.value);
-        setPagination(meta);
-        tournaments.value = tournamentItems;
+        const { data: { data: tournamentItems, meta } } = await paginateTournaments(search, currentPage.value)
+        setPagination(meta)
+        tournaments.value = tournamentItems
       } catch (e) {
       } finally {
-        setLoaded();
+        setLoaded()
       }
-    });
+    })
 
     const onRemoveTournamentClicked = async (tournamentId) => {
       try {
-        setLoading();
-        await removeTournament(tournamentId);
-        const { data: { data: tournamentItems, meta } } = await paginateTournaments(search, currentPage.value);
-        tournaments.value = tournamentItems;
-        setPagination(meta);
+        setLoading()
+        await removeTournament(tournamentId)
+        const { data: { data: tournamentItems, meta } } = await paginateTournaments(search, currentPage.value)
+        tournaments.value = tournamentItems
+        setPagination(meta)
       } catch (e) {
       } finally {
-        setLoaded();
+        setLoaded()
       }
-    };
-    const onCurrentPageUpdated = (page) => currentPage.value = page;
+    }
+    const onCurrentPageUpdated = (page) => currentPage.value = page
 
     return {
       getPrintableTournamentStatus,
@@ -150,9 +149,9 @@ export default {
       onCurrentPageUpdated,
       pagination,
       currentPage,
-    };
+    }
   },
-};
+}
 </script>
 
 <style scoped>
