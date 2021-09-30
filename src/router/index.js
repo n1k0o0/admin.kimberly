@@ -19,7 +19,7 @@ const routes = [
   { path: "/tournaments/create", name: 'tournaments-create', component: () => import('@/views/tournaments/Create.vue') },
   { path: "/tournaments", name: 'tournaments', component: () => import('@/views/tournaments/Index.vue') },
 
-  { path: "/calendar", name: 'calendar', component: import('@/views/calendar/Index.vue') },
+  { path: "/calendar", name: 'calendar', component: () => import('@/views/calendar/Index.vue') },
 
   // { path: "/games/create", name: 'games-create', component: import('@/views/games/Create.vue') },
   // { path: "/games/:id", name: 'games-edit', component: import('@/views/games/Edit.vue') },
