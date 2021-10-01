@@ -18,6 +18,9 @@
         <el-date-picker
           v-model="newTournament.started_at"
           placeholder="Дата и время начала"
+          type="date"
+          format="YYYY-MM-DD"
+          value-format="YYYY-MM-DD"
         />
       </el-col>
     </el-row>
@@ -27,6 +30,9 @@
         <el-date-picker
           v-model="newTournament.ended_at"
           placeholder="Дата и время окончания"
+          type="date"
+          format="YYYY-MM-DD"
+          value-format="YYYY-MM-DD"
         />
       </el-col>
     </el-row>
