@@ -57,7 +57,7 @@
           <el-popconfirm
             cancel-button-text="Отмена"
             confirm-button-text="Да"
-            title="Вы действительно хотите удалить стадион?"
+            title="Вы действительно хотите удалить лигу?"
             @confirm="onRemoveLeagueClicked(scope.row.id)"
           >
             <template #reference>

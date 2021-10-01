@@ -1,6 +1,12 @@
 <template>
-  <el-row class="country-city-selector">
-    <el-col class="country-city-selector__league">
+  <el-row
+    :gutter="20"
+    class="country-city-selector"
+  >
+    <el-col
+      :span="12"
+      class="country-city-selector__league"
+    >
       <span class="d-block">Выберите лигу</span>
       <el-select
         v-model="selectedLeagueId"
@@ -16,7 +22,10 @@
         />
       </el-select>
     </el-col>
-    <el-col class="country-city-selector__division">
+    <el-col
+      :span="12"
+      class="country-city-selector__division"
+    >
       <span>Выберите дивизион</span>
       <el-select
         v-model="selectedDivisionId"

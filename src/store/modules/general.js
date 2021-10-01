@@ -35,6 +35,11 @@ const mutations = {
 
   },
   SET_COUNTRIES(state, countries) {
+    /*console.log(countries)
+    countries.unshift({id:null,name:'Все',cities:[]})
+    countries.map(country=>{
+      country.cities.unshift({id:null,name:'Все'})
+    })*/
     state.countries = countries
   },
   SET_SELECTED_COUNTRY(state, countryId) {

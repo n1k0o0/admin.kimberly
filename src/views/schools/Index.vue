@@ -3,21 +3,21 @@
     <template #header>
       <h3>Школы</h3>
       <el-row
-        :gutter="2"
+        :gutter="20"
       >
-        <el-col :span="4">
-          <league-and-division-selectors
-            :leagues="availableLeagues"
-            @league-selected="onLeagueSelected"
-            @division-selected="onDivisionSelected"
-          />
-        </el-col>
         <el-col :span="4">
           <span class="d-block">Поиск по названию</span>
           <el-input
             v-model="search.name"
             clearable
             placeholder="Поиск"
+          />
+        </el-col>
+        <el-col :span="12">
+          <league-and-division-selectors
+            :leagues="availableLeagues"
+            @league-selected="onLeagueSelected"
+            @division-selected="onDivisionSelected"
           />
         </el-col>
       </el-row>

@@ -4,7 +4,7 @@
       <h3>Создать лигу</h3>
     </template>
     <el-row class="my-4">
-      <el-col :span="6">
+      <el-col :span="12">
         <span>Укажите название</span>
         <el-input
           v-model="newLeague.name"
@@ -12,8 +12,8 @@
         />
       </el-col>
     </el-row>
-    <el-row>
-      <el-col :span="6">
+    <el-row gutter="20">
+      <el-col :span="12">
         <span>Добавить дивизион</span>
         <el-row class="mb-5">
           <el-input
@@ -28,6 +28,11 @@
             Добавить
           </el-button>
         </el-row>
+      </el-col>
+      <el-col
+        class="mt-n20"
+        :span="12"
+      >
         <el-table
           :data="newLeague.divisions"
           :empty-text="'Нет дивизионов'"

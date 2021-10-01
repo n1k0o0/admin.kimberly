@@ -101,9 +101,10 @@ export default {
   setup () {
     const { loading, setLoaded, setLoading } = useLoadingState(true)
     const { pagination, setPagination, currentPage } = usePagination()
-    const { selectedCityId } = useCountryAndCity()
+    const { selectedCityId, selectedCountryId } = useCountryAndCity()
     const search = reactive({
       city_id: selectedCityId,
+      country_id: selectedCountryId,
     })
     const tournaments = ref([])
 

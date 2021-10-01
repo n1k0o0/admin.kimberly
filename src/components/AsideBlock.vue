@@ -106,6 +106,22 @@
               <span class="menu-title">Календарь</span>
             </router-link>
           </div>
+          <div class="menu-item">
+            <router-link
+              class="menu-link"
+              to="/results"
+            >
+              <span class="menu-icon">
+                <span class="svg-icon svg-icon-1">
+                  <i
+                    class="fas fa-user-shield"
+                    style="color:white"
+                  />
+                </span>
+              </span>
+              <span class="menu-title">Результаты</span>
+            </router-link>
+          </div>
           <hr>
           <div class="menu-item">
             <router-link
@@ -152,23 +168,7 @@
               <span class="menu-title">Школы</span>
             </router-link>
           </div>
-          <hr>
-          <div class="menu-item">
-            <router-link
-              class="menu-link"
-              to="/results"
-            >
-              <span class="menu-icon">
-                <span class="svg-icon svg-icon-1">
-                  <i
-                    class="fas fa-user-shield"
-                    style="color:white"
-                  />
-                </span>
-              </span>
-              <span class="menu-title">Результаты</span>
-            </router-link>
-          </div>
+
           <hr>
           <div class="menu-item">
             <router-link

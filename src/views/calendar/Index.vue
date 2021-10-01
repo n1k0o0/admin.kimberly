@@ -7,7 +7,7 @@
       >
         <el-col :span="5">
           <el-select
-            v-model="search.leagues"
+            v-model="search.league_ids"
             multiple
             placeholder="Лига"
             @change="searchGames"
@@ -22,8 +22,8 @@
         </el-col>
         <el-col :span="5">
           <el-select
-            v-model="search.divisions"
-            :disabled="!search.leagues || !search.leagues.length"
+            v-model="search.division_ids"
+            :disabled="!search.league_ids || !search.league_ids.length"
             multiple
             placeholder="Дивизион"
             @change="searchGames"
@@ -38,8 +38,8 @@
         </el-col>
         <el-col :span="5">
           <el-select
-            v-model="search.teams"
-            :disabled="!search.divisions || !search.divisions.length"
+            v-model="search.team_ids"
+            :disabled="!search.division_ids || !search.division_ids.length"
             multiple
             placeholder="Команда"
             @change="searchGames"
@@ -54,7 +54,7 @@
         </el-col>
         <el-col :span="5">
           <el-select
-            v-model="search.tournaments"
+            v-model="search.tournament_ids"
             multiple
             placeholder="Турнир"
             @change="searchGames"
@@ -69,7 +69,7 @@
         </el-col>
         <el-col :span="4">
           <el-select
-            v-model="search.stadiums"
+            v-model="search.stadium_ids"
             multiple
             placeholder="Стадион"
             @change="searchGames"
@@ -157,37 +157,37 @@ export default {
     })
 
     watch(
-      () => search.leagues,
+      () => search.league_ids,
       (newName, prevName) => {
-        if (search.leagues && search.leagues.length) {
+        if (search.league_ids && search.league_ids.length) {
 
-          if (search.divisions && search.divisions.length) {
-            search.divisions = search.divisions.filter(function (el) {
+          if (search.division_ids && search.division_ids.length) {
+            search.division_ids = search.division_ids.filter(function (el) {
               return divisions.value.map(e => e.id)
                 .indexOf(el) !== -1
             })
           }
 
         } else {
-          search.divisions = []
+          search.division_ids = []
         }
       },
     )
     watch(
-      () => search.divisions,
+      () => search.division_ids,
       async (newName, prevName) => {
-        if (search.divisions && search.divisions.length) {
+        if (search.division_ids && search.division_ids.length) {
           const { data: { data: teamItems, } } = await getTeams(search, null, 0)
           teams.value = teamItems
-          if (search.teams && search.teams.length) {
-            search.teams = search.teams.filter(function (el) {
+          if (search.team_ids && search.team_ids.length) {
+            search.team_ids = search.team_ids.filter(function (el) {
               return teams.value.map(e => e.id)
                 .indexOf(el) !== -1
             })
           }
         } else {
           teams.value = []
-          search.teams = []
+          search.team_ids = []
         }
       },
     )
@@ -201,9 +201,9 @@ export default {
         leagues.value = leagueItems
         stadiums.value = stadiumItems
         tournaments.value = tournamentItems
-        search.leagues = []
-        search.stadiums = []
-        search.tournaments = []
+        search.league_ids = []
+        search.stadium_ids = []
+        search.tournament_ids = []
         games.value = []
         setPagination({ current_page: 0, total: 0, per_page: 0 })
       },
@@ -225,7 +225,7 @@ export default {
     })
 
     const divisions = computed(
-      () => leagues.value.filter(league => search.leagues.includes(league.id))
+      () => leagues.value.filter(league => search.league_ids.includes(league.id))
         .map(function (lg) {
           return lg.divisions
         })
@@ -247,11 +247,11 @@ export default {
     const updateOnChangeSearch = () => {
       try {
         setLoading()
-        search.leagues = search.leagues.filter(function (el) {
+        search.league_ids = search.league_ids.filter(function (el) {
           return leagues.value.map(e => e.id)
             .indexOf(el) !== -1
         })
-        search.divisions = search.divisions.filter(function (el) {
+        search.division_ids = search.division_ids.filter(function (el) {
           return divisions.value.map(e => e.id)
             .indexOf(el) !== -1
         })
