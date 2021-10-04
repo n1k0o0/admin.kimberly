@@ -88,7 +88,10 @@
         justify="end"
         style="margin-top: 15px;"
       >
-        <el-col :span="3">
+        <el-col
+          :span="3"
+          class="d-flex justify-content-end"
+        >
           <el-button
             type="primary"
             @click="$router.push({name: 'game-create'})"

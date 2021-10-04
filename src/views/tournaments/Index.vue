@@ -53,6 +53,22 @@
         </template>
       </el-table-column>
       <el-table-column
+        label="Дата начала"
+        prop="started_at"
+      >
+        <template #default="scope">
+          {{ $moment(scope.row.started_at).utc().locale('ru').format('YYYY-MM-DD HH:mm') }}
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="Дата завершения"
+        prop="ended_at"
+      >
+        <template #default="scope">
+          {{ $moment(scope.row.ended_at).utc().locale('ru').format('YYYY-MM-DD HH:mm') }}
+        </template>
+      </el-table-column>
+      <el-table-column
         label="Управление"
       >
         <template #default="scope">
@@ -64,7 +80,7 @@
           <el-popconfirm
             cancel-button-text="Отмена"
             confirm-button-text="Да"
-            title="Вы действительно хотите удалить стадион?"
+            title="Вы действительно хотите удалить турнир?"
             @confirm="onRemoveTournamentClicked(scope.row.id)"
           >
             <template #reference>

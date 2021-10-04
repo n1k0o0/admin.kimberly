@@ -6,6 +6,7 @@ export const InternalUserTypes = {
 export function getPrintableInternalUserTypes() {
   return {
     admin: 'Администратор',
+    super_admin: 'Супер администратор',
     jury: 'Судья',
   };
 }

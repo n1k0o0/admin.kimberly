@@ -2,56 +2,53 @@
   <el-card>
     <template #header>
       <h3>Внутренние пользователи</h3>
-      <el-row
-        :gutter="2"
-        justify="space-between"
-      >
-        <el-row>
-          <el-col :span="6">
-            <el-input
-              v-model="search.login"
-              placeholder="Логин"
-            />
-          </el-col>
-          <el-col :span="6">
-            <el-select
-              v-model="search.types"
-              multiple
-              placeholder="Тип пользователя"
-            >
-              <el-option
-                v-for="(type, key) in internalUserTypes"
-                :key="key"
-                :value="key"
-                :label="type"
-              />
-            </el-select>
-          </el-col>
-          <el-col :span="6">
-            <el-date-picker
-              v-model="search.created_at_start"
-              type="date"
-              placeholder="Создан от"
-              @change="onCreatedAtStartChanged"
-            />
-          </el-col>
-          <el-col :span="6">
-            <el-date-picker
-              v-model="search.created_at_end"
-              placeholder="Создан по"
-              type="date"
-              @change="onCreatedAtEndChanged"
-            />
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-button
-            type="primary"
-            @click="$router.push({name: 'internal-users-create'})"
+      <el-row :gutter="20">
+        <el-col :span="6">
+          <el-input
+            v-model="search.login"
+            placeholder="Логин"
+          />
+        </el-col>
+        <el-col :span="6">
+          <el-select
+            v-model="search.types"
+            multiple
+            placeholder="Тип пользователя"
           >
-            Создать
-          </el-button>
-        </el-row>
+            <el-option
+              v-for="(type, key) in internalUserTypes"
+              :key="key"
+              :value="key"
+              :label="type"
+            />
+          </el-select>
+        </el-col>
+        <el-col :span="6">
+          <el-date-picker
+            v-model="search.created_at_start"
+            type="date"
+            placeholder="Создан от"
+            @change="onCreatedAtStartChanged"
+          />
+        </el-col>
+        <el-col :span="6">
+          <el-date-picker
+            v-model="search.created_at_end"
+            placeholder="Создан по"
+            type="date"
+            @change="onCreatedAtEndChanged"
+          />
+        </el-col>
+      </el-row>
+      <el-row
+        class="my-3 flex-row-reverse"
+      >
+        <el-button
+          type="primary"
+          @click="$router.push({name: 'internal-users-create'})"
+        >
+          Создать
+        </el-button>
       </el-row>
     </template>
     <el-table
@@ -92,6 +89,7 @@
             @click="$router.push({name: 'internal-users-edit', params: {id: scope.row.id}})"
           />
           <el-popconfirm
+            v-if="scope.row.type!=='super_admin'"
             title="Вы действительно хотите удалить пользователя?"
             cancel-button-text="Отмена"
             confirm-button-text="Да"
@@ -166,7 +164,9 @@ export default {
       try {
         setLoading()
         await removeInternalUser(internalUserId)
-        await paginateInternalUsers(search, currentPage.value)
+        const { data: {data: internalUsers, meta}} = await paginateInternalUsers(search, currentPage.value);
+        setPagination(meta)
+        users.value = internalUsers
       } catch (e) {}
       finally {
         setLoaded()

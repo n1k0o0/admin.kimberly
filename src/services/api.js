@@ -21,6 +21,7 @@ api.interceptors.request.use((config) => {
 });
 
 api.interceptors.response.use(undefined, (error) => {
+  let errorMessage=error.response.data.message
   if (error.response && (error.response.status === 401 || error.response.status === 419)) {
     localStorage.removeItem('token');
     if (window.location.pathname !== '/auth') {
@@ -37,10 +38,14 @@ api.interceptors.response.use(undefined, (error) => {
     return;
   }
   if (error.response && error.response.status === 500) {
-    ElNotification({type: 'error', title: 'Ошибка', message: 'Обратитесь к разработчикам.'})
+    ElNotification({type: 'error', title: 'Ошибка', message: errorMessage??'Обратитесь к разработчикам.'})
     return;
   }
-  console.log(error);
+
+  if (error.response.data.errors){
+    errorMessage=Object.values(error.response.data.errors).flat().toString()
+  }
+  ElNotification({type: 'error', title: 'Ошибка', message: errorMessage??'Нераспознання ошибка'})
 
   return Promise.reject(error);
 });
