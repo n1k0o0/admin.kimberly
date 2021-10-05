@@ -70,7 +70,7 @@ export default {
     const { selectedCityId } = useCountryAndCity();
     const newTournament = reactive({
       name: '',
-      city_id: selectedCityId.value,
+      city_id: selectedCityId,
       started_at: null,
       ended_at: null,
     });

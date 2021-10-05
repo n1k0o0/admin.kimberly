@@ -1,10 +1,26 @@
 <template>
   <el-card>
     <template #header>
-      <h3>Календарь</h3>
+      <h3>Расписание</h3>
       <el-row
         :gutter="20"
       >
+        <el-col :span="5">
+          <el-select
+            v-model="search.tournament_ids"
+            filterable
+            multiple
+            placeholder="Турнир"
+            @change="searchGames"
+          >
+            <el-option
+              v-for="(tournament) in tournaments"
+              :key="tournament.id"
+              :label="tournament.name"
+              :value="tournament.id"
+            />
+          </el-select>
+        </el-col>
         <el-col :span="5">
           <el-select
             v-model="search.league_ids"
@@ -52,22 +68,6 @@
               :key="team.id"
               :label="team.name"
               :value="team.id"
-            />
-          </el-select>
-        </el-col>
-        <el-col :span="5">
-          <el-select
-            v-model="search.tournament_ids"
-            filterable
-            multiple
-            placeholder="Турнир"
-            @change="searchGames"
-          >
-            <el-option
-              v-for="(tournament) in tournaments"
-              :key="tournament.id"
-              :label="tournament.name"
-              :value="tournament.id"
             />
           </el-select>
         </el-col>

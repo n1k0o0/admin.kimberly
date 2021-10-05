@@ -81,6 +81,7 @@
       </el-table-column>
       <el-table-column
         label="Управление"
+        width="140"
       >
         <template #default="scope">
           <el-button

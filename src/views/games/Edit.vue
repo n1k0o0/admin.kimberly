@@ -1,64 +1,147 @@
 <template>
   <el-card v-loading="loading">
     <template #header>
-      <h3>Редактирование {{ tournament.name }}</h3>
-      <el-row
-        :gutter="2"
-        justify="space-between"
-      >
-        <el-row />
-        <el-row>
-          <el-select
-            v-model="tournament.status"
-            placeholder="Статус"
-            @change="handleTournamentStatusChanged"
-          >
-            <el-option
-              v-for="(userType, key) in printableStatuses"
-              :key="key"
-              :label="userType"
-              :value="key"
-            />
-          </el-select>
-        </el-row>
-      </el-row>
+      <h3>Создать Игру</h3>
     </template>
-    <el-row class="my-4">
-      <el-col :span="6">
-        <span>Укажите название</span>
-        <el-input
-          v-model="tournament.name"
-          placeholder="Название"
-        />
+    <el-row
+      :gutter="10"
+      class="my-4"
+    >
+      <el-col
+        :span="12"
+        class="pb-4"
+      >
+        <el-select
+          v-model="newGame.league_id"
+          placeholder="Лига"
+        >
+          <el-option
+            v-for="(league) in leagues"
+            :key="league.id"
+            :label="league.name"
+            :value="league.id"
+          />
+        </el-select>
       </el-col>
-    </el-row>
-
-    <el-row>
-      <el-col :span="6">
-        <span>Укажите дату и время начала</span>
+      <el-col
+        :span="12"
+        class="pb-4"
+      >
+        <el-select
+          v-model="newGame.division_id"
+          :disabled="!newGame.league_id"
+          placeholder="Дивизион"
+        >
+          <el-option
+            v-for="(division) in divisions"
+            :key="division.id"
+            :label="division.name"
+            :value="division.id"
+          />
+        </el-select>
+      </el-col>
+      <el-col
+        :span="12"
+        class="pb-4"
+      >
+        <el-select
+          v-model="newGame.tournament_id"
+          placeholder="Турнир"
+        >
+          <el-option
+            v-for="(tournament) in tournaments"
+            :key="tournament.id"
+            :label="tournament.name"
+            :value="tournament.id"
+          />
+        </el-select>
+      </el-col>
+      <el-col
+        :span="12"
+        class="pb-4"
+      >
+        <el-select
+          v-model="newGame.stadium_id"
+          placeholder="Стадион"
+        >
+          <el-option
+            v-for="(stadium) in stadiums"
+            :key="stadium.id"
+            :label="stadium.title"
+            :value="stadium.id"
+          />
+        </el-select>
+      </el-col>
+      <el-col
+        :span="12"
+        class="pb-4"
+      >
+        <el-select
+          v-model="newGame.team_1_id"
+          :disabled="!newGame.division_id"
+          placeholder="Команда 1"
+        >
+          <el-option
+            v-for="(team) in teams"
+            :key="team.id"
+            :label="team.name"
+            :value="team.id"
+          />
+        </el-select>
+      </el-col>
+      <el-col
+        :span="12"
+        class="pb-4"
+      >
+        <el-select
+          v-model="newGame.team_2_id"
+          :disabled="!newGame.division_id || !newGame.team_1_id"
+          placeholder="Команда 2"
+        >
+          <el-option
+            v-for="(team) in secondTeams"
+            :key="team.id"
+            :label="team.name"
+            :value="team.id"
+          />
+        </el-select>
+      </el-col>
+      <el-col
+        :span="12"
+        class="pb-4"
+      >
         <el-date-picker
-          v-model="tournament.started_at"
+          v-model="newGame.started_at"
+          format="MM-DD-YYYY HH:mm"
+          placeholder="Дата и время начало турнира"
+          type="datetime"
         />
       </el-col>
-    </el-row>
-    <el-row class="my-4">
-      <el-col :span="6">
-        <span>Укажите дату и время окончания</span>
+      <el-col
+        :span="12"
+        class="pb-4"
+      >
         <el-date-picker
-          v-model="tournament.ended_at"
+          v-model="newGame.finished_at"
+          format="MM-DD-YYYY HH:mm"
+          placeholder="Дата и время завершения турнира"
+          type="datetime"
         />
       </el-col>
     </el-row>
-    <el-row class="my-3 flex-row-reverse">
+    <el-row
+      :gutter="20"
+      class="my-3 flex-row-reverse"
+    >
       <el-button-group>
         <el-button @click="$router.push({name: 'tournaments'})">
           Отменить
         </el-button>
         <el-button
           type="primary"
-          @click="onUpdateTournamentClicked"
+          @click="onCreateGameClicked"
         >
-          Обновить
+          Создать
         </el-button>
       </el-button-group>
     </el-row>

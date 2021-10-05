@@ -156,10 +156,9 @@ const toggleSubmenu = (type) => {
 watch(
   [selectedCountryId],
   (newName, prevName) => {
-    if (newName[0]===0) {
+    if (newName[0]===null) {
       selectedCityId.value=null
     }
-    else console.log('false')
   },
 )
 

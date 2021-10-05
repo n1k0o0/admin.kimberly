@@ -103,7 +103,7 @@
                   <i class="fas fa-white fa-calendar-alt" />
                 </span>
               </span>
-              <span class="menu-title">Календарь</span>
+              <span class="menu-title">Расписание</span>
             </router-link>
           </div>
           <div class="menu-item">

@@ -104,9 +104,10 @@ const closeCountryAndCityModal = () => {
 const getMe = async () => {
   await store.dispatch('auth/GET_AUTH_ME')
   data.isLoading = true
-  if (!selectedCountry.value || !selectedCity.value) {
+  if (!localStorage.getItem('firstSign')) {
     countryAndCityModalShown.value = true
   }
+  localStorage.setItem('firstSign', '1')
 }
 
 const checkAuth = computed(() => store.getters['auth/GET_USER_ID'])

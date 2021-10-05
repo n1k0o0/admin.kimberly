@@ -38,6 +38,7 @@
         <span>Укажите дату и время начала</span>
         <el-date-picker
           v-model="tournament.started_at"
+          value-format="YYYY-MM-DD"
         />
       </el-col>
     </el-row>
@@ -46,6 +47,7 @@
         <span>Укажите дату и время окончания</span>
         <el-date-picker
           v-model="tournament.ended_at"
+          value-format="YYYY-MM-DD"
         />
       </el-col>
     </el-row>
@@ -66,21 +68,21 @@
 </template>
 
 <script>
-import { onMounted, ref } from "vue";
-import { useRoute, useRouter } from "vue-router";
-import { useLoadingState } from "@/composables/common/useLoadingState.js";
-import { getTournament, updateTournament, updateTournamentStatus } from "@/services/tournaments/tournaments.js";
-import { getPrintableTournamentStatuses } from "@/services/tournaments/Tournament.js";
+import { onMounted, ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { useLoadingState } from '@/composables/common/useLoadingState.js'
+import { getTournament, updateTournament, updateTournamentStatus } from '@/services/tournaments/tournaments.js'
+import { getPrintableTournamentStatuses } from '@/services/tournaments/Tournament.js'
 
 export default {
-  name: "Edit",
-  setup() {
+  name: 'Edit',
+  setup () {
     const route = useRoute()
     const router = useRouter()
     const { loading, setLoaded, setLoading } = useLoadingState(false)
 
     let tournamentId = null
-    let tournament = ref({});
+    let tournament = ref({})
 
     onMounted(async () => {
       try {
@@ -108,15 +110,15 @@ export default {
 
     const handleTournamentStatusChanged = async (status) => {
       try {
-        setLoading();
-        await updateTournamentStatus(tournamentId, status);
-        tournament.value.status = status;
+        setLoading()
+        await updateTournamentStatus(tournamentId, status)
+        tournament.value.status = status
       } catch (e) {
-        console.log(e);
+        console.log(e)
       } finally {
-        setLoaded();
+        setLoaded()
       }
-    };
+    }
 
     const printableStatuses = getPrintableTournamentStatuses()
 

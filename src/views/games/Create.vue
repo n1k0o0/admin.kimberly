@@ -8,7 +8,7 @@
       class="my-4"
     >
       <el-col
-        :span="12"
+        :span="9"
         class="pb-4"
       >
         <el-select
@@ -24,7 +24,7 @@
         </el-select>
       </el-col>
       <el-col
-        :span="12"
+        :span="9"
         class="pb-4"
       >
         <el-select
@@ -41,7 +41,7 @@
         </el-select>
       </el-col>
       <el-col
-        :span="12"
+        :span="9"
         class="pb-4"
       >
         <el-select
@@ -57,7 +57,7 @@
         </el-select>
       </el-col>
       <el-col
-        :span="12"
+        :span="9"
         class="pb-4"
       >
         <el-select
@@ -73,7 +73,7 @@
         </el-select>
       </el-col>
       <el-col
-        :span="12"
+        :span="9"
         class="pb-4"
       >
         <el-select
@@ -90,7 +90,7 @@
         </el-select>
       </el-col>
       <el-col
-        :span="12"
+        :span="9"
         class="pb-4"
       >
         <el-select
@@ -107,24 +107,13 @@
         </el-select>
       </el-col>
       <el-col
-        :span="12"
+        :span="9"
         class="pb-4"
       >
         <el-date-picker
           v-model="newGame.started_at"
           format="MM-DD-YYYY HH:mm"
-          placeholder="Дата и время начало турнира"
-          type="datetime"
-        />
-      </el-col>
-      <el-col
-        :span="12"
-        class="pb-4"
-      >
-        <el-date-picker
-          v-model="newGame.finished_at"
-          format="MM-DD-YYYY HH:mm"
-          placeholder="Дата и время завершения турнира"
+          placeholder="Дата и время начало игры"
           type="datetime"
         />
       </el-col>

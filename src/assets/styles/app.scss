@@ -8,6 +8,6 @@ button i {
 i.el-input__icon.el-icon-view.el-input__clear {
   color: black !important;
 }
-.el-date-editor.el-input, .el-date-editor.el-input__inner {
-  width: auto;
+.el-input,.el-select,.el-date-editor.el-input, .el-date-editor.el-input__inner{
+  width: 100%!important;
 }

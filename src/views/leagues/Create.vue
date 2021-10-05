@@ -96,13 +96,13 @@ export default {
   setup() {
     const router = useRouter();
     const { loading, setLoaded, setLoading } = useLoadingState(false);
-    const { selectedCity } = useCountryAndCity();
+    const { selectedCityId } = useCountryAndCity();
     const newDivision = reactive({
       name: ''
     });
     const newLeague = reactive({
       name: '',
-      city_id: selectedCity.value.id,
+      city_id: selectedCityId,
       divisions: [],
     });
 

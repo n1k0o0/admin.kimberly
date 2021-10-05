@@ -5,12 +5,57 @@
     :empty-text="'Нет данных'"
   >
     <el-table-column
-      label="Дата и время начало"
+      label="Страна"
     >
       <template #default="scope">
-        {{ $moment(scope.row.started_at).utc().locale('ru').format('YYYY-MM-DD HH:mm') }}
+        {{ scope.row.league.country.name }}
       </template>
     </el-table-column>
+    <el-table-column
+      label="Город"
+    >
+      <template #default="scope">
+        {{ scope.row.league.city.name }}
+      </template>
+    </el-table-column>
+
+    <el-table-column
+      label="Турнир"
+    >
+      <template #default="scope">
+        {{ scope.row.tournament.name }}
+      </template>
+    </el-table-column>
+    <el-table-column
+      label="Лига"
+    >
+      <template #default="scope">
+        {{ scope.row.league.name }}
+      </template>
+    </el-table-column>
+    <el-table-column
+      label="Дивизион"
+    >
+      <template #default="scope">
+        {{ scope.row.division.name }}
+      </template>
+    </el-table-column>
+
+    <el-table-column
+      label="Дата начало"
+    >
+      <template #default="scope">
+        {{ $moment(scope.row.started_at).utc().locale('ru').format('YYYY-MM-DD') }}
+      </template>
+    </el-table-column>
+    <el-table-column
+      label="Время начало"
+    >
+      <template #default="scope">
+        {{ $moment(scope.row.started_at).utc().locale('ru').format('HH:mm') }}
+      </template>
+    </el-table-column>
+
     <el-table-column
       label="Team 1"
     >
@@ -27,42 +72,6 @@
     </el-table-column>
 
     <el-table-column
-      label="Страна"
-    >
-      <template #default="scope">
-        {{ scope.row.league.country.name }}
-      </template>
-    </el-table-column>
-    <el-table-column
-      label="Город"
-    >
-      <template #default="scope">
-        {{ scope.row.league.city.name }}
-      </template>
-    </el-table-column>
-
-    <el-table-column
-      label="Лига"
-    >
-      <template #default="scope">
-        {{ scope.row.league.name }}
-      </template>
-    </el-table-column>
-    <el-table-column
-      label="Дивизион"
-    >
-      <template #default="scope">
-        {{ scope.row.division.name }}
-      </template>
-    </el-table-column>
-    <el-table-column
-      label="Турнир"
-    >
-      <template #default="scope">
-        {{ scope.row.tournament.name }}
-      </template>
-    </el-table-column>
-    <el-table-column
       label="Стадион"
     >
       <template #default="scope">
@@ -77,14 +86,16 @@
         {{ tournamentStatus(scope.row.status) }}
       </template>
     </el-table-column>
+
     <el-table-column
       label="Управление"
+      width="140"
     >
       <template #default="scope">
         <el-button
           icon="el-icon-edit"
           type="primary"
-          @click="$emit('edit-game', scope.row)"
+          @click="$router.push({name: 'games-edit', params: {id: scope.row.id}})"
         />
         <el-popconfirm
           cancel-button-text="Отмена"

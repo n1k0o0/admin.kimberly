@@ -26,7 +26,7 @@ const routes = [
   { path: '/calendar', name: 'calendar', component: () => import('@/views/calendar/Index.vue') },
 
   { path: '/games/create', name: 'game-create', component: () => import('@/views/games/Create.vue') },
-  // { path: "/games/:id", name: 'games-edit', component: import('@/views/games/Edit.vue') },
+  { path: "/games/:id", name: 'games-edit', component: () => import('@/views/games/Edit.vue') },
 
   {
     path: '/internal-users/:id',
