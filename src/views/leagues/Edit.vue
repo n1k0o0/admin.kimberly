@@ -4,7 +4,7 @@
       <h3>Редактирование лиги: {{ league.name }}</h3>
     </template>
     <el-row class="my-4">
-      <el-col :span="6">
+      <el-col :span="12">
         <span>Укажите название</span>
         <el-input
           v-model="league.name"
@@ -12,8 +12,8 @@
         />
       </el-col>
     </el-row>
-    <el-row>
-      <el-col :span="6">
+    <el-row :gutter="20">
+      <el-col :span="12">
         <add-division
           v-if="!updatingDivision.id"
           @add-division="onDivisionAdded"
@@ -34,6 +34,11 @@
             Обновить
           </el-button>
         </el-row>
+      </el-col>
+      <el-col
+        class="mt-n20"
+        :span="12"
+      >
         <el-table
           :data="league.divisions"
           :empty-text="'Нет дивизионов'"

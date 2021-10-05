@@ -21,7 +21,11 @@ api.interceptors.request.use((config) => {
 });
 
 api.interceptors.response.use(undefined, (error) => {
-  let errorMessage=error.response.data.message
+  let errorMessage
+  if (error.response.data.exception==='App\\Exceptions\\BusinessLogicException'){
+    errorMessage=error.response.data.message
+  }
+  console.log()
   if (error.response && (error.response.status === 401 || error.response.status === 419)) {
     localStorage.removeItem('token');
     if (window.location.pathname !== '/auth') {

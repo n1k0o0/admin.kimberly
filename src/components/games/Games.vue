@@ -5,6 +5,13 @@
     :empty-text="'Нет данных'"
   >
     <el-table-column
+      label="Дата и время начало"
+    >
+      <template #default="scope">
+        {{ $moment(scope.row.started_at).utc().locale('ru').format('YYYY-MM-DD HH:mm') }}
+      </template>
+    </el-table-column>
+    <el-table-column
       label="Team 1"
     >
       <template #default="scope">
@@ -18,6 +25,22 @@
         {{ scope.row.team_2.name }}
       </template>
     </el-table-column>
+
+    <el-table-column
+      label="Страна"
+    >
+      <template #default="scope">
+        {{ scope.row.league.country.name }}
+      </template>
+    </el-table-column>
+    <el-table-column
+      label="Город"
+    >
+      <template #default="scope">
+        {{ scope.row.league.city.name }}
+      </template>
+    </el-table-column>
+
     <el-table-column
       label="Лига"
     >
@@ -26,18 +49,10 @@
       </template>
     </el-table-column>
     <el-table-column
-      label="Стадион"
+      label="Дивизион"
     >
       <template #default="scope">
-        {{ scope.row.stadium.title }}
-      </template>
-    </el-table-column>
-
-    <el-table-column
-      label="Страна"
-    >
-      <template #default="scope">
-        {{ scope.row.stadium.country.name }}
+        {{ scope.row.division.name }}
       </template>
     </el-table-column>
     <el-table-column
@@ -48,8 +63,15 @@
       </template>
     </el-table-column>
     <el-table-column
-      prop="status"
+      label="Стадион"
+    >
+      <template #default="scope">
+        {{ scope.row.stadium.title }}
+      </template>
+    </el-table-column>
+    <el-table-column
       label="Статус"
+      prop="status"
     >
       <template #default="scope">
         {{ tournamentStatus(scope.row.status) }}
@@ -60,20 +82,20 @@
     >
       <template #default="scope">
         <el-button
-          type="primary"
           icon="el-icon-edit"
+          type="primary"
           @click="$emit('edit-game', scope.row)"
         />
         <el-popconfirm
-          title="Вы действительно хотите удалить игру?"
           cancel-button-text="Отмена"
           confirm-button-text="Да"
+          title="Вы действительно хотите удалить игру?"
           @confirm="$emit('remove-game', scope.row)"
         >
           <template #reference>
             <el-button
-              type="danger"
               icon="el-icon-delete"
+              type="danger"
             />
           </template>
         </el-popconfirm>
@@ -83,23 +105,24 @@
 </template>
 
 <script>
-import { getPrintableTournamentStatus } from "@/services/tournaments/Tournament.js";
+import { getPrintableTournamentStatus } from '@/services/tournaments/Tournament.js'
+
 export default {
-  name: "Games",
+  name: 'Games',
   props: {
     games: {
       type: Array,
       default: () => [],
     }
   },
-emits: ['remove-game', 'edit-game'],
-  setup() {
-    const tournamentStatus = (type)=>getPrintableTournamentStatus(type)
+  emits: ['remove-game', 'edit-game'],
+  setup () {
+    const tournamentStatus = (type) => getPrintableTournamentStatus(type)
     return {
       tournamentStatus
     }
   }
-};
+}
 </script>
 
 <style scoped>

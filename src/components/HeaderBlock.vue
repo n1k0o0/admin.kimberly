@@ -114,7 +114,7 @@
 </template>
 
 <script setup>
-import { onMounted, reactive, } from 'vue'
+import { onMounted, reactive, watch, } from 'vue'
 import { useStore } from 'vuex'
 import useCountryAndCity from '../composables/useCountryAndCity'
 import TopbarBlock from './TopbarBlock.vue'
@@ -125,7 +125,7 @@ const data = reactive({
 })
 const store = useStore()
 
-const { selectedCountry, selectedCountryId, selectedCityId, countries, cities } = useCountryAndCity()
+let { selectedCountry, selectedCountryId, selectedCityId, countries, cities } = useCountryAndCity()
 
 const toggleDropdown = (type) => {
   if (!type) {
@@ -153,9 +153,15 @@ const toggleSubmenu = (type) => {
   }
 }
 
-onMounted(() => {
-
-})
+watch(
+  [selectedCountryId],
+  (newName, prevName) => {
+    if (newName[0]===null) {
+      selectedCityId.value=null
+    }
+    else console.log('false')
+  },
+)
 
 </script>
 

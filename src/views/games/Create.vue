@@ -4,12 +4,12 @@
       <h3>Создать Игру</h3>
     </template>
     <el-row
-      class="my-4"
       :gutter="10"
+      class="my-4"
     >
       <el-col
+        :span="12"
         class="pb-4"
-        :span="6"
       >
         <el-select
           v-model="newGame.league_id"
@@ -24,8 +24,8 @@
         </el-select>
       </el-col>
       <el-col
+        :span="12"
         class="pb-4"
-        :span="6"
       >
         <el-select
           v-model="newGame.division_id"
@@ -41,8 +41,40 @@
         </el-select>
       </el-col>
       <el-col
+        :span="12"
         class="pb-4"
-        :span="6"
+      >
+        <el-select
+          v-model="newGame.tournament_id"
+          placeholder="Турнир"
+        >
+          <el-option
+            v-for="(tournament) in tournaments"
+            :key="tournament.id"
+            :label="tournament.name"
+            :value="tournament.id"
+          />
+        </el-select>
+      </el-col>
+      <el-col
+        :span="12"
+        class="pb-4"
+      >
+        <el-select
+          v-model="newGame.stadium_id"
+          placeholder="Стадион"
+        >
+          <el-option
+            v-for="(stadium) in stadiums"
+            :key="stadium.id"
+            :label="stadium.title"
+            :value="stadium.id"
+          />
+        </el-select>
+      </el-col>
+      <el-col
+        :span="12"
+        class="pb-4"
       >
         <el-select
           v-model="newGame.team_1_id"
@@ -58,8 +90,8 @@
         </el-select>
       </el-col>
       <el-col
+        :span="12"
         class="pb-4"
-        :span="6"
       >
         <el-select
           v-model="newGame.team_2_id"
@@ -75,69 +107,31 @@
         </el-select>
       </el-col>
       <el-col
+        :span="12"
         class="pb-4"
-        :span="6"
-      >
-        <el-select
-          v-model="newGame.tournament_id"
-          placeholder="Турнир"
-        >
-          <el-option
-            v-for="(tournament) in tournaments"
-            :key="tournament.id"
-            :label="tournament.name"
-            :value="tournament.id"
-          />
-        </el-select>
-      </el-col>
-      <el-col
-        class="pb-4"
-        :span="6"
-      >
-        <el-select
-          v-model="newGame.stadium_id"
-          placeholder="Стадион"
-        >
-          <el-option
-            v-for="(stadium) in stadiums"
-            :key="stadium.id"
-            :label="stadium.title"
-            :value="stadium.id"
-          />
-        </el-select>
-      </el-col>
-      <el-col
-        class="pb-4"
-        :span="6"
       >
         <el-date-picker
           v-model="newGame.started_at"
+          format="MM-DD-YYYY HH:mm"
+          placeholder="Дата и время начало турнира"
           type="datetime"
-          placeholder="Select date and time"
+        />
+      </el-col>
+      <el-col
+        :span="12"
+        class="pb-4"
+      >
+        <el-date-picker
+          v-model="newGame.finished_at"
+          format="MM-DD-YYYY HH:mm"
+          placeholder="Дата и время завершения турнира"
+          type="datetime"
         />
       </el-col>
     </el-row>
-    <!--    <el-row class="my-4">
-      <el-col :span="6">
-        <span>Укажите дату и время начала</span>
-        <el-date-picker
-          v-model="newTournament.started_at"
-          placeholder="Дата и время начала"
-        />
-      </el-col>
-    </el-row>
-    <el-row class="my-4">
-      <el-col :span="6">
-        <span>Укажите дату и время окончания</span>
-        <el-date-picker
-          v-model="newTournament.ended_at"
-          placeholder="Дата и время окончания"
-        />
-      </el-col>
-    </el-row>-->
     <el-row
-      class="my-3 flex-row-reverse"
       :gutter="20"
+      class="my-3 flex-row-reverse"
     >
       <el-button-group>
         <el-button @click="$router.push({name: 'tournaments'})">
@@ -155,42 +149,42 @@
 </template>
 
 <script>
-import { computed, reactive, ref, onMounted, watch } from 'vue'
-import { useLoadingState } from "@/composables/common/useLoadingState.js";
-import { parseErrors } from "@/helpers.js";
-import { useRouter } from "vue-router";
-import { useStore } from "vuex";
-import { paginateTournaments } from "@/services/tournaments/tournaments.js";
+import { computed, onMounted, reactive, ref, watch } from 'vue'
+import { useLoadingState } from '@/composables/common/useLoadingState.js'
+import { parseErrors } from '@/helpers.js'
+import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
+import { paginateTournaments } from '@/services/tournaments/tournaments.js'
 import { paginateLeagues } from '@/services/leagues/leagueService.js'
 import { paginateStadiums } from '@/services/stadiums/stadiums.js'
 import { getTeams } from '@/services/schools/teams/teams.js'
 import { createGame } from '@/services/games/gameService.js'
-import useCountryAndCity from "@/composables/useCountryAndCity.js";
+import useCountryAndCity from '@/composables/useCountryAndCity.js'
 
 export default {
-  name: "Create",
-  setup() {
-    const router = useRouter();
-    const store = useStore();
-    const { loading, setLoaded, setLoading } = useLoadingState(false);
-    const { selectedCityId ,selectedCountryId } = useCountryAndCity();
+  name: 'Create',
+  setup () {
+    const router = useRouter()
+    const store = useStore()
+    const { loading, setLoaded, setLoading } = useLoadingState(false)
+    const { selectedCityId, selectedCountryId } = useCountryAndCity()
     const newGame = reactive({
       city_id: selectedCityId,
       country_id: selectedCountryId,
-    });
-    const countries = computed(() => store.getters["general/GET_COUNTRIES"]);
+    })
+    const countries = computed(() => store.getters['general/GET_COUNTRIES'])
     const onCreateGameClicked = async () => {
       try {
-        setLoading();
-        const { data } = await createGame(newGame);
-        await router.push({ name: 'calendar' });
+        setLoading()
+        const { data } = await createGame(newGame)
+        await router.push({ name: 'calendar' })
       } catch (e) {
-        const errors = parseErrors(e.response.data.errors);
-        console.log(errors);
+        const errors = parseErrors(e.response.data.errors)
+        console.log(errors)
       } finally {
-        setLoaded();
+        setLoaded()
       }
-    };
+    }
 
     const tournaments = ref([])
     const leagues = ref([])
@@ -217,13 +211,13 @@ export default {
     )
 
     const secondTeams = computed(
-      () => teams.value.filter(team => team.id!==newGame.team_1_id)
+      () => teams.value.filter(team => team.id !== newGame.team_1_id)
     )
 
     watch(
       () => newGame.league_id,
       (newName, prevName) => {
-          newGame.division_id = ''
+        newGame.division_id = ''
       },
     )
     watch(
@@ -266,9 +260,9 @@ export default {
       secondTeams,
       countries,
       onCreateGameClicked,
-    };
+    }
   },
-};
+}
 </script>
 
 <style scoped>

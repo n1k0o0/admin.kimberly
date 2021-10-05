@@ -8,6 +8,7 @@
         <el-col :span="5">
           <el-select
             v-model="search.league_ids"
+            filterable
             multiple
             placeholder="Лига"
             @change="searchGames"
@@ -24,6 +25,7 @@
           <el-select
             v-model="search.division_ids"
             :disabled="!search.league_ids || !search.league_ids.length"
+            filterable
             multiple
             placeholder="Дивизион"
             @change="searchGames"
@@ -39,6 +41,7 @@
         <el-col :span="5">
           <el-select
             v-model="search.team_ids"
+            filterable
             :disabled="!search.division_ids || !search.division_ids.length"
             multiple
             placeholder="Команда"
@@ -55,6 +58,7 @@
         <el-col :span="5">
           <el-select
             v-model="search.tournament_ids"
+            filterable
             multiple
             placeholder="Турнир"
             @change="searchGames"
@@ -70,6 +74,7 @@
         <el-col :span="4">
           <el-select
             v-model="search.stadium_ids"
+            filterable
             multiple
             placeholder="Стадион"
             @change="searchGames"
