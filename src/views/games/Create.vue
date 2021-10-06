@@ -192,7 +192,7 @@ export default {
     })
 
     const divisions = computed(
-      () => leagues.value.filter(league => newGame.league_id)
+      () => leagues.value.filter(league => league.id=== newGame.league_id)
         .map(function (lg) {
           return lg.divisions
         })

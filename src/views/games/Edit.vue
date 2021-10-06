@@ -1,7 +1,7 @@
 <template>
   <el-card v-loading="loading">
     <template #header>
-      <h3>Создать Игру</h3>
+      <h3>Редактировать Игру</h3>
     </template>
     <el-row
       :gutter="10"
@@ -12,7 +12,7 @@
         class="pb-4"
       >
         <el-select
-          v-model="newGame.league_id"
+          v-model="game.league_id"
           placeholder="Лига"
         >
           <el-option
@@ -28,8 +28,8 @@
         class="pb-4"
       >
         <el-select
-          v-model="newGame.division_id"
-          :disabled="!newGame.league_id"
+          v-model="game.division_id"
+          :disabled="!game.league_id"
           placeholder="Дивизион"
         >
           <el-option
@@ -45,7 +45,7 @@
         class="pb-4"
       >
         <el-select
-          v-model="newGame.tournament_id"
+          v-model="game.tournament_id"
           placeholder="Турнир"
         >
           <el-option
@@ -61,7 +61,7 @@
         class="pb-4"
       >
         <el-select
-          v-model="newGame.stadium_id"
+          v-model="game.stadium_id"
           placeholder="Стадион"
         >
           <el-option
@@ -77,8 +77,8 @@
         class="pb-4"
       >
         <el-select
-          v-model="newGame.team_1_id"
-          :disabled="!newGame.division_id"
+          v-model="game.team_1_id"
+          :disabled="!game.division_id"
           placeholder="Команда 1"
         >
           <el-option
@@ -94,8 +94,8 @@
         class="pb-4"
       >
         <el-select
-          v-model="newGame.team_2_id"
-          :disabled="!newGame.division_id || !newGame.team_1_id"
+          v-model="game.team_2_id"
+          :disabled="!game.division_id || !game.team_1_id"
           placeholder="Команда 2"
         >
           <el-option
@@ -111,20 +111,9 @@
         class="pb-4"
       >
         <el-date-picker
-          v-model="newGame.started_at"
-          format="MM-DD-YYYY HH:mm"
+          v-model="game.started_at"
+          format="DD-MM-YYYY HH:mm"
           placeholder="Дата и время начало турнира"
-          type="datetime"
-        />
-      </el-col>
-      <el-col
-        :span="12"
-        class="pb-4"
-      >
-        <el-date-picker
-          v-model="newGame.finished_at"
-          format="MM-DD-YYYY HH:mm"
-          placeholder="Дата и время завершения турнира"
           type="datetime"
         />
       </el-col>
@@ -134,14 +123,14 @@
       class="my-3 flex-row-reverse"
     >
       <el-button-group>
-        <el-button @click="$router.push({name: 'tournaments'})">
+        <el-button @click="$router.push({name: 'calendar'})">
           Отменить
         </el-button>
         <el-button
           type="primary"
-          @click="onCreateGameClicked"
+          @click="onUpdateGameClicked"
         >
-          Создать
+          Обновить
         </el-button>
       </el-button-group>
     </el-row>
@@ -149,11 +138,14 @@
 </template>
 
 <script>
-import { onMounted, ref } from "vue";
+import { computed, onMounted, reactive, ref, watch } from 'vue'
 import { useRoute, useRouter } from "vue-router";
 import { useLoadingState } from "@/composables/common/useLoadingState.js";
-import { getTournament, updateTournament, updateTournamentStatus } from "@/services/tournaments/tournaments.js";
-import { getPrintableTournamentStatuses } from "@/services/tournaments/Tournament.js";
+import { getGame,updateGame } from '@/services/games/gameService.js'
+import { paginateTournaments } from '@/services/tournaments/tournaments.js'
+import { paginateLeagues } from '@/services/leagues/leagueService.js'
+import { paginateStadiums } from '@/services/stadiums/stadiums.js'
+import { getTeams } from '@/services/schools/teams/teams.js'
 
 export default {
   name: "Edit",
@@ -162,53 +154,96 @@ export default {
     const router = useRouter()
     const { loading, setLoaded, setLoading } = useLoadingState(false)
 
-    let tournamentId = null
-    let tournament = ref({});
+    let firstLoad=true
+    let gameId = null
+    let game = reactive({});
+    const tournaments = ref([])
+    const leagues = ref([])
+    const stadiums = ref([])
+    const teams = ref([])
 
     onMounted(async () => {
       try {
-        tournamentId = route.params.id
+        console.log(route.params,route.params.id)
+        gameId = route.params.id
         setLoading()
-        const { data } = await getTournament(tournamentId)
-        tournament.value = data
+        const { data } = await getGame(gameId)
+        const { data: { data: tournamentItems } } = await paginateTournaments({ city_id:data.league.city_id }, null, 0)
+        const { data: { data: leagueItems } } = await paginateLeagues({ city_id:data.league.city_id }, null, 0)
+        const { data: { data: stadiumItems } } = await paginateStadiums({ city_id:data.league.city_id }, null, 0)
+        const { data: { data: teamItems, } } = await getTeams({ division_id:data.division_id }, null, 0)
+
+        teams.value = teamItems
+        leagues.value = leagueItems
+        stadiums.value = stadiumItems
+        tournaments.value = tournamentItems
+        Object.assign(game, data)
+        game.league_id=game.league.id
+        setTimeout(()=>firstLoad=false,1000)
       } catch (e) {
-        console.log(e)
+        console.log(e.message)
       } finally {
         setLoaded()
       }
     })
 
-    const onUpdateTournamentClicked = async () => {
+    const onUpdateGameClicked = async () => {
       try {
         setLoading()
-        await updateTournament(tournamentId, tournament.value)
-        await router.push({ name: 'tournaments' })
+        await updateGame(gameId, game)
+        await router.push({ name: 'calendar' })
       } catch (e) {
       } finally {
         setLoaded()
       }
     }
+    const divisions = computed(
+      () => leagues.value.filter(league => league.id===game.league_id)
+        .map(function (lg) {
+          return lg.divisions
+        })
+        .flat()
+    )
+    const secondTeams = computed(
+      () => teams.value.filter(team => team.id !== game.team_1_id)
+    )
 
-    const handleTournamentStatusChanged = async (status) => {
-      try {
-        setLoading();
-        await updateTournamentStatus(tournamentId, status);
-        tournament.value.status = status;
-      } catch (e) {
-        console.log(e);
-      } finally {
-        setLoaded();
-      }
-    };
+    watch(
+      () => game.league_id,
+      (newName, prevName) => {
 
-    const printableStatuses = getPrintableTournamentStatuses()
+        if(!(divisions.value.map(e => e.id)).includes(game.division_id)){
+          game.division_id=''
+        }
+      },
+    )
+
+    watch(
+      () => game.division_id,
+      async (newName, prevName) => {
+
+        if (firstLoad)return
+        if (game.division_id) {
+          const { data: { data: teamItems, } } = await getTeams(game, null, 0)
+          teams.value = teamItems
+        } else {
+          teams.value = []
+        }
+        game.team_1_id = ''
+        game.team_2_id = ''
+      },
+    )
 
     return {
-      printableStatuses,
       loading,
-      tournament,
-      onUpdateTournamentClicked,
-      handleTournamentStatusChanged,
+      game,
+      tournaments,
+      leagues,
+      divisions,
+      stadiums,
+      teams,
+      secondTeams,
+      onUpdateGameClicked,
     }
   },
 }

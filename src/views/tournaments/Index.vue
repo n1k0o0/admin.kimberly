@@ -57,7 +57,7 @@
         prop="started_at"
       >
         <template #default="scope">
-          {{ $moment(scope.row.started_at).utc().locale('ru').format('YYYY-MM-DD') }}
+          {{ $moment(scope.row.started_at).locale('ru').format('YYYY-MM-DD') }}
         </template>
       </el-table-column>
       <el-table-column
@@ -65,7 +65,7 @@
         prop="ended_at"
       >
         <template #default="scope">
-          {{ $moment(scope.row.ended_at).utc().locale('ru').format('YYYY-MM-DD') }}
+          {{ $moment(scope.row.ended_at).locale('ru').format('YYYY-MM-DD') }}
         </template>
       </el-table-column>
       <el-table-column

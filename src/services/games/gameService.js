@@ -38,3 +38,20 @@ export function loadGames(params) {
     params
   })
 }
+
+export function getPrintableGameStatuses() {
+  return {
+    not_started: 'Не начат',
+    started: 'Начат',
+    finished: 'Закончен',
+  };
+}
+
+export function getPrintableGameStatus(type) {
+  const types = getPrintableGameStatuses();
+  if (types.hasOwnProperty(type)) {
+    return types[type];
+  }
+
+  return '';
+}

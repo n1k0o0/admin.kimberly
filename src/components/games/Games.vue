@@ -45,14 +45,14 @@
       label="Дата начало"
     >
       <template #default="scope">
-        {{ $moment(scope.row.started_at).utc().locale('ru').format('YYYY-MM-DD') }}
+        {{ $moment(scope.row.started_at).locale('ru').format('YYYY-MM-DD') }}
       </template>
     </el-table-column>
     <el-table-column
       label="Время начало"
     >
       <template #default="scope">
-        {{ $moment(scope.row.started_at).utc().locale('ru').format('HH:mm') }}
+        {{ $moment(scope.row.started_at).locale('ru').format('HH:mm') }}
       </template>
     </el-table-column>
 
