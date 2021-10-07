@@ -1,3 +1,5 @@
+import { getPrintableSchoolStatuses } from '../schools/School'
+
 export const UserTypes = {
   school: 'school',
 };
@@ -29,4 +31,12 @@ export function getPrintableUserStatuses() {
     active: 'Активен',
     disabled: 'Заблокирован',
   };
+}
+export function getPrintableUserStatus(type) {
+  const types = getPrintableUserStatuses();
+  if (types.hasOwnProperty(type)) {
+    return types[type];
+  }
+
+  return '';
 }

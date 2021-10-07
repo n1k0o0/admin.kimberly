@@ -22,16 +22,16 @@
               <el-option
                 v-for="(type, key) in userTypes"
                 :key="key"
-                :value="key"
                 :label="type"
+                :value="key"
               />
             </el-select>
           </el-col>
           <el-col :span="6">
             <el-date-picker
               v-model="search.created_at_start"
-              type="date"
               placeholder="Создан от"
+              type="date"
               @change="onCreatedAtStartChanged"
             />
           </el-col>
@@ -52,12 +52,12 @@
       :empty-text="'Нет данных'"
     >
       <el-table-column
-        prop="email"
         label="Email"
+        prop="email"
       />
       <el-table-column
-        label="Полное имя"
         :prop="'full_name'"
+        label="Полное имя"
       />
       <el-table-column
         label="Школа"
@@ -65,10 +65,10 @@
         <template #default="scope">
           <router-link
             v-if="scope.row.school"
-            class="menu-link"
             :to="`/schools/${scope.row.school.id}`"
+            class="menu-link"
           >
-            Школа {{ scope.row.school.name }}
+            {{ scope.row.school.name }}
           </router-link>
         </template>
       </el-table-column>
@@ -80,8 +80,15 @@
         </template>
       </el-table-column>
       <el-table-column
-        prop="created_at"
+        label="Статус"
+      >
+        <template #default="scope">
+          {{ getPrintableUserStatus(scope.row.status) }}
+        </template>
+      </el-table-column>
+      <el-table-column
         label="Дата создания"
+        prop="created_at"
       >
         <template #default="scope">
           {{ $moment.unix(scope.row.created_at).locale('ru').format('YYYY-MM-DD hh:mm') }}
@@ -93,8 +100,8 @@
       >
         <template #default="scope">
           <el-button
-            type="primary"
             icon="el-icon-edit"
+            type="primary"
             @click="$router.push({name: 'users-edit', params: {id: scope.row.id}})"
           />
         </template>
@@ -102,8 +109,8 @@
     </el-table>
     <el-row justify="center">
       <el-pagination
-        layout="prev, pager, next"
         :hide-on-single-page="true"
+        layout="prev, pager, next"
         v-bind="pagination"
         @update:current-page="onCurrentPageUpdated"
       />
@@ -112,65 +119,66 @@
 </template>
 
 <script>
-import { paginateUsers, removeUser, } from "@/services/users/users.js";
-import { onMounted, reactive, ref, watch } from "vue";
-import { useLoadingState } from "@/composables/common/useLoadingState.js";
-import { getPrintableUserType, getPrintableUserTypes } from "@/services/users/User.js";
-import moment from "moment";
-import usePagination from "@/composables/common/usePagination";
+import { paginateUsers, removeUser, } from '@/services/users/users.js'
+import { onMounted, reactive, ref, watch } from 'vue'
+import { useLoadingState } from '@/composables/common/useLoadingState.js'
+import { getPrintableUserStatus, getPrintableUserType, getPrintableUserTypes } from '@/services/users/User.js'
+import moment from 'moment'
+import usePagination from '@/composables/common/usePagination'
 
 export default {
-  name: "Index",
-  setup() {
-    const { loading, setLoaded, setLoading } = useLoadingState(true);
-    const { pagination, setPagination, currentPage } = usePagination();
+  name: 'Index',
+  setup () {
+    const { loading, setLoaded, setLoading } = useLoadingState(true)
+    const { pagination, setPagination, currentPage } = usePagination()
     const search = reactive({
       login: '',
       types: [],
       created_at_start: null,
       created_at_end: null,
-    });
-    const userTypes = getPrintableUserTypes();
-    const users = ref([]);
+    })
+    const userTypes = getPrintableUserTypes()
+    const users = ref([])
 
     onMounted(async () => {
-      const { data: { data: userCollection, meta } } = await paginateUsers();
-      setPagination(meta);
-      users.value = userCollection;
-      setLoaded();
-    });
+      const { data: { data: userCollection, meta } } = await paginateUsers()
+      setPagination(meta)
+      users.value = userCollection
+      setLoaded()
+    })
 
     watch([search, currentPage], async () => {
-      setLoading();
+      setLoading()
       try {
-        const { data: { data: users, meta } } = await paginateUsers(search, currentPage.value);
-        setPagination(meta);
-        users.value = users;
+        const { data: { data: users, meta } } = await paginateUsers(search, currentPage.value)
+        setPagination(meta)
+        users.value = users
       } catch (e) {
       } finally {
-        setLoaded();
+        setLoaded()
       }
-    });
+    })
 
     const onRemoveUserClicked = async (userId) => {
       try {
-        setLoading();
-        await removeUser(userId);
-        await paginateUsers(search, currentPage.value);
+        setLoading()
+        await removeUser(userId)
+        await paginateUsers(search, currentPage.value)
       } catch (e) {
       } finally {
-        setLoaded();
+        setLoaded()
       }
-    };
-    const onCurrentPageUpdated = (page) => currentPage.value = page;
-    const onCreatedAtStartChanged = (datetime) => search.created_at_start = moment(datetime).format('YYYY-MM-DD');
-    const onCreatedAtEndChanged = (datetime) => search.created_at_end = moment(datetime).format('YYYY-MM-DD');
+    }
+    const onCurrentPageUpdated = (page) => currentPage.value = page
+    const onCreatedAtStartChanged = (datetime) => search.created_at_start = moment(datetime).format('YYYY-MM-DD')
+    const onCreatedAtEndChanged = (datetime) => search.created_at_end = moment(datetime).format('YYYY-MM-DD')
 
     return {
       search,
       users,
       userTypes,
       getPrintableUserType,
+      getPrintableUserStatus,
       loading,
       onCreatedAtStartChanged,
       onCreatedAtEndChanged,
@@ -178,9 +186,9 @@ export default {
       onCurrentPageUpdated,
       pagination,
       currentPage,
-    };
+    }
   },
-};
+}
 </script>
 
 <style scoped>

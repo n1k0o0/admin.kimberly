@@ -57,8 +57,8 @@
         <el-col :span="5">
           <el-select
             v-model="search.team_ids"
-            filterable
             :disabled="!search.division_ids || !search.division_ids.length"
+            filterable
             multiple
             placeholder="Команда"
             @change="searchGames"
@@ -157,6 +157,7 @@ export default {
       const { data: { data: leagueItems } } = await paginateLeagues(search, null, 0)
       const { data: { data: stadiumItems } } = await paginateStadiums(search, null, 0)
 
+      await searchGames()
       leagues.value = leagueItems
       stadiums.value = stadiumItems
       tournaments.value = tournamentItems
@@ -214,6 +215,7 @@ export default {
         search.tournament_ids = []
         games.value = []
         setPagination({ current_page: 0, total: 0, per_page: 0 })
+        await searchGames()
       },
     )
 

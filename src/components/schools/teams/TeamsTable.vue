@@ -5,6 +5,20 @@
     :empty-text="'Нет данных'"
   >
     <el-table-column
+      label="Страна"
+    >
+      <template #default="scope">
+        {{ scope.row.league.country?.name }}
+      </template>
+    </el-table-column>
+    <el-table-column
+      label="Город"
+    >
+      <template #default="scope">
+        {{ scope.row.league.city?.name }}
+      </template>
+    </el-table-column>
+    <el-table-column
       label="Лига"
       prop="league"
     >
@@ -30,6 +44,7 @@
     </el-table-column>
     <el-table-column
       label="Управление"
+      width="140"
     >
       <template #default="scope">
         <el-button

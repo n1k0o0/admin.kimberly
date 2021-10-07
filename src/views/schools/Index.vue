@@ -37,6 +37,15 @@
         prop="name"
       />
       <el-table-column
+        label="Статус"
+      >
+        <template #default="scope">
+          <div :class="scope.row.status==='moderation'?'moderation':'published'">
+            {{ getPrintableSchoolStatus(scope.row.status) }}
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column
         label="Управление"
       >
         <template #default="scope">
@@ -78,6 +87,7 @@ import usePagination from '@/composables/common/usePagination'
 import { computed, onMounted, reactive, ref, watch } from 'vue'
 import LeagueAndDivisionSelectors from '@/components/common/LeagueAndDivisionSelectors.vue'
 import { paginateSchools, removeSchool } from '@/services/schools/schools.js'
+import { getPrintableSchoolStatus } from '@/services/schools/School.js'
 import useCountryAndCity from '@/composables/useCountryAndCity.js'
 import { paginateLeagues } from '@/services/leagues/leagueService.js'
 
@@ -149,6 +159,7 @@ export default {
       schools,
       pagination,
       currentPage,
+      getPrintableSchoolStatus,
       onRemoveSchoolClicked,
       onCurrentPageUpdated,
       onLeagueSelected,
@@ -159,5 +170,17 @@ export default {
 </script>
 
 <style scoped>
-
+.moderation,.published{
+  padding: 5px 15px;
+  border-radius: 10px;
+  width: fit-content;
+}
+.moderation{
+  background-color: red;
+  color: #ffffff;
+}
+.published{
+  background-color: green;
+  color: #ffffff;
+}
 </style>
