@@ -8,7 +8,7 @@
       @change="onColorSelected"
     >
       <el-option
-        v-for="color in colors"
+        v-for="color in availableColors"
         :key="color.id"
         :label="color.name"
         :value="color.id"
@@ -18,19 +18,23 @@
 </template>
 
 <script>
-import { ref } from "vue";
+import { computed, ref } from 'vue'
 
 export default {
-  name: "TeamColorPicker",
+  name: 'TeamColorPicker',
   props: {
     colorId: {
       type: Number,
       default: null,
-    }
+    },
+    disabledColors: {
+      type: Array,
+      default: () => [],
+    },
   },
   emits: ['color-selected'],
-  setup(props, { emit }) {
-    const selectedColorId = ref(props.colorId);
+  setup (props, { emit }) {
+    const selectedColorId = ref(props.colorId)
     const colors = ref([
       {
         id: 1,
@@ -50,17 +54,19 @@ export default {
         name: 'синий',
         rgb: '#0000ff'
       },
-    ]);
+    ])
 
-    const onColorSelected = (color) => emit('color-selected', colors.value.find(colorItem => colorItem.id === selectedColorId.value));
+    let availableColors = computed(() => colors.value.filter(el => !props.disabledColors.includes(el.id)))
+    const onColorSelected = (color) => emit('color-selected', colors.value.find(colorItem => colorItem.id === selectedColorId.value))
 
     return {
       selectedColorId,
+      availableColors,
       colors,
       onColorSelected,
-    };
+    }
   }
-};
+}
 </script>
 
 <style scoped>

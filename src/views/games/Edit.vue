@@ -164,7 +164,6 @@ export default {
 
     onMounted(async () => {
       try {
-        console.log(route.params,route.params.id)
         gameId = route.params.id
         setLoading()
         const { data } = await getGame(gameId)

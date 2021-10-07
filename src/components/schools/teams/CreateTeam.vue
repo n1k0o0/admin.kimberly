@@ -1,10 +1,10 @@
 <template>
   <el-dialog
+    :before-close="handleClose"
     :destroy-on-close="true"
     :model-value="visible"
     :width="'30%'"
     title="Создание команды"
-    :before-close="handleClose"
   >
     <el-row>
       <el-col :span="24">
@@ -16,7 +16,10 @@
           />
         </el-col>
         <el-col>
-          <team-color-picker @color-selected="onTeamColorClicked" />
+          <team-color-picker
+            :disabled-colors="disabledColors"
+            @color-selected="onTeamColorClicked"
+          />
         </el-col>
       </el-col>
     </el-row>
@@ -33,12 +36,12 @@
 </template>
 
 <script>
-import { ref } from "vue";
-import LeagueAndDivisionSelectors from "@/components/common/LeagueAndDivisionSelectors.vue";
-import TeamColorPicker from "@/components/common/TeamColorPicker.vue";
+import { ref } from 'vue'
+import LeagueAndDivisionSelectors from '@/components/common/LeagueAndDivisionSelectors.vue'
+import TeamColorPicker from '@/components/common/TeamColorPicker.vue'
 
 export default {
-  name: "CreateTeam",
+  name: 'CreateTeam',
   components: {
     TeamColorPicker,
     LeagueAndDivisionSelectors,
@@ -52,33 +55,37 @@ export default {
       type: Array,
       default: () => [],
     },
+    disabledColors: {
+      type: Array,
+      default: () => [],
+    },
   },
   emits: ['team-created', 'close'],
-  setup(_, { emit }) {
+  setup (_, { emit }) {
     const team = ref({
       league_id: null,
       division_id: null,
       color_id: null,
-    });
+    })
 
-    const onLeagueSelected = (league) => team.value.league_id = league.id;
-    const onDivisionSelected = (division) => team.value.division_id = division?.id ?? null;
-    const onTeamColorClicked = (color) => team.value.color_id = color.id;
+    const onLeagueSelected = (league) => team.value.league_id = league.id
+    const onDivisionSelected = (division) => team.value.division_id = division?.id ?? null
+    const onTeamColorClicked = (color) => team.value.color_id = color.id
     const onCreateTeamClicked = () => {
-      emit('team-created', team.value);
-      clearFields();
-    };
+      emit('team-created', team.value)
+      clearFields()
+    }
     const clearFields = () => {
       team.value = {
         league_id: null,
         division_id: null,
         color_id: null,
-      };
+      }
     }
 
     const handleClose = () => {
-      clearFields();
-      emit('close');
+      clearFields()
+      emit('close')
     }
 
     return {
@@ -88,9 +95,9 @@ export default {
       onTeamColorClicked,
       onCreateTeamClicked,
       handleClose,
-    };
+    }
   }
-};
+}
 </script>
 
 <style scoped>

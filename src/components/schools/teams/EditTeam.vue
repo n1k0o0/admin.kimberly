@@ -1,9 +1,9 @@
 <template>
   <el-dialog
+    :before-close="handleClose"
     :destroy-on-close="true"
     :model-value="visible"
     :width="'30%'"
-    :before-close="handleClose"
     title="Редактирование команды"
   >
     <el-row>
@@ -20,6 +20,7 @@
         <el-col>
           <team-color-picker
             :color-id="editedTeam.color_id"
+            :disabled-colors="disabledColors"
             @color-selected="onTeamColorClicked"
           />
         </el-col>
@@ -38,12 +39,12 @@
 </template>
 
 <script>
-import { ref, watch } from "vue";
-import TeamColorPicker from "@/components/common/TeamColorPicker.vue";
-import LeagueAndDivisionSelectors from "@/components/common/LeagueAndDivisionSelectors.vue";
+import { ref, watch } from 'vue'
+import TeamColorPicker from '@/components/common/TeamColorPicker.vue'
+import LeagueAndDivisionSelectors from '@/components/common/LeagueAndDivisionSelectors.vue'
 
 export default {
-  name: "EditTeam",
+  name: 'EditTeam',
   components: { TeamColorPicker, LeagueAndDivisionSelectors },
   props: {
     visible: {
@@ -58,20 +59,24 @@ export default {
       type: Array,
       default: () => []
     },
+    disabledColors: {
+      type: Array,
+      default: () => [],
+    },
   },
   emits: ['close', 'team-edited'],
-  setup(props, { emit }) {
-    const editedTeam = ref({ ...props.team });
-    watch(() => props.team, () => editedTeam.value = { ...props.team });
+  setup (props, { emit }) {
+    const editedTeam = ref({ ...props.team })
+    watch(() => props.team, () => editedTeam.value = { ...props.team })
 
-    const onLeagueSelected = (league) => editedTeam.value.league_id = league.id;
-    const onDivisionSelected = (division) => editedTeam.value.division_id = division?.id ?? null;
-    const onTeamColorClicked = (color) => editedTeam.value.color_id = color.id;
+    const onLeagueSelected = (league) => editedTeam.value.league_id = league.id
+    const onDivisionSelected = (division) => editedTeam.value.division_id = division?.id ?? null
+    const onTeamColorClicked = (color) => editedTeam.value.color_id = color.id
     const handleTeamEditClicked = () => {
-      emit('team-edited', editedTeam);
-      handleClose();
-    };
-    const handleClose = () => emit('close');
+      emit('team-edited', editedTeam)
+      handleClose()
+    }
+    const handleClose = () => emit('close')
 
     return {
       editedTeam,
@@ -80,9 +85,9 @@ export default {
       onTeamColorClicked,
       handleClose,
       handleTeamEditClicked,
-    };
+    }
   }
-};
+}
 </script>
 
 <style scoped>
