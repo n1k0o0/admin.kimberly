@@ -71,7 +71,7 @@ export default {
 
     const onLeagueSelected = (league) => editedTeam.value.league_id = league.id
     const onDivisionSelected = (division) => editedTeam.value.division_id = division?.id ?? null
-    const onTeamColorClicked = (color) => editedTeam.value.color_id = color.id
+    const onTeamColorClicked = (color) => editedTeam.value.color_id = color?.id||null
     const handleTeamEditClicked = () => {
       emit('team-edited', editedTeam)
       handleClose()

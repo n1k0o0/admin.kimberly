@@ -4,6 +4,7 @@
     <el-select
       v-model="selectedColorId"
       class="d-block"
+      clearable
       placeholder="Выберите цвет"
       @change="onColorSelected"
     >
@@ -57,7 +58,9 @@ export default {
     ])
 
     let availableColors = computed(() => colors.value.filter(el => !props.disabledColors.includes(el.id)))
-    const onColorSelected = (color) => emit('color-selected', colors.value.find(colorItem => colorItem.id === selectedColorId.value))
+    const onColorSelected = (color) => {
+      emit('color-selected', colors.value.find(colorItem => colorItem.id === selectedColorId.value))
+    }
 
     return {
       selectedColorId,

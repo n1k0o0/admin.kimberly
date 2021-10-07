@@ -25,7 +25,7 @@
       prop="color"
     >
       <template #default="scope">
-        {{ getPrintableColor(scope.row.color.color) }}
+        {{ getPrintableColor(scope.row.color?.color) }}
       </template>
     </el-table-column>
     <el-table-column
