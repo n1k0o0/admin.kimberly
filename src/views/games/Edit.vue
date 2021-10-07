@@ -233,6 +233,13 @@ export default {
       },
     )
 
+    watch(
+      () => game.team_1_id,
+      async (newName, prevName) => {
+        if (newName===game.team_2_id) game.team_2_id=''
+      },
+    )
+
     return {
       loading,
       game,

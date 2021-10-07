@@ -238,6 +238,13 @@ export default {
       },
     )
 
+    watch(
+      () => newGame.team_1_id,
+      async (newName, prevName) => {
+        if (newName===newGame.team_2_id) newGame.team_2_id=''
+      },
+    )
+
     return {
       newGame,
       loading,
