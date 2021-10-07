@@ -16,6 +16,7 @@
         <el-col :span="12">
           <league-and-division-selectors
             :leagues="availableLeagues"
+            :clearable="true"
             @league-selected="onLeagueSelected"
             @division-selected="onDivisionSelected"
           />
@@ -78,6 +79,8 @@ import { computed, onMounted, reactive, ref, watch } from 'vue'
 import LeagueAndDivisionSelectors from '@/components/common/LeagueAndDivisionSelectors.vue'
 import { paginateSchools, removeSchool } from '@/services/schools/schools.js'
 import useCountryAndCity from '@/composables/useCountryAndCity.js'
+import { paginateLeagues } from '@/services/leagues/leagueService.js'
+
 
 export default {
   name: 'SchoolList',
@@ -87,7 +90,7 @@ export default {
     const { selectedCity, selectedCityId, selectedCountryId } = useCountryAndCity()
     const { loading, setLoaded, setLoading } = useLoadingState(true)
     const { pagination, setPagination, currentPage } = usePagination()
-    const availableLeagues = computed(() => selectedCity.value?.leagues)
+    const availableLeagues = ref({})
     const schools = ref([])
 
     const search = reactive({
@@ -101,6 +104,9 @@ export default {
     onMounted(async () => {
       try {
         setLoading()
+        const { data: { data: leagueItems } } = await paginateLeagues(search, null, 0)
+
+        availableLeagues.value = leagueItems
         const { data: { data: schoolItems, meta } } = await paginateSchools(search)
         setPagination(meta)
         schools.value = schoolItems
@@ -121,8 +127,8 @@ export default {
         setLoaded()
       }
     }
-    const onLeagueSelected = (league) => search.league_id = league.id
-    const onDivisionSelected = (division) => search.division_id = division.id
+    const onLeagueSelected = (league) => search.league_id = league?.id||null
+    const onDivisionSelected = (division) => search.division_id = division?.id||null
     const onCurrentPageUpdated = (page) => currentPage.value = page
     watch([search, currentPage], async () => {
       setLoading()
