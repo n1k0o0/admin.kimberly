@@ -4,20 +4,20 @@
     @edit-team="handleEditTeamClicked"
     @remove-team="handleRemoveTeamClicked"
   />
-  <el-button @click="openCreateModal">
+  <el-button @click="showCreateTeamDialog = true">
     Создать команду
   </el-button>
   <create-team
-    :disabled-colors="disabledColors"
+    :teams="teams"
     :leagues="leagues"
     :visible="showCreateTeamDialog"
     @close="showCreateTeamDialog = false"
     @team-created="handleCreateTeamClicked"
   />
   <edit-team
-    :disabled-colors="disabledEditColors"
     :leagues="leagues"
     :team="selectedTeam"
+    :teams="teams"
     :visible="showEditTeamDialog"
     @close="showEditTeamDialog = false"
     @team-edited="handleTeamEdited"
@@ -52,7 +52,6 @@ export default {
     const availableLeagues = ref({})
     const showCreateTeamDialog = ref(false)
     const showEditTeamDialog = ref(false)
-    let disabledEditColors = ref({})
 
     const selectedTeam = ref(null)
     const handleCreateTeamClicked = (team) => {
@@ -61,29 +60,18 @@ export default {
     }
 
     const handleEditTeamClicked = (team) => {
-      disabledEditColors.value = _.teams.map(el => el.color_id).filter(el => el !== team.color_id)
       selectedTeam.value = team
       showEditTeamDialog.value = true
     }
 
     const handleRemoveTeamClicked = (team) => emit('remove-team', team)
     const handleTeamEdited = (team) => emit('edit-team', team)
-    const openCreateModal = () => {
-      if (_.teams.length >= 3) {
-        ElNotification({ type: 'error', title: 'Ошибка', message: 'Создано максимальное количество команд!' })
-      } else showCreateTeamDialog.value = true
 
-    }
-
-    let disabledColors = computed(() => _.teams.map(el => el.color_id))
 
     return {
       showCreateTeamDialog,
       showEditTeamDialog,
       selectedTeam,
-      disabledColors,
-      disabledEditColors,
-      openCreateModal,
       handleRemoveTeamClicked,
       handleTeamEdited,
       handleEditTeamClicked,

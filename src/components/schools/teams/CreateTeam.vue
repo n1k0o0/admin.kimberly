@@ -17,6 +17,7 @@
         </el-col>
         <el-col>
           <team-color-picker
+            :disabled="!team.division_id"
             :disabled-colors="disabledColors"
             @color-selected="onTeamColorClicked"
           />
@@ -55,7 +56,7 @@ export default {
       type: Array,
       default: () => [],
     },
-    disabledColors: {
+    teams: {
       type: Array,
       default: () => [],
     },
@@ -68,9 +69,14 @@ export default {
       color_id: null,
     })
 
+    let disabledColors=ref([])
+
     const onLeagueSelected = (league) => team.value.league_id = league.id
-    const onDivisionSelected = (division) => team.value.division_id = division?.id ?? null
-    const onTeamColorClicked = (color) => team.value.color_id = color.id
+    const onDivisionSelected = (division) => {
+      team.value.division_id = division?.id ?? null
+      disabledColors.value=_.teams.filter(el=>el.division_id===division?.id).map(el=>el.color_id)
+    }
+    const onTeamColorClicked = (color) => team.value.color_id = color?.id
     const onCreateTeamClicked = () => {
       emit('team-created', team.value)
       clearFields()
@@ -90,6 +96,7 @@ export default {
 
     return {
       team,
+      disabledColors,
       onLeagueSelected,
       onDivisionSelected,
       onTeamColorClicked,

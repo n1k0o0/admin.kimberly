@@ -6,6 +6,7 @@
       class="d-block"
       clearable
       placeholder="Выберите цвет"
+      :disabled="disabled"
       @change="onColorSelected"
     >
       <el-option
@@ -32,6 +33,10 @@ export default {
       type: Array,
       default: () => [],
     },
+    disabled: {
+      type: Boolean,
+      default: false,
+    }
   },
   emits: ['color-selected'],
   setup (props, { emit }) {

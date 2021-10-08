@@ -19,6 +19,7 @@
         </el-col>
         <el-col>
           <team-color-picker
+            :disabled="!editedTeam.division_id"
             :color-id="editedTeam.color_id"
             :disabled-colors="disabledColors"
             @color-selected="onTeamColorClicked"
@@ -39,7 +40,7 @@
 </template>
 
 <script>
-import { ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import TeamColorPicker from '@/components/common/TeamColorPicker.vue'
 import LeagueAndDivisionSelectors from '@/components/common/LeagueAndDivisionSelectors.vue'
 
@@ -59,7 +60,7 @@ export default {
       type: Array,
       default: () => []
     },
-    disabledColors: {
+    teams: {
       type: Array,
       default: () => [],
     },
@@ -78,8 +79,13 @@ export default {
     }
     const handleClose = () => emit('close')
 
+    const disabledColors = computed(
+      () => props.teams.filter(el=>el.division_id===editedTeam.value.division_id && el.id!==props.team.id).map(el=>el.color_id)
+    )
+
     return {
       editedTeam,
+      disabledColors,
       onLeagueSelected,
       onDivisionSelected,
       onTeamColorClicked,

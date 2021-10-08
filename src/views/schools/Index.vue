@@ -34,6 +34,14 @@
       />
       <el-table-column
         label="Название"
+        prop="country.name"
+      />
+      <el-table-column
+        label="Название"
+        prop="city.name"
+      />
+      <el-table-column
+        label="Название"
         prop="name"
       />
       <el-table-column
