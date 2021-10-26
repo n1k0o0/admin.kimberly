@@ -83,7 +83,7 @@
       prop="status"
     >
       <template #default="scope">
-        {{ tournamentStatus(scope.row.status) }}
+        {{ gameStatus(scope.row.status) }}
       </template>
     </el-table-column>
 
@@ -116,7 +116,7 @@
 </template>
 
 <script>
-import { getPrintableTournamentStatus } from '@/services/tournaments/Tournament.js'
+import {getPrintableGameStatus} from "@/services/games/gameService";
 
 export default {
   name: 'Games',
@@ -128,9 +128,9 @@ export default {
   },
   emits: ['remove-game', 'edit-game'],
   setup () {
-    const tournamentStatus = (type) => getPrintableTournamentStatus(type)
+    const gameStatus = (type) => getPrintableGameStatus(type)
     return {
-      tournamentStatus
+      gameStatus
     }
   }
 }
