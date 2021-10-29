@@ -60,6 +60,7 @@ const actions = {
       localStorage.removeItem('token');
       localStorage.removeItem('selected_country');
       localStorage.removeItem('selected_city');
+      localStorage.removeItem('firstSign');
       window.location.href = '/auth';
     });
   },

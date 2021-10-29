@@ -1,28 +1,34 @@
 <template>
+  <router-view v-if="!checkAuth && data.isLoading" />
 
-  <router-view v-if="!checkAuth && data.isLoading"/>
-
-  <div v-if="checkAuth && data.isLoading" class="page d-flex flex-row flex-column-fluid">
-
-    <AsideBlock></AsideBlock>
+  <div
+    v-if="checkAuth && data.isLoading"
+    class="page d-flex flex-row flex-column-fluid"
+  >
+    <AsideBlock />
 
     <!--begin::Wrapper-->
-    <div class="wrapper d-flex flex-column flex-row-fluid" id="kt_wrapper">
+    <div
+      id="kt_wrapper"
+      class="wrapper d-flex flex-column flex-row-fluid"
+    >
+      <HeaderBlock />
 
-      <HeaderBlock></HeaderBlock>
-
-      <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+      <div
+        id="kt_content"
+        class="content d-flex flex-column flex-column-fluid"
+      >
         <el-container>
           <el-main>
-              <router-view></router-view>
+            <router-view />
           </el-main>
         </el-container>
       </div>
 
-      <FooterBlock></FooterBlock>
+      <FooterBlock />
       <el-dialog
-        title="Первоначальная настройка"
         v-model="countryAndCityModalShown"
+        title="Первоначальная настройка"
         width="30%"
         :show-close="false"
       >
@@ -37,11 +43,10 @@
             >
               <el-option
                 v-for="country in countries"
-                :value="country.id"
                 :key="country.id"
+                :value="country.id"
                 :label="country.name"
-              >
-              </el-option>
+              />
             </el-select>
           </div>
           <div class="form-group">
@@ -54,26 +59,30 @@
             >
               <el-option
                 v-for="city in cities"
+                :key="city.id"
                 :value="city.id"
                 :label="city.name"
-                :key="city.id"
-              >
-              </el-option>
+              />
             </el-select>
           </div>
         </template>
         <template #footer>
           <span class="dialog-footer">
-            <el-button type="primary" @click="closeCountryAndCityModal">Подтвердить</el-button>
+            <el-button
+              type="primary"
+              @click="closeCountryAndCityModal"
+            >Подтвердить</el-button>
           </span>
         </template>
       </el-dialog>
     </div>
-    <div class="p-toast p-component p-toast-top-right" style="z-index: 1000000;">
-      <div></div>
+    <div
+      class="p-toast p-component p-toast-top-right"
+      style="z-index: 1000000;"
+    >
+      <div />
     </div>
   </div>
-
 </template>
 
 <script setup>
@@ -84,12 +93,15 @@ import FooterBlock from './components/FooterBlock.vue'
 import { computed, onMounted, reactive, ref, watch } from 'vue'
 import { useStore } from 'vuex'
 import useCountryAndCity from "./composables/useCountryAndCity";
+import {useRoute, useRouter} from "vue-router";
 
 const store = useStore();
 
 onMounted(() => {
   getMe()
 })
+const route = useRoute()
+const router = useRouter()
 const countryAndCityModalShown = ref(false);
 const isLoading = false
 const showUserPanel = computed(() => store.getters['GET_USER_PANEL'])
@@ -104,10 +116,10 @@ const closeCountryAndCityModal = () => {
 const getMe = async () => {
   await store.dispatch('auth/GET_AUTH_ME')
   data.isLoading = true
-  if (!localStorage.getItem('firstSign')) {
+  if (!localStorage.getItem('firstSign') && router.currentRoute.value.path!=='/auth') {
     countryAndCityModalShown.value = true
+    localStorage.setItem('firstSign', '1')
   }
-  localStorage.setItem('firstSign', '1')
 }
 
 const checkAuth = computed(() => store.getters['auth/GET_USER_ID'])

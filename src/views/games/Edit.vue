@@ -132,28 +132,59 @@
           {{ game.team_1.name }}
         </h6>
         <el-row
-          v-for="firstTeamsGoal in firstTeamsGoals"
-          :key="firstTeamsGoal.id"
+          v-for="firstTeamsPlayer in firstTeamsPlayers"
+          :key="firstTeamsPlayer.id"
           :gutter="10"
         >
-          <el-col :span="11">
-            <el-input
-              v-if="firstTeamsGoal.player"
-              v-model="firstTeamsGoal.player.first_name"
-              class="pb-4"
-              readonly
-            />
+          <el-col :span="6">
+            <el-row :gutter="5">
+              <el-col :span="16">
+                <el-input
+                  v-model="firstTeamsPlayer.player.first_name"
+                  class="pb-4"
+                  readonly
+                />
+              </el-col>
+              <el-col :span="8">
+                <el-button
+                  type="primary"
+                  icon="el-icon-plus"
+                  circle
+                  @click="addGoal(firstTeamsPlayer.player.id)"
+                />
+              </el-col>
+            </el-row>
           </el-col>
           <el-col
-            :span="11"
-            class="pb-4"
+            v-for="(goal,index) in firstTeamsPlayer.goals"
+            :key="index"
+            :span="5"
           >
-            <el-input
-              v-if="firstTeamsGoal.player"
-              v-model="firstTeamsGoal.goals"
-              readonly
-            />
+            <el-row :gutter="5">
+              <el-col :span="14">
+                <el-input
+                  v-model="firstTeamsPlayer.goals[index]"
+                  class="pb-4"
+                  readonly
+                />
+              </el-col>
+              <el-col :span="10">
+                <el-popconfirm
+                  title="Вы действительно хотите удалить гол?"
+                  @confirm="deleteGoal(firstTeamsPlayer.player.id,goal)"
+                >
+                  <template #reference>
+                    <el-button
+                      type="danger"
+                      icon="el-icon-delete"
+                      circle
+                    />
+                  </template>
+                </el-popconfirm>
+              </el-col>
+            </el-row>
           </el-col>
+          <el-divider />
         </el-row>
       </el-col>
       <el-col :span="12">
@@ -161,26 +192,57 @@
           {{ game.team_2.name }}
         </h6>
         <el-row
-          v-for="secondTeamsGoal in secondTeamsGoals"
-          :key="secondTeamsGoal.id"
+          v-for="secondTeamsPlayer in secondTeamsPlayers"
+          :key="secondTeamsPlayer.id"
           :gutter="10"
         >
-          <el-col :span="11">
-            <el-input
-              v-if="secondTeamsGoal.player"
-              v-model="secondTeamsGoal.player.first_name"
-              class="pb-4"
-              readonly
-            />
+          <el-col :span="6">
+            <el-col :span="16">
+              <el-input
+                v-model="secondTeamsPlayer.player.first_name"
+                class="pb-4"
+                readonly
+              />
+            </el-col>
+            <el-col :span="8">
+              <el-button
+                type="primary"
+                icon="el-icon-plus"
+                circle
+                @click="addGoal(secondTeamsPlayer.player.id)"
+              />
+            </el-col>
           </el-col>
-          <el-col :span="11">
-            <el-input
-              v-if="secondTeamsGoal.player"
-              v-model="secondTeamsGoal.goals"
-              class="pb-4"
-              readonly
-            />
+          <el-col
+            v-for="(goal,index) in secondTeamsPlayer.goals"
+            :key="index"
+            :span="5"
+          >
+            <el-row :gutter="5">
+              <el-col :span="14">
+                <el-input
+                  v-model="secondTeamsPlayer.goals[index]"
+                  class="pb-4"
+                  readonly
+                />
+              </el-col>
+              <el-col :span="10">
+                <el-popconfirm
+                  title="Вы действительно хотите удалить гол?"
+                  @confirm="deleteGoal(secondTeamsPlayer.player.id,goal)"
+                >
+                  <template #reference>
+                    <el-button
+                      type="danger"
+                      icon="el-icon-delete"
+                      circle
+                    />
+                  </template>
+                </el-popconfirm>
+              </el-col>
+            </el-row>
           </el-col>
+          <el-divider />
         </el-row>
       </el-col>
     </el-row>
@@ -192,35 +254,28 @@
         <el-button @click="$router.go(-1)">
           Назад
         </el-button>
-        <!--        <el-button-->
-        <!--          type="primary"-->
-        <!--          @click="onUpdateGameClicked"-->
-        <!--        >-->
-        <!--          Обновить-->
-        <!--        </el-button>-->
       </el-button-group>
     </el-row>
   </el-card>
 </template>
 
 <script>
-import {computed, onMounted, reactive, ref, watch} from 'vue'
-import {useRoute, useRouter} from "vue-router";
+import {computed, onMounted, reactive, ref} from 'vue'
+import {useRoute} from "vue-router";
 import {useLoadingState} from "@/composables/common/useLoadingState.js";
-import {getGame, updateGame} from '@/services/games/gameService.js'
+import {getGame, deleteGoalAdmin, addGoalAdmin} from '@/services/games/gameService.js'
 import {paginateTournaments} from '@/services/tournaments/tournaments.js'
 import {paginateLeagues} from '@/services/leagues/leagueService.js'
 import {paginateStadiums} from '@/services/stadiums/stadiums.js'
 import {getTeams} from '@/services/schools/teams/teams.js'
+import {ElMessageBox} from "element-plus";
 
 export default {
   name: "Edit",
-  setup() {
+  setup(target) {
     const route = useRoute()
-    const router = useRouter()
     const {loading, setLoaded, setLoading} = useLoadingState(false)
 
-    let firstLoad = true
     let gameId = null
     let game = reactive({
       team_1: [],
@@ -234,17 +289,16 @@ export default {
     const leagues = ref([])
     const stadiums = ref([])
     const teams = ref([])
-    const players = ref([
-      player=> reactive({
-        first_name:''
-      })
-    ])
+    let secondTeamsPlayers = ref({})
+    let firstTeamsPlayers = ref({})
 
     onMounted(async () => {
       try {
         gameId = route.params.id
         setLoading()
         const {data} = await getGame(gameId)
+        firstTeamsPlayers.value = data.players.filter(player => player.team_id === data.team_1_id && player.player)
+        secondTeamsPlayers.value = data.players.filter(player => player.team_id === data.team_2_id && player.player)
         const {data: {data: tournamentItems}} = await paginateTournaments({city_id: data.league.city_id}, null, 0)
         const {data: {data: leagueItems}} = await paginateLeagues({city_id: data.league.city_id}, null, 0)
         const {data: {data: stadiumItems}} = await paginateStadiums({city_id: data.league.city_id}, null, 0)
@@ -256,8 +310,7 @@ export default {
         tournaments.value = tournamentItems
         Object.assign(game, data)
         game.league_id = game.league.id
-        players.value = data.players
-        setTimeout(() => firstLoad = false, 1000)
+
       } catch (e) {
         console.log(e.message)
       } finally {
@@ -265,16 +318,6 @@ export default {
       }
     })
 
-    const onUpdateGameClicked = async () => {
-      try {
-        setLoading()
-        await updateGame(gameId, game)
-        await router.push({name: 'calendar'})
-      } catch (e) {
-      } finally {
-        setLoaded()
-      }
-    }
     const divisions = computed(
       () => leagues.value.filter(league => league.id === game.league_id)
         .map(function (lg) {
@@ -286,46 +329,41 @@ export default {
       () => teams.value.filter(team => team.id !== game.team_1_id)
     )
 
-    const firstTeamsGoals = computed(
-      () => players.value.filter(player => player.team_id === game.team_1_id && player.player)
-    )
+    const deleteGoal = async (playerId, goalMinute) => {
+      try {
+        setLoading()
+        await deleteGoalAdmin(game.id, {player_id: playerId, minute: goalMinute})
+        const {data} = await getGame(gameId)
+        firstTeamsPlayers.value = data.players.filter(player => player.team_id === data.team_1_id && player.player)
+        secondTeamsPlayers.value = data.players.filter(player => player.team_id === data.team_2_id && player.player)
+      } catch (e) {
+      } finally {
+        setLoaded()
+      }
+    }
 
-    const secondTeamsGoals = computed(
-      () => players.value.filter(player => player.team_id === game.team_2_id && player.player)
-    )
+    const addGoal = async (playerId) => {
+      ElMessageBox.prompt('Введите минуту в которой был забит гол', 'Добавить гол', {
+        confirmButtonText: 'OK',
+        cancelButtonText: 'Cancel',
+        inputPattern:
+          /\b([1-9]|[1-9][0-9]|1[01][0-9]|12[0-9]|130)\b/,
+        inputErrorMessage: 'Введите целое число',
+      })
+        .then(async ({value}) => {
+          setLoading()
+          await addGoalAdmin(game.id, {player_id: playerId, minute: value})
+          const {data} = await getGame(gameId)
+          firstTeamsPlayers.value = data.players.filter(player => player.team_id === data.team_1_id && player.player)
+          secondTeamsPlayers.value = data.players.filter(player => player.team_id === data.team_2_id && player.player)
+        })
+        .catch(() => {
+        }).finally(() => {
+        setLoaded()
+      })
 
-    watch(
-      () => game.league_id,
-      (newName, prevName) => {
+    }
 
-        if (!(divisions.value.map(e => e.id)).includes(game.division_id)) {
-          game.division_id = ''
-        }
-      },
-    )
-
-    watch(
-      () => game.division_id,
-      async (newName, prevName) => {
-
-        if (firstLoad) return
-        if (game.division_id) {
-          const {data: {data: teamItems,}} = await getTeams(game, null, 0)
-          teams.value = teamItems
-        } else {
-          teams.value = []
-        }
-        game.team_1_id = ''
-        game.team_2_id = ''
-      },
-    )
-
-    watch(
-      () => game.team_1_id,
-      async (newName, prevName) => {
-        if (newName === game.team_2_id) game.team_2_id = ''
-      },
-    )
 
     return {
       loading,
@@ -336,9 +374,10 @@ export default {
       stadiums,
       teams,
       secondTeams,
-      onUpdateGameClicked,
-      firstTeamsGoals,
-      secondTeamsGoals,
+      firstTeamsPlayers,
+      secondTeamsPlayers,
+      deleteGoal,
+      addGoal
     }
   },
 }

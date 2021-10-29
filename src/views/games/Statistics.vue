@@ -13,7 +13,6 @@
           <el-select
             v-model="game.status"
             filterable
-            :disabled="!isEditable"
           >
             <el-option
               v-for="(status,key) in gameStatuses"
@@ -32,7 +31,6 @@
             format="DD-MM-YYYY HH:mm"
             value-format="YYYY-MM-DD HH:mm"
             type="datetime"
-            :readonly="!isEditable"
           />
         </label>
       </el-col>
@@ -44,7 +42,6 @@
             format="DD-MM-YYYY HH:mm"
             value-format="YYYY-MM-DD HH:mm"
             type="datetime"
-            :readonly="!isEditable"
           />
         </label>
       </el-col>
@@ -65,7 +62,6 @@
             format="DD-MM-YYYY HH:mm"
             value-format="YYYY-MM-DD HH:mm"
             type="datetime"
-            :readonly="!isEditable"
           />
         </label>
       </el-col>
@@ -77,7 +73,6 @@
             format="DD-MM-YYYY HH:mm"
             value-format="YYYY-MM-DD HH:mm"
             type="datetime"
-            :readonly="!isEditable"
           />
         </label>
       </el-col>
@@ -87,7 +82,6 @@
         <el-button
           icon="el-icon-delete"
           type="danger"
-          :disabled="!isEditable"
           @click="removePause(pause.id,index)"
         />
       </el-col>
@@ -96,7 +90,6 @@
       <el-col span="24">
         <el-button
           type="primary"
-          :disabled="!isEditable"
           @click="addPause"
         >
           Добавить паузу
@@ -108,21 +101,8 @@
       :gutter="20"
       class="my-3 flex-row-reverse"
     >
-      <el-button-group v-show="!isEditable">
+      <el-button-group>
         <el-button @click="$router.push({name: 'results'})">
-          Назад
-        </el-button>
-        <el-button
-          v-show="!isEditable"
-          type="primary"
-          @click="isEditable=!isEditable"
-        >
-          Редактировать
-        </el-button>
-      </el-button-group>
-
-      <el-button-group v-show="isEditable">
-        <el-button @click="cancelEdit">
           Отменить
         </el-button>
         <el-button
@@ -137,7 +117,7 @@
 </template>
 
 <script>
-import {onMounted, reactive, ref} from 'vue'
+import {onMounted, reactive} from 'vue'
 import {useRoute, useRouter} from "vue-router";
 import {useLoadingState} from "@/composables/common/useLoadingState.js";
 import {getGame, getPrintableGameStatuses,updateGameStatistics} from '@/services/games/gameService.js';
@@ -149,9 +129,6 @@ export default {
     const router = useRouter()
     const {loading, setLoaded, setLoading} = useLoadingState(false)
 
-    let firstLoad = true
-    let isEditable = ref(false)
-    let deletedItems = ref([])
     let gameId = null
     let game = reactive({});
     const gameStatuses = getPrintableGameStatuses()
@@ -162,14 +139,9 @@ export default {
     }
     let removePause = (id, index) => {
       if (id)game.removed_pause_ids.push(id)
-      deletedItems.value.push(game.pauses[index])
       game.pauses.splice(index, 1);
     }
-    let cancelEdit = ()=>{
-      game.pauses=[...game.pauses,...deletedItems.value].sort((a, b) => a.id - b.id)
-      deletedItems.value=[]
-      isEditable=false
-    }
+
 
     onMounted(async () => {
       try {
@@ -179,7 +151,6 @@ export default {
 
         Object.assign(game, data)
         game.removed_pause_ids=[]
-        setTimeout(() => firstLoad = false, 1000)
       } catch (e) {
         console.log(e.message)
       } finally {
@@ -200,13 +171,11 @@ export default {
 
     return {
       loading,
-      isEditable,
       game,
       gameStatuses,
       addPause,
       removePause,
       onUpdateStatisticsClicked,
-      cancelEdit
     }
   },
 }

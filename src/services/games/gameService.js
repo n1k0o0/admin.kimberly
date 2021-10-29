@@ -57,6 +57,14 @@ export function updateGameStatistics(id,fields){
   return api.put(`${ENDPOINT}/${id}/statistics`,cleanFalsyFields(fields))
 }
 
+export function deleteGoalAdmin(id, fields) {
+  return api.put(`${ENDPOINT}/${id}/delete_goal_admin`, cleanFalsyFields(fields))
+}
+
+export function addGoalAdmin(id, fields) {
+  return api.put(`${ENDPOINT}/${id}/add_goal_admin`, cleanFalsyFields(fields))
+}
+
 export function getPrintableGameStatuses() {
   return {
     not_started: 'Не начат',
