@@ -12,7 +12,21 @@ export function paginateGames(search, page = 1, limit = 10) {
     params = {...params, ...cleanFalsyFields(search)}
   }
 
-  return api.get(`${ENDPOINT}/`, {
+  return api.get(`${ENDPOINT}/schedule`, {
+    params
+  })
+}
+
+export function getAdminSchedule(search, page = 1, limit = 10){
+  let params = {
+    page,
+    limit,
+  }
+  if (search) {
+    params = {...params, ...cleanFalsyFields(search)}
+  }
+
+  return api.get(`${ENDPOINT}/schedule_admin`, {
     params
   })
 }
@@ -37,6 +51,10 @@ export function loadGames(params) {
   return api.get(`${ENDPOINT}`, {
     params
   })
+}
+
+export function updateGameStatistics(id,fields){
+  return api.put(`${ENDPOINT}/${id}/statistics`,cleanFalsyFields(fields))
 }
 
 export function getPrintableGameStatuses() {

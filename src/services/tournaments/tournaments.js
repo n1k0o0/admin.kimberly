@@ -27,6 +27,11 @@ export function paginateTournaments(search, page = 1, limit = 10) {
   })
 }
 
+export function getCurrentTournament(search) {
+   let params = { ...cleanFalsyFields(search)}
+  return api.get(`${ENDPOINT}/current`,{params})
+}
+
 export function createTournament(fields) {
   return api.post(`${ENDPOINT}`, fields)
 }

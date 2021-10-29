@@ -27,6 +27,7 @@ const routes = [
 
   { path: '/games/create', name: 'game-create', component: () => import('@/views/games/Create.vue') },
   { path: "/games/:id", name: 'games-edit', component: () => import('@/views/games/Edit.vue') },
+  { path: '/games/:id/statistics', name: 'game-statistics', component: () => import('@/views/games/Statistics.vue') },
 
   {
     path: '/internal-users/:id',

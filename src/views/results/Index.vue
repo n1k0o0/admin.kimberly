@@ -3,106 +3,118 @@
     <template #header>
       <h3>Результаты</h3>
       <el-row
-        :gutter="2"
-        justify="space-between"
+        :gutter="20"
       >
-        <el-row>
-          <el-col :span="6">
-            <el-input
-              v-model="search.login"
-              placeholder="Email"
+        <el-col :span="4">
+          <el-select
+            v-model="search.tournament_ids"
+            filterable
+            multiple
+            placeholder="Турнир"
+            @change="searchGames"
+          >
+            <el-option
+              v-for="(tournament) in tournaments"
+              :key="tournament.id"
+              :label="tournament.name"
+              :value="tournament.id"
             />
-          </el-col>
-          <el-col :span="6">
-            <el-select
-              v-model="search.types"
-              multiple
-              placeholder="Тип пользователя"
-            >
-              <el-option
-                v-for="(type, key) in userTypes"
-                :key="key"
-                :value="key"
-                :label="type"
-              />
-            </el-select>
-          </el-col>
-          <el-col :span="6">
-            <el-date-picker
-              v-model="search.created_at_start"
-              type="date"
-              placeholder="Создан от"
-              @change="onCreatedAtStartChanged"
+          </el-select>
+        </el-col>
+        <el-col :span="4">
+          <el-select
+            v-model="search.league_ids"
+            filterable
+            multiple
+            placeholder="Лига"
+            @change="searchGames"
+          >
+            <el-option
+              v-for="(league) in leagues"
+              :key="league.id"
+              :label="league.name"
+              :value="league.id"
             />
-          </el-col>
-          <el-col :span="6">
-            <el-date-picker
-              v-model="search.created_at_end"
-              placeholder="Создан по"
-              type="date"
-              @change="onCreatedAtEndChanged"
+          </el-select>
+        </el-col>
+        <el-col :span="4">
+          <el-select
+            v-model="search.division_ids"
+            :disabled="!search.league_ids || !search.league_ids.length"
+            filterable
+            multiple
+            placeholder="Дивизион"
+            @change="searchGames"
+          >
+            <el-option
+              v-for="(division) in divisions"
+              :key="division.id"
+              :label="division.name"
+              :value="division.id"
             />
-          </el-col>
-        </el-row>
+          </el-select>
+        </el-col>
+        <el-col :span="4">
+          <el-select
+            v-model="search.team_ids"
+            :disabled="!search.division_ids || !search.division_ids.length"
+            filterable
+            multiple
+            placeholder="Команда"
+            @change="searchGames"
+          >
+            <el-option
+              v-for="(team) in teams"
+              :key="team.id"
+              :label="team.name"
+              :value="team.id"
+            />
+          </el-select>
+        </el-col>
+        <el-col :span="4">
+          <el-select
+            v-model="search.stadium_ids"
+            filterable
+            multiple
+            placeholder="Стадион"
+            @change="searchGames"
+          >
+            <el-option
+              v-for="(stadium) in stadiums"
+              :key="stadium.id"
+              :label="stadium.title"
+              :value="stadium.id"
+            />
+          </el-select>
+        </el-col>
+        <el-col :span="4">
+          <el-select
+            v-model="search.statuses"
+            filterable
+            multiple
+            placeholder="Статус"
+            @change="searchGames"
+          >
+            <el-option
+              v-for="(status,key) in gameStatuses"
+              :key="key"
+              :label="status"
+              :value="key"
+            />
+          </el-select>
+        </el-col>
       </el-row>
     </template>
-    <el-table
-      v-loading="loading"
-      :data="users"
-      :empty-text="'Нет данных'"
-    >
-      <el-table-column
-        prop="email"
-        label="Email"
-      />
-      <el-table-column
-        label="Полное имя"
-        :prop="'full_name'"
-      />
-      <el-table-column
-        label="Школа"
-      >
-        <template #default="scope">
-          <router-link
-            v-if="scope.row.school"
-            class="menu-link"
-            :to="`/schools/${scope.row.school.id}`"
-          >
-            Школа {{ scope.row.school.name }}
-          </router-link>
-        </template>
-      </el-table-column>
-      <el-table-column
-        label="Тип"
-      >
-        <template #default="scope">
-          {{ getPrintableUserType(scope.row.type) }}
-        </template>
-      </el-table-column>
-      <el-table-column
-        prop="created_at"
-        label="Дата создания"
-      >
-        <template #default="scope">
-          {{ $moment.unix(scope.row.created_at).locale('ru').format('YYYY-MM-DD hh:mm') }}
-        </template>
-      </el-table-column>
-      <el-table-column
-        label="Управление"
-      >
-        <template #default="scope">
-          <el-button
-            type="primary"
-            icon="el-icon-edit"
-            @click="$router.push({name: 'users-edit', params: {id: scope.row.id}})"
-          />
-        </template>
-      </el-table-column>
-    </el-table>
+    <games
+      :games="games"
+      with-goals
+      @remove-game="onRemoveGameClicked($event)"
+    />
     <el-row justify="center">
       <el-pagination
-        layout="prev, pager, next"
+        :current-page="currentPage"
         :hide-on-single-page="true"
+        layout="prev, pager, next"
         v-bind="pagination"
         @update:current-page="onCurrentPageUpdated"
       />
@@ -111,75 +123,186 @@
 </template>
 
 <script>
-import { paginateUsers, removeUser, } from "@/services/users/users.js";
-import { onMounted, reactive, ref, watch } from "vue";
-import { useLoadingState } from "@/composables/common/useLoadingState.js";
-import { getPrintableUserType, getPrintableUserTypes } from "@/services/users/User.js";
-import moment from "moment";
-import usePagination from "@/composables/common/usePagination";
+import {computed, onMounted, reactive, ref, watch} from 'vue'
+import {useLoadingState} from '@/composables/common/useLoadingState.js'
+import usePagination from '@/composables/common/usePagination.js'
+import {getCurrentTournament} from '@/services/tournaments/tournaments.js'
+import {paginateLeagues} from '@/services/leagues/leagueService.js'
+import {paginateStadiums} from '@/services/stadiums/stadiums.js'
+import {removeGame, getAdminSchedule, getPrintableGameStatuses} from '@/services/games/gameService.js'
+import {getPrintableTournamentStatus} from '@/services/tournaments/Tournament.js'
+import {getTeams} from '@/services/schools/teams/teams.js'
+import useCountryAndCity from '@/composables/useCountryAndCity.js'
+import Games from '@/components/games/Games.vue'
 
 export default {
-  name: "Index",
+  name: 'Index',
+  components: {Games},
   setup() {
-    const { loading, setLoaded, setLoading } = useLoadingState(true);
-    const { pagination, setPagination, currentPage } = usePagination();
+    const {loading, setLoaded, setLoading} = useLoadingState(true)
+    const {pagination, setPagination, currentPage} = usePagination()
+    const {selectedCityId, selectedCountryId} = useCountryAndCity()
     const search = reactive({
-      login: '',
-      types: [],
-      created_at_start: null,
-      created_at_end: null,
-    });
-    const userTypes = getPrintableUserTypes();
-    const users = ref([]);
+      city_id: selectedCityId,
+      country_id: selectedCountryId,
+    })
+    const gameStatuses = getPrintableGameStatuses()
+    const tournaments = ref([])
+    const leagues = ref([])
+    const stadiums = ref([])
+    const games = ref([])
+    const teams = ref([])
 
     onMounted(async () => {
-      const { data: { data: userCollection, meta } } = await paginateUsers();
-      setPagination(meta);
-      users.value = userCollection;
-      setLoaded();
-    });
+      const  {data: tournamentItems} = await getCurrentTournament(search, null, 0)
+      const {data: {data: leagueItems}} = await paginateLeagues(search, null, 0)
+      const {data: {data: stadiumItems}} = await paginateStadiums(search, null, 0)
+      console.log(gameStatuses)
+      await searchGames()
+      leagues.value = leagueItems
+      stadiums.value = stadiumItems
+      tournaments.value = [tournamentItems]
 
-    watch([search, currentPage], async () => {
-      setLoading();
+      setLoaded()
+    })
+
+    watch(
+      () => search.league_ids,
+      (newName, prevName) => {
+        if (search.league_ids && search.league_ids.length) {
+
+          if (search.division_ids && search.division_ids.length) {
+            search.division_ids = search.division_ids.filter(function (el) {
+              return divisions.value.map(e => e.id)
+                .indexOf(el) !== -1
+            })
+          }
+
+        } else {
+          search.division_ids = []
+        }
+      },
+    )
+    watch(
+      () => search.division_ids,
+      async (newName, prevName) => {
+        if (search.division_ids && search.division_ids.length) {
+          const {data: {data: teamItems,}} = await getTeams(search, null, 0)
+          teams.value = teamItems
+          if (search.team_ids && search.team_ids.length) {
+            search.team_ids = search.team_ids.filter(function (el) {
+              return teams.value.map(e => e.id)
+                .indexOf(el) !== -1
+            })
+          }
+        } else {
+          teams.value = []
+          search.team_ids = []
+        }
+      },
+    )
+    watch(
+      () => search.city_id,
+      async (newName, prevName) => {
+        const {data: {data: tournamentItems}} = await getCurrentTournament(search, null, 0)
+        const {data: {data: leagueItems}} = await paginateLeagues(search, null, 0)
+        const {data: {data: stadiumItems}} = await paginateStadiums(search, null, 0)
+
+        leagues.value = leagueItems
+        stadiums.value = stadiumItems
+        tournaments.value = tournamentItems
+        search.league_ids = []
+        search.stadium_ids = []
+        search.tournament_ids = []
+        games.value = []
+        setPagination({current_page: 0, total: 0, per_page: 0})
+        await searchGames()
+      },
+    )
+
+    watch([currentPage], async () => {
+      setLoading()
+      if (currentPage.value > 0) {
+        try {
+          setLoading()
+          const {data: {data: gameItems, meta}} = await getAdminSchedule(search, currentPage.value)
+          games.value = gameItems
+          setPagination(meta)
+        } catch (e) {
+        } finally {
+          setLoaded()
+        }
+      }
+    })
+
+    const divisions = computed(
+      () => leagues.value.filter(league => search.league_ids.includes(league.id))
+        .map(function (lg) {
+          return lg.divisions
+        })
+        .flat()
+    )
+
+    const searchGames = async () => {
       try {
-        const { data: { data: users, meta } } = await paginateUsers(search, currentPage.value);
-        setPagination(meta);
-        users.value = users;
+        setLoading()
+        const {data: {data: gameItems, meta}} = await getAdminSchedule(search)
+        games.value = gameItems
+        setPagination(meta)
       } catch (e) {
       } finally {
-        setLoaded();
+        setLoaded()
       }
-    });
-
-    const onRemoveUserClicked = async (userId) => {
+    }
+    const onCurrentPageUpdated = (page) => currentPage.value = page
+    const updateOnChangeSearch = () => {
       try {
-        setLoading();
-        await removeUser(userId);
-        await paginateUsers(search, currentPage.value);
+        setLoading()
+        search.league_ids = search.league_ids.filter(function (el) {
+          return leagues.value.map(e => e.id)
+            .indexOf(el) !== -1
+        })
+        search.division_ids = search.division_ids.filter(function (el) {
+          return divisions.value.map(e => e.id)
+            .indexOf(el) !== -1
+        })
       } catch (e) {
       } finally {
-        setLoaded();
+        setLoaded()
       }
-    };
-    const onCurrentPageUpdated = (page) => currentPage.value = page;
-    const onCreatedAtStartChanged = (datetime) => search.created_at_start = moment(datetime).format('YYYY-MM-DD');
-    const onCreatedAtEndChanged = (datetime) => search.created_at_end = moment(datetime).format('YYYY-MM-DD');
+    }
+    const onRemoveGameClicked = async (game) => {
+      try {
+        setLoading()
+        await removeGame(game.id)
+        const {data: {data: gameItems, meta}} = await getAdminSchedule(search)
+        games.value = gameItems
+        setPagination(meta)
+      } catch (e) {
+      } finally {
+        setLoaded()
+      }
+    }
 
     return {
+      getPrintableTournamentStatus,
       search,
-      users,
-      userTypes,
-      getPrintableUserType,
+      gameStatuses,
+      searchGames,
+      tournaments,
+      leagues,
+      divisions,
+      stadiums,
+      games,
+      teams,
       loading,
-      onCreatedAtStartChanged,
-      onCreatedAtEndChanged,
-      onRemoveUserClicked,
       onCurrentPageUpdated,
+      onRemoveGameClicked,
       pagination,
       currentPage,
-    };
+    }
   },
-};
+}
 </script>
 
 <style scoped>

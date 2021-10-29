@@ -71,6 +71,23 @@
       </template>
     </el-table-column>
 
+    <template v-if="withGoals">
+      <el-table-column
+        label="Goals 1"
+      >
+        <template #default="scope">
+          {{ scope.row.team_1_goals ?? 0 }}
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="Goals 2"
+      >
+        <template #default="scope">
+          {{ scope.row.team_2_goals ?? 0 }}
+        </template>
+      </el-table-column>
+    </template>
+
     <el-table-column
       label="Стадион"
     >
@@ -90,10 +107,11 @@
     <el-table-column
       label="Управление"
       width="140"
+      class-name="actions"
     >
       <template #default="scope">
         <el-button
-          icon="el-icon-edit"
+          icon="el-icon-more"
           type="primary"
           @click="$router.push({name: 'games-edit', params: {id: scope.row.id}})"
         />
@@ -110,6 +128,12 @@
             />
           </template>
         </el-popconfirm>
+        <el-button
+          v-if="withGoals"
+          icon="el-icon-edit"
+          type="primary"
+          @click="$router.push({name: 'game-statistics', params: {id: scope.row.id}})"
+        />
       </template>
     </el-table-column>
   </el-table>
@@ -124,10 +148,14 @@ export default {
     games: {
       type: Array,
       default: () => [],
+    },
+    withGoals: {
+      type: Boolean,
+      default: false,
     }
   },
   emits: ['remove-game', 'edit-game'],
-  setup () {
+  setup() {
     const gameStatus = (type) => getPrintableGameStatus(type)
     return {
       gameStatus
