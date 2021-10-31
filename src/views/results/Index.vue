@@ -108,6 +108,7 @@
     <games
       :games="games"
       with-goals
+      :loading="loading"
       @remove-game="onRemoveGameClicked($event)"
     />
     <el-row justify="center">
@@ -154,6 +155,8 @@ export default {
     const teams = ref([])
 
     onMounted(async () => {
+      setLoading()
+
       const  {data: tournamentItems} = await getCurrentTournament(search, null, 0)
       const {data: {data: leagueItems}} = await paginateLeagues(search, null, 0)
       const {data: {data: stadiumItems}} = await paginateStadiums(search, null, 0)

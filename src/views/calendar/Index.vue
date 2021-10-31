@@ -108,6 +108,7 @@
     </template>
     <games
       :games="games"
+      :loading="loading"
       @remove-game="onRemoveGameClicked($event)"
     />
     <el-row justify="center">

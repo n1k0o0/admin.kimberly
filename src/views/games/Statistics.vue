@@ -3,6 +3,12 @@
     <template #header>
       <h3>Статистика Игры</h3>
     </template>
+    <el-row>
+      <el-col :span="24">
+        <h4>{{ game.team_1?.name }} - {{ game.team_2?.name }} ( {{ game.tournament?.name }}, {{ game.stadium?.title }} ) </h4>
+      </el-col>
+    </el-row>
+    <el-divider />
     <el-row
       :gutter="20"
       class=""

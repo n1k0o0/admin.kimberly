@@ -149,6 +149,10 @@ export default {
       type: Array,
       default: () => [],
     },
+    loading: {
+      type: Boolean,
+      default: false,
+    },
     withGoals: {
       type: Boolean,
       default: false,

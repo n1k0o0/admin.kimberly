@@ -75,6 +75,7 @@ onMounted(async () => {
   if (store.getters['auth/GET_USER_ID']) {
     await router.push({ name: 'dashboard' });
   }
+  localStorage.removeItem('firstSign')
 });
 
 onBeforeMount(() => {
