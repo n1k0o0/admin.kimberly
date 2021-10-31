@@ -34,7 +34,6 @@
           <el-input
             v-model="school.name"
             placeholder="Название школы"
-            @input="onSchoolNameChanged"
           />
         </el-row>
         <el-row class="mb-5">
@@ -44,7 +43,6 @@
             :rows="2"
             placeholder="Please input"
             type="textarea"
-            @input="onSchoolDescriptionChanged"
           />
         </el-row>
         <el-row class="mb-5">
@@ -52,7 +50,6 @@
           <el-input
             v-model="school.email"
             placeholder="Email"
-            @input="onSchoolEmailChanged"
           />
         </el-row>
         <el-row class="mb-5">
@@ -60,7 +57,6 @@
           <el-input
             v-model="school.phone"
             placeholder="Телефон"
-            @input="onSchoolPhoneChanged"
           />
         </el-row>
         <el-row class="mb-5">
@@ -70,7 +66,6 @@
               v-model="school.branch_count"
               placeholder="Количество филиалов"
               type="number"
-              @input="onSchoolBranchCountChanged"
             />
           </div>
         </el-row>
@@ -92,12 +87,44 @@
         <el-divider content-position="left">
           <span class="d-block h4">Социальные сети</span>
         </el-divider>
-        <social-links
-          :social-links="school.social_links"
-          @create-social-link="handleSocialLinkCreated"
-          @edit-social-link="handleSocialLinkEdited"
-          @remove-social-link="handleSocialLinkRemoved"
-        />
+        <el-row :gutter="10">
+          <el-col
+            :span="6"
+            :xs="12"
+          >
+            <label for="">
+              YOUTUBE
+              <el-input v-model="school.youtube_link" />
+            </label>
+          </el-col>
+          <el-col
+            :span="6"
+            :xs="12"
+          >
+            <label for="">
+              INSTAGRAM
+              <el-input v-model="school.inst_link" />
+            </label>
+          </el-col>
+          <el-col
+            :span="6"
+            :xs="12"
+          >
+            <label for="">
+              VK
+              <el-input v-model="school.vk_link" />
+            </label>
+          </el-col>
+          <el-col
+            :span="6"
+            :xs="12"
+          >
+            <label for="">
+              DIAGRAM
+              <el-input v-model="school.diagram_link" />
+            </label>
+          </el-col>
+        </el-row>
       </el-col>
     </el-row>
     <el-row class="mb-5">
@@ -132,37 +159,41 @@
         <el-button @click="$router.push({name: 'schools'})">
           Закрыть
         </el-button>
+        <el-button
+          type="primary"
+          @click="updateSchoolClicked"
+        >
+          Обновить
+        </el-button>
       </el-button-group>
     </el-row>
   </el-card>
 </template>
 
 <script>
-import { computed, onMounted, ref, watch } from 'vue'
-import { useRoute } from 'vue-router'
-import { useLoadingState } from '@/composables/common/useLoadingState.js'
-import { getSchool, updateSchool, updateSchoolStatus, uploadSchoolAvatar } from '@/services/schools/schools.js'
-import { getPrintableSchoolStatus, SchoolStatuses } from '@/services/schools/School.js'
-import { createTeam, removeTeam, updateTeam } from '@/services/schools/teams/teams.js'
-import { createCoach, removeCoach, updateCoach } from '@/services/schools/coaches/coaches.js'
+import {computed, onMounted, ref, watch} from 'vue'
+import {useRoute} from 'vue-router'
+import {useLoadingState} from '@/composables/common/useLoadingState.js'
+import {getSchool, updateSchool, updateSchoolStatus, uploadSchoolAvatar} from '@/services/schools/schools.js'
+import {getPrintableSchoolStatus, SchoolStatuses} from '@/services/schools/School.js'
+import {createTeam, removeTeam, updateTeam} from '@/services/schools/teams/teams.js'
+import {createCoach, removeCoach, updateCoach} from '@/services/schools/coaches/coaches.js'
 import SingleImageUploader from '@/components/common/SingleImageUploader.vue'
 import Coaches from '@/components/schools/coaches/Coaches.vue'
 import Teams from '@/components/schools/teams/Teams.vue'
-import SocialLinks from '@/components/schools/social_links/SocialLinks.vue'
-import { removeInArray, replaceInArray } from '@/helpers.js'
-import { createSocialLink, removeSocialLink, updateSocialLink } from '@/services/schools/social-links/socialLinks.js'
-import { paginateLeagues } from '@/services/leagues/leagueService.js'
+import {removeInArray, replaceInArray} from '@/helpers.js'
+import {createSocialLink, removeSocialLink, updateSocialLink} from '@/services/schools/social-links/socialLinks.js'
+import {paginateLeagues} from '@/services/leagues/leagueService.js'
 
 export default {
   name: 'Edit',
   components: {
     Teams,
     Coaches,
-    SocialLinks,
     SingleImageUploader,
   },
-  setup () {
-    const { loading, setLoaded, setLoading } = useLoadingState(false)
+  setup() {
+    const {loading, setLoaded, setLoading} = useLoadingState(false)
     const route = useRoute()
     let schoolId = computed(() => route.params.id)
     let school = ref({})
@@ -172,8 +203,8 @@ export default {
       try {
         schoolId = route.params.id
         setLoading()
-        const { data } = await getSchool(schoolId)
-        const { data: { data: leagueItems } } = await paginateLeagues({ city_id: data.city_id }, null, 0)
+        const {data} = await getSchool(schoolId)
+        const {data: {data: leagueItems}} = await paginateLeagues({city_id: data.city_id}, null, 0)
         school.value = data
         availableLeagues.value = leagueItems
       } catch (e) {
@@ -189,7 +220,7 @@ export default {
         if (!route.params.id) return
         try {
           setLoading()
-          const { data } = await getSchool(route.params.id)
+          const {data} = await getSchool(route.params.id)
           school.value = data
         } catch (e) {
           console.log(e)
@@ -198,6 +229,16 @@ export default {
         }
       }
     )
+    const updateSchoolClicked = async ()=>{
+      try {
+        setLoading()
+        let  {name,description,email,phone,branch_count,vk_link,youtube_link,inst_link,diagram_link}=school.value
+        await updateSchool(schoolId,  {name,description,email,phone,branch_count,vk_link,youtube_link,inst_link,diagram_link})
+      } catch (e) {
+      } finally {
+        setLoaded()
+      }
+    }
 
     const updateSchoolFields = async (fields) => {
       try {
@@ -208,16 +249,11 @@ export default {
         setLoaded()
       }
     }
-    const onSchoolNameChanged = () => updateSchoolFields({ name: school.value.name })
-    const onSchoolDescriptionChanged = () => updateSchoolFields({ description: school.value.description })
     const onSchoolCountrySelected = (country) => school.value.country_id = country.id
     const onSchoolCitySelected = (city) => {
       school.value.city_id = city.id
-      updateSchoolFields({ city_id: city.id })
+      updateSchoolFields({city_id: city.id})
     }
-    const onSchoolPhoneChanged = () => updateSchoolFields({ phone: school.value.phone })
-    const onSchoolEmailChanged = () => updateSchoolFields({ email: school.value.email })
-    const onSchoolBranchCountChanged = () => updateSchoolFields({ branch_count: school.value.branch_count })
 
     const handleAvatarRemoved = async (file) => {
       school.value.avatar = null
@@ -238,7 +274,7 @@ export default {
     const handleSocialLinkCreated = async (socialLink) => {
       try {
         setLoading()
-        const { data } = await createSocialLink(schoolId, socialLink)
+        const {data} = await createSocialLink(schoolId, socialLink)
         school.value.social_links.push(data)
       } catch (e) {
         console.log(e)
@@ -250,7 +286,7 @@ export default {
     const handleSocialLinkEdited = async (socialLink) => {
       try {
         setLoading()
-        const { data } = await updateSocialLink(socialLink.value.id, socialLink.value)
+        const {data} = await updateSocialLink(socialLink.value.id, socialLink.value)
         replaceInArray(school.value.social_links, (socialLinkItem) => socialLinkItem.id === socialLink.value.id, data)
       } catch (e) {
         console.log(e)
@@ -274,7 +310,7 @@ export default {
     const handleTeamCreated = async (team) => {
       try {
         setLoading()
-        const { data } = await createTeam(schoolId, team)
+        const {data} = await createTeam(schoolId, team)
         school.value.teams.push(data)
       } catch (e) {
         console.log(e)
@@ -286,7 +322,7 @@ export default {
     const handleTeamEdited = async (team) => {
       try {
         setLoading()
-        const { data } = await updateTeam(team.value.id, team.value)
+        const {data} = await updateTeam(team.value.id, team.value)
         replaceInArray(school.value.teams, (teamItem) => teamItem.id === team.value.id, data)
       } catch (e) {
         console.log(e)
@@ -310,7 +346,7 @@ export default {
     const handleCoachCreated = async (coach) => {
       try {
         setLoading()
-        const { data } = await createCoach(schoolId, coach)
+        const {data} = await createCoach(schoolId, coach)
         school.value.coaches.push(data)
       } catch (e) {
         console.log(e)
@@ -322,7 +358,7 @@ export default {
     const handleCoachEdited = async (coach) => {
       try {
         setLoading()
-        const { data } = await updateCoach(coach.value.id, coach.value)
+        const {data} = await updateCoach(coach.value.id, coach.value)
         replaceInArray(school.value.coaches, (coachItem) => coachItem.id === coach.value.id, data)
       } catch (e) {
         console.log(e)
@@ -363,11 +399,6 @@ export default {
       school,
       handleAvatarRemoved,
       handleAvatarChanged,
-      onSchoolNameChanged,
-      onSchoolDescriptionChanged,
-      onSchoolPhoneChanged,
-      onSchoolBranchCountChanged,
-      onSchoolEmailChanged,
       onSchoolCountrySelected,
       onSchoolCitySelected,
       handleSocialLinkCreated,
@@ -380,6 +411,7 @@ export default {
       handleCoachEdited,
       handleCoachRemoved,
       handlePublishSchoolClicked,
+      updateSchoolClicked
     }
   },
 }
