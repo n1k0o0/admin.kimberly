@@ -153,6 +153,8 @@ export default {
     const teams = ref([])
 
     onMounted(async () => {
+      setLoading()
+
       const { data: { data: tournamentItems } } = await paginateTournaments(search, null, 0)
       const { data: { data: leagueItems } } = await paginateLeagues(search, null, 0)
       const { data: { data: stadiumItems } } = await paginateStadiums(search, null, 0)

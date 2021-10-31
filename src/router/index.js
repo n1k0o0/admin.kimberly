@@ -53,7 +53,7 @@ const routes = [
 
   { path: '/results', name: 'results', component: () => import('@/views/results/Index.vue') },
 
-  { path: '/notifications', name: 'notifications', component: Dashboard },
+  { path: '/notifications', name: 'notifications', component: () => import('@/views/notifications/Index.vue') },
 ]
 
 const router = createRouter({
