@@ -35,7 +35,6 @@
           <el-date-picker
             v-model="game.actual_start_time"
             format="DD-MM-YYYY HH:mm"
-            value-format="YYYY-MM-DD HH:mm"
             type="datetime"
           />
         </label>
@@ -46,7 +45,6 @@
           <el-date-picker
             v-model="game.actual_finish_time"
             format="DD-MM-YYYY HH:mm"
-            value-format="YYYY-MM-DD HH:mm"
             type="datetime"
           />
         </label>
@@ -66,7 +64,6 @@
           <el-date-picker
             v-model="pause.started_at"
             format="DD-MM-YYYY HH:mm"
-            value-format="YYYY-MM-DD HH:mm"
             type="datetime"
           />
         </label>
@@ -77,7 +74,6 @@
           <el-date-picker
             v-model="pause.finished_at"
             format="DD-MM-YYYY HH:mm"
-            value-format="YYYY-MM-DD HH:mm"
             type="datetime"
           />
         </label>
