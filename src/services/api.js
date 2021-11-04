@@ -28,6 +28,7 @@ api.interceptors.response.use(undefined, (error) => {
     if (window.location.pathname !== '/login') {
       window.location.href = '/login';
     }
+    ElNotification({type: 'error', title: 'Ошибка авторизации', message: 'Введен неверный логин или пароль'})
     return;
   }
   if (error.response && error.response.status === 403) {
