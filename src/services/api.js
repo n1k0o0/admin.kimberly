@@ -38,6 +38,12 @@ api.interceptors.response.use(undefined, (error) => {
     ElNotification({type: 'error', title: '404', message: 'Ресурс отсутствует'})
     return;
   }
+
+  if (error.response && error.response.status === 422) {
+    ElNotification({type: 'error', title: 'Ошибка', message: Object.values(errorMessage).join("\r\n")??'Обратитесь к разработчикам.'})
+    return;
+  }
+
   if (error.response && error.response.status === 500) {
     ElNotification({type: 'error', title: 'Ошибка', message: errorMessage??'Обратитесь к разработчикам.'})
     return;
