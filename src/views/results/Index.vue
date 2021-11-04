@@ -5,23 +5,10 @@
       <el-row
         :gutter="20"
       >
-        <el-col :span="4">
-          <el-select
-            v-model="search.tournament_ids"
-            filterable
-            multiple
-            placeholder="Турнир"
-            @change="searchGames"
-          >
-            <el-option
-              v-for="(tournament) in tournaments"
-              :key="tournament.id"
-              :label="tournament.name"
-              :value="tournament.id"
-            />
-          </el-select>
-        </el-col>
-        <el-col :span="4">
+        <el-col
+          :span="5"
+          class="pb-5"
+        >
           <el-select
             v-model="search.league_ids"
             filterable
@@ -37,7 +24,7 @@
             />
           </el-select>
         </el-col>
-        <el-col :span="4">
+        <el-col :span="5">
           <el-select
             v-model="search.division_ids"
             :disabled="!search.league_ids || !search.league_ids.length"
@@ -54,7 +41,7 @@
             />
           </el-select>
         </el-col>
-        <el-col :span="4">
+        <el-col :span="5">
           <el-select
             v-model="search.team_ids"
             :disabled="!search.division_ids || !search.division_ids.length"
@@ -71,7 +58,7 @@
             />
           </el-select>
         </el-col>
-        <el-col :span="4">
+        <el-col :span="5">
           <el-select
             v-model="search.stadium_ids"
             filterable
@@ -87,7 +74,7 @@
             />
           </el-select>
         </el-col>
-        <el-col :span="4">
+        <el-col :span="5">
           <el-select
             v-model="search.statuses"
             filterable
@@ -102,6 +89,25 @@
               :value="key"
             />
           </el-select>
+        </el-col>
+        <el-col :span="5">
+          <el-date-picker
+            v-model="search.date_from"
+            format="DD-MM-YYYY"
+            placeholder="Дата начала матча"
+            type="date"
+            @change="searchGames"
+          />
+        </el-col>
+        <el-col :span="5">
+          <el-date-picker
+            v-model="search.date_to"
+            format="DD-MM-YYYY"
+            value-format="YYYY-MM-DD"
+            placeholder="Дата завершения матча"
+            type="date"
+            @change="searchGames"
+          />
         </el-col>
       </el-row>
     </template>

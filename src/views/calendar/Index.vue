@@ -103,6 +103,7 @@
           <el-date-picker
             v-model="search.date_to"
             format="DD-MM-YYYY"
+            value-format="YYYY-MM-DD"
             placeholder="Дата завершения матча"
             type="date"
             @change="searchGames"
