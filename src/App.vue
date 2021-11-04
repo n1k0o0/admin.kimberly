@@ -1,8 +1,8 @@
 <template>
-  <router-view v-if="!checkAuth && data.isLoading" />
+  <router-view v-if="!userType" />
 
   <div
-    v-if="checkAuth && data.isLoading"
+    v-if="userType"
     class="page d-flex flex-row flex-column-fluid"
   >
     <AsideBlock />
@@ -90,21 +90,25 @@
 import AsideBlock from './components/AsideBlock.vue'
 import HeaderBlock from './components/HeaderBlock.vue'
 import FooterBlock from './components/FooterBlock.vue'
-import { computed, onMounted, reactive, ref, watch } from 'vue'
+import { computed, onMounted, reactive, ref } from 'vue'
 import { useStore } from 'vuex'
 import useCountryAndCity from "./composables/useCountryAndCity";
 import {useRoute, useRouter} from "vue-router";
+import {InternalUserTypes} from '@/services/internal-users/InternalUser'
 
 const store = useStore();
 
 onMounted(() => {
-  getMe()
+  if (!store.getters['general/GET_FIRST_SIGN']) {
+    countryAndCityModalShown.value = true
+    localStorage.setItem('firstSign', '1')
+  }
 })
 const route = useRoute()
 const router = useRouter()
 const countryAndCityModalShown = ref(false);
 const isLoading = false
-const showUserPanel = computed(() => store.getters['GET_USER_PANEL'])
+const showUserPanel = computed(() => store.getters['general/GET_USER_PANEL'])
 const data = reactive({ isLoading, showUserPanel, })
 const { selectedCountry, selectedCity, selectedCountryId, selectedCityId, countries, cities } = useCountryAndCity()
 
@@ -113,15 +117,8 @@ const closeCountryAndCityModal = () => {
     countryAndCityModalShown.value = false
   }
 }
-const getMe = async () => {
-  await store.dispatch('auth/GET_AUTH_ME')
-  data.isLoading = true
-  if (!localStorage.getItem('firstSign') && router.currentRoute.value.path!=='/auth') {
-    countryAndCityModalShown.value = true
-    localStorage.setItem('firstSign', '1')
-  }
-}
 
-const checkAuth = computed(() => store.getters['auth/GET_USER_ID'])
+const userType = computed(() => store.getters['auth/GET_USER_TYPE'])
+
 
 </script>

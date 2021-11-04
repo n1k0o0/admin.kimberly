@@ -2,7 +2,7 @@ import api from "../../services/api";
 import useLocalStorage from "../../composables/common/useLocalStorage";
 
 const state = () => ({
-  auth: false,
+  auth: JSON.parse(localStorage.getItem('user'))??false,
   test: false
 });
 
@@ -10,6 +10,10 @@ const getters = {
 
   GET_USER_ID(state) {
     return state.auth ? state.auth.id : false;
+  },
+
+  GET_USER_TYPE(state) {
+    return state.auth ? state.auth.type : false;
   },
 
   GET_TEST(state) {
@@ -28,7 +32,7 @@ const getters = {
 const mutations = {
 
   SET_AUTH(state, payload) {
-    state.auth = payload;
+    localStorage.setItem('user',JSON.stringify(payload))
   },
 
   SET_TEST(state, payload) {
@@ -42,15 +46,17 @@ const actions = {
   async GET_AUTH_ME({ commit, state }, payload) {
     const response = await api.post('/internal_users/me');
     if (response) {
-      commit('SET_AUTH', response.data.user);
+      localStorage.setItem('user',JSON.stringify(response.data.user))
       commit('general/SET_COUNTRIES', response.data.countries, { root: true });
+      localStorage.setItem('countries',JSON.stringify(response.data.countries))
     }
   },
 
-  async LOGIN({ commit, state }, payload) {
+  async LOGIN({ commit, state,dispatch  }, payload) {
     await api.get(import.meta.env.VITE_BASE_API_URL + '/sanctum/csrf-cookie');
-    await api.post('internal_users/issue-token', payload).then(({ data }) => {
+    await api.post('internal_users/issue-token', payload).then(async ({data}) => {
       localStorage.setItem('token', data.access_token);
+      await dispatch('GET_AUTH_ME')
       window.location.href = '/';
     });
   },
@@ -58,10 +64,14 @@ const actions = {
   async LOGOUT({ commit, state }) {
     await api.post('internal_users/revoke-token').then(() => {
       localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      localStorage.removeItem('countries');
       localStorage.removeItem('selected_country');
       localStorage.removeItem('selected_city');
+      localStorage.removeItem('tournament_id');
+      localStorage.removeItem('tournaments');
       localStorage.removeItem('firstSign');
-      window.location.href = '/auth';
+      window.location.href = '/login';
     });
   },
 

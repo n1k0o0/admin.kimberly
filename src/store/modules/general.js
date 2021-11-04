@@ -1,6 +1,8 @@
 const state = () => ({
   userPanel: false,
-  countries: [],
+  firstSign: localStorage.getItem('firstSign')??false,
+  countries: JSON.parse(localStorage.getItem('countries'))??[],
+  tournaments: JSON.parse(localStorage.getItem('tournaments'))??[],
   selected_country_id: JSON.parse(localStorage.getItem('selected_country')) ?? null,
   selected_city_id: JSON.parse(localStorage.getItem('selected_city')) ?? null,
 })
@@ -8,6 +10,9 @@ const state = () => ({
 const getters = {
   GET_USER_PANEL(state) {
     return state.userPanel
+  },
+  GET_FIRST_SIGN(state) {
+    return state.firstSign
   },
   GET_SELECTED_COUNTRY(state) {
     return state.countries.find((countryItem) => countryItem.id === state.selected_country_id)
@@ -39,13 +44,20 @@ const mutations = {
     countries.map(country=>{
       country.cities.unshift({id:null,name:'Все'})
     })
-    state.countries = countries
+    localStorage.setItem('countries',JSON.stringify(countries))
+  },
+  SET_TOURNAMENTS(state, tournaments) {
+    localStorage.setItem('tournaments',JSON.stringify(tournaments))
   },
   SET_SELECTED_COUNTRY(state, countryId) {
     state.selected_country_id = countryId
   },
   SET_SELECTED_CITY(state, cityId) {
     state.selected_city_id = cityId
+  },
+  SET_SELECTED_TOURNAMENT(state, tournamentId)  {
+    localStorage.setItem('selected_tournament_id',tournamentId)
+    state.selected_tournament_id=tournamentId
   },
   CHANGE_USER_PANEL(state) {
     state.userPanel = !state.userPanel

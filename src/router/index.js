@@ -1,64 +1,145 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import {createRouter, createWebHistory} from 'vue-router'
 
+import {InternalUserTypes} from '@/services/internal-users/InternalUser'
 import Auth from '../views/auth/Login.vue'
 import Dashboard from '../views/Index.vue'
+import store from "@/store/index.js";
+import {ElNotification} from "element-plus";
 
 const routes = [
-  { path: '/auth/', name: 'auth', component: Auth, },
-  { path: '/dashboard', name: 'dashboard', component: Dashboard, },
+  {path: '/login/', name: 'auth', component: Auth,},
+  {path: '/dashboard', name: 'dashboard', component: Dashboard,},
 
-  { path: '/stadiums/:id', name: 'stadiums-edit', component: () => import('@/views/stadiums/Edit.vue') },
-  { path: '/stadiums/create', name: 'stadiums-create', component: () => import('@/views/stadiums/Create.vue') },
-  { path: '/stadiums', name: 'stadiums', component: () => import('../views/stadiums/Index.vue') },
+  {
+    path: '/stadiums/:id',
+    name: 'stadiums-edit', component: () => import('@/views/stadiums/Edit.vue'),
+    meta: {authorize: [InternalUserTypes.admin]},
+  },
+  {
+    path: '/stadiums/create', name: 'stadiums-create', component: () => import('@/views/stadiums/Create.vue'),
+    meta: {authorize: [InternalUserTypes.admin]}
+  },
+  {
+    path: '/stadiums', name: 'stadiums', component: () => import('../views/stadiums/Index.vue'),
+    meta: {authorize: [InternalUserTypes.admin]}
+  },
 
-  { path: '/leagues/:id', name: 'leagues-edit', component: () => import('../views/leagues/Edit.vue') },
-  { path: '/leagues/create', name: 'leagues-create', component: () => import('../views/leagues/Create.vue') },
-  { path: '/leagues', name: 'leagues', component: () => import('../views/leagues/Index.vue') },
+  {path: '/leagues/:id', name: 'leagues-edit', component: () => import('../views/leagues/Edit.vue')},
+  {
+    path: '/leagues/create', name: 'leagues-create', component: () => import('../views/leagues/Create.vue'),
+    meta: {authorize: [InternalUserTypes.admin]}
+  },
+  {
+    path: '/leagues', name: 'leagues', component: () => import('../views/leagues/Index.vue'),
+    meta: {authorize: [InternalUserTypes.admin]}
+  },
 
-  { path: '/tournaments/:id', name: 'tournaments-edit', component: () => import('../views/tournaments/Edit.vue') },
+  {
+    path: '/tournaments/:id', name: 'tournaments-edit', component: () => import('../views/tournaments/Edit.vue'),
+    meta: {authorize: [InternalUserTypes.admin]}
+  },
   {
     path: '/tournaments/create',
     name: 'tournaments-create',
-    component: () => import('@/views/tournaments/Create.vue')
+    component: () => import('@/views/tournaments/Create.vue'),
+    meta: {authorize: [InternalUserTypes.admin]}
   },
-  { path: '/tournaments', name: 'tournaments', component: () => import('@/views/tournaments/Index.vue') },
+  {
+    path: '/tournaments', name: 'tournaments', component: () => import('@/views/tournaments/Index.vue'),
+    meta: {authorize: [InternalUserTypes.admin]}
+  },
 
-  { path: '/calendar', name: 'calendar', component: () => import('@/views/calendar/Index.vue') },
+  {
+    path: '/calendar', name: 'calendar', component: () => import('@/views/calendar/Index.vue'),
+    meta: {authorize: [InternalUserTypes.admin]}
+  },
 
-  { path: '/games/create', name: 'game-create', component: () => import('@/views/games/Create.vue') },
-  { path: "/games/:id", name: 'games-edit', component: () => import('@/views/games/Edit.vue') },
-  { path: '/games/:id/statistics', name: 'game-statistics', component: () => import('@/views/games/Statistics.vue') },
+  {
+    path: '/games/create', name: 'game-create', component: () => import('@/views/games/Create.vue'),
+    meta: {authorize: [InternalUserTypes.admin]}
+  },
+  {
+    path: "/games/:id", name: 'games-edit', component: () => import('@/views/games/Edit.vue'),
+    meta: {authorize: [InternalUserTypes.admin]}
+  },
+  {
+    path: '/games/:id/statistics', name: 'game-statistics', component: () => import('@/views/games/Statistics.vue'),
+    meta: {authorize: [InternalUserTypes.admin]}
+  },
 
   {
     path: '/internal-users/:id',
     name: 'internal-users-edit',
-    component: () => import('../views/internal_users/Edit.vue')
+    component: () => import('../views/internal_users/Edit.vue'),
+    meta: {authorize: [InternalUserTypes.admin]}
   },
   {
     path: '/internal-users/create',
     name: 'internal-users-create',
-    component: () => import('../views/internal_users/Create.vue')
+    component: () => import('../views/internal_users/Create.vue'),
+    meta: {authorize: [InternalUserTypes.admin]}
   },
-  { path: '/internal-users', name: 'internal-users', component: () => import('../views/internal_users/Index.vue') },
+  {
+    path: '/internal-users', name: 'internal-users', component: () => import('../views/internal_users/Index.vue'),
+    meta: {authorize: [InternalUserTypes.admin]}
+  },
 
   {
     path: '/users/:id',
     name: 'users-edit',
-    component: () => import('@/views/users/Edit.vue')
+    component: () => import('@/views/users/Edit.vue'),
+    meta: {authorize: [InternalUserTypes.admin]}
   },
-  { path: '/users', name: 'users', component: () => import('@/views/users/Index.vue') },
+  {
+    path: '/users', name: 'users', component: () => import('@/views/users/Index.vue'),
+    meta: {authorize: [InternalUserTypes.admin]}
+  },
 
-  { path: '/schools/:id', name: 'schools-edit', component: () => import('@/views/schools/Edit.vue') },
-  { path: '/schools', name: 'schools', component: () => import('@/views/schools/Index.vue'), },
+  {
+    path: '/schools/:id', name: 'schools-edit', component: () => import('@/views/schools/Edit.vue'),
+    meta: {authorize: [InternalUserTypes.admin]}
+  },
+  {
+    path: '/schools', name: 'schools', component: () => import('@/views/schools/Index.vue'),
+    meta: {authorize: [InternalUserTypes.admin]},
+  },
 
-  { path: '/results', name: 'results', component: () => import('@/views/results/Index.vue') },
+  {
+    path: '/results', name: 'results', component: () => import('@/views/results/Index.vue'),
+    meta: {authorize: [InternalUserTypes.admin]}
+  },
 
-  { path: '/notifications', name: 'notifications', component: () => import('@/views/notifications/Index.vue') },
+  {
+    path: '/notifications', name: 'notifications', component: () => import('@/views/notifications/Index.vue'),
+    meta: {authorize: [InternalUserTypes.admin]}
+  },
 ]
 
 const router = createRouter({
   history: createWebHistory(),
   routes,
 })
+
+router.beforeEach((to, from, next) => {
+  // redirect to login page if not logged in and trying to access a restricted page
+  const {authorize} = to.meta;
+  const currentUser = store.getters['auth/GET_USER'];
+
+  if (authorize) {
+    if (!currentUser) {
+      console.log('not auth', currentUser)
+      // not logged in so redirect to login page with the return url
+      return next({path: "/login"});
+    }
+    // check if route is restricted by role
+    if (authorize.length && !authorize.includes(currentUser.type)) {
+      // role not authorised so redirect to home page
+      ElNotification({type: 'error', title: 'Ошибка', message: 'Нет доступа'})
+      return next({name: "Dashboard"});
+    }
+  }
+
+  next();
+});
 
 export default router
