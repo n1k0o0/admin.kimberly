@@ -5,6 +5,22 @@
       <el-row
         :gutter="20"
       >
+        <el-col :span="5">
+          <el-select
+            v-model="search.stadium_ids"
+            filterable
+            multiple
+            placeholder="Стадион"
+            @change="searchGames"
+          >
+            <el-option
+              v-for="(stadium) in stadiums"
+              :key="stadium.id"
+              :label="stadium.title"
+              :value="stadium.id"
+            />
+          </el-select>
+        </el-col>
         <el-col
           :span="5"
           class="pb-5"
@@ -60,22 +76,6 @@
         </el-col>
         <el-col :span="5">
           <el-select
-            v-model="search.stadium_ids"
-            filterable
-            multiple
-            placeholder="Стадион"
-            @change="searchGames"
-          >
-            <el-option
-              v-for="(stadium) in stadiums"
-              :key="stadium.id"
-              :label="stadium.title"
-              :value="stadium.id"
-            />
-          </el-select>
-        </el-col>
-        <el-col :span="5">
-          <el-select
             v-model="search.statuses"
             filterable
             multiple
@@ -113,7 +113,7 @@
     </template>
     <games
       :games="games"
-      with-goals
+      results
       :loading="loading"
       @remove-game="onRemoveGameClicked($event)"
     />
@@ -177,7 +177,7 @@ export default {
 
     watch(
       () => search.league_ids,
-      (newName, prevName) => {
+      () => {
         if (search.league_ids && search.league_ids.length) {
 
           if (search.division_ids && search.division_ids.length) {
@@ -194,7 +194,7 @@ export default {
     )
     watch(
       () => search.division_ids,
-      async (newName, prevName) => {
+      async () => {
         if (search.division_ids && search.division_ids.length) {
           const {data: {data: teamItems,}} = await getTeams(search, null, 0)
           teams.value = teamItems
@@ -212,7 +212,7 @@ export default {
     )
     watch(
       () => search.city_id,
-      async (newName, prevName) => {
+      async () => {
         const {data: {data: tournamentItems}} = await getCurrentTournament(search, null, 0)
         const {data: {data: leagueItems}} = await paginateLeagues(search, null, 0)
         const {data: {data: stadiumItems}} = await paginateStadiums(search, null, 0)

@@ -5,6 +5,7 @@
     :empty-text="'Нет данных'"
   >
     <el-table-column
+      v-if="!results"
       label="Страна"
     >
       <template #default="scope">
@@ -12,6 +13,7 @@
       </template>
     </el-table-column>
     <el-table-column
+      v-if="!results"
       label="Город"
     >
       <template #default="scope">
@@ -20,6 +22,7 @@
     </el-table-column>
 
     <el-table-column
+      v-if="!results"
       label="Турнир"
     >
       <template #default="scope">
@@ -64,29 +67,28 @@
       </template>
     </el-table-column>
     <el-table-column
+      v-if="results"
+      label="Goals 1"
+    >
+      <template #default="scope">
+        {{ scope.row.team_1_goals ?? 0 }}
+      </template>
+    </el-table-column>
+    <el-table-column
+      v-if="results"
+      label="Goals 2"
+    >
+      <template #default="scope">
+        {{ scope.row.team_2_goals ?? 0 }}
+      </template>
+    </el-table-column>
+    <el-table-column
       label="Team 2"
     >
       <template #default="scope">
         {{ scope.row.team_2.name }}
       </template>
     </el-table-column>
-
-    <template v-if="withGoals">
-      <el-table-column
-        label="Goals 1"
-      >
-        <template #default="scope">
-          {{ scope.row.team_1_goals ?? 0 }}
-        </template>
-      </el-table-column>
-      <el-table-column
-        label="Goals 2"
-      >
-        <template #default="scope">
-          {{ scope.row.team_2_goals ?? 0 }}
-        </template>
-      </el-table-column>
-    </template>
 
     <el-table-column
       label="Стадион"
@@ -129,7 +131,7 @@
           </template>
         </el-popconfirm>
         <el-button
-          v-if="withGoals"
+          v-if="results"
           icon="el-icon-edit"
           type="primary"
           @click="$router.push({name: 'game-statistics', params: {id: scope.row.id}})"
@@ -153,7 +155,7 @@ export default {
       type: Boolean,
       default: false,
     },
-    withGoals: {
+    results: {
       type: Boolean,
       default: false,
     }

@@ -15,7 +15,7 @@
     >
       <el-col :span="6">
         <label>
-          Status
+          Статус
           <el-select
             v-model="game.status"
             filterable
@@ -31,21 +31,23 @@
       </el-col>
       <el-col :span="6">
         <label>
-          Start time
+          Дата начала
           <el-date-picker
             v-model="game.actual_start_time"
             format="DD-MM-YYYY HH:mm"
             type="datetime"
+            editable
           />
         </label>
       </el-col>
       <el-col :span="6">
         <label>
-          Finish time
+          Дата завершения
           <el-date-picker
             v-model="game.actual_finish_time"
             format="DD-MM-YYYY HH:mm"
             type="datetime"
+            editable
           />
         </label>
       </el-col>
@@ -60,21 +62,23 @@
     >
       <el-col :span="6">
         <label>
-          Start time
+          Дата начала
           <el-date-picker
             v-model="pause.started_at"
             format="DD-MM-YYYY HH:mm"
             type="datetime"
+            editable
           />
         </label>
       </el-col>
       <el-col :span="6">
         <label>
-          Finish time
+          Дата завершения
           <el-date-picker
             v-model="pause.finished_at"
             format="DD-MM-YYYY HH:mm"
             type="datetime"
+            editable
           />
         </label>
       </el-col>
