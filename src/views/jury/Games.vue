@@ -28,7 +28,7 @@
       class="pb-4"
     >
       <el-input
-        v-model="search.school"
+        v-model="search.name"
         placeholder="Поиск"
         @input="searchGames"
       />
@@ -61,7 +61,7 @@
 import useCountryAndCity from "@/composables/useCountryAndCity";
 import useLocalStorage from "@/composables/common/useLocalStorage";
 import {useLoadingState} from '@/composables/common/useLoadingState.js'
-import {paginateGames} from '@/services/games/gameService.js'
+import {getAdminSchedule} from '@/services/games/gameService.js'
 import {onMounted, reactive, ref} from "vue";
 
 export default {
@@ -80,12 +80,12 @@ export default {
       country_id: selectedCountryId,
       stadium_id: stadiumId,
       date: date,
-      current_tournament:1
+      current_tournament:1,
     })
 
     const searchGames = async () => {
         setLoading()
-        const {data: {data: gameItems, }} = await paginateGames(search,null,null)
+        const {data: {data: gameItems, }} = await getAdminSchedule(search,null,null)
         games.value = gameItems
         setLoaded()
     }
@@ -141,6 +141,7 @@ export default {
     color: #444444;
     text-transform: uppercase;
     padding: 15px;
+    align-self: center;
   }
   .team:first-child{
     border-right: 1px solid #A29A9A;
