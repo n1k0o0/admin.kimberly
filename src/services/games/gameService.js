@@ -1,5 +1,5 @@
 import api from "../api";
-import { cleanFalsyFields } from "@/helpers.js";
+import {cleanFalsyFields} from "@/helpers.js";
 
 const ENDPOINT = '/games'
 
@@ -17,7 +17,7 @@ export function paginateGames(search, page = 1, limit = 10) {
   })
 }
 
-export function getAdminSchedule(search, page = 1, limit = 10){
+export function getAdminSchedule(search, page = 1, limit = 10) {
   let params = {
     page,
     limit,
@@ -47,23 +47,38 @@ export function removeGame(id) {
   return api.delete(`${ENDPOINT}/${id}`)
 }
 
-export function loadGames(params) {
-  return api.get(`${ENDPOINT}`, {
-    params
-  })
-}
-
-export function updateGameStatistics(id,fields){
-  return api.put(`${ENDPOINT}/${id}/statistics`,cleanFalsyFields(fields))
+export function updateGameStatistics(id, fields) {
+  return api.put(`${ENDPOINT}/${id}/statistics`, cleanFalsyFields(fields))
 }
 
 export function deleteGoalAdmin(id, fields) {
-  return api.put(`${ENDPOINT}/${id}/delete_goal_admin`, cleanFalsyFields(fields))
+  return api.put(`${ENDPOINT}/${id}/delete_goal_admin`, fields)
 }
 
 export function addGoalAdmin(id, fields) {
   return api.put(`${ENDPOINT}/${id}/add_goal_admin`, cleanFalsyFields(fields))
 }
+
+export function deleteGoalJury(id, fields) {
+  return api.put(`${ENDPOINT}/${id}/delete_goal_jury`, fields)
+}
+
+export function addGoalJury(id, fields) {
+  return api.put(`${ENDPOINT}/${id}/add_goal_jury`, cleanFalsyFields(fields))
+}
+
+export function changeStatus(id, fields) {
+  return api.put(`${ENDPOINT}/${id}/status`, cleanFalsyFields(fields))
+}
+
+export function startPause(id) {
+  return api.post(`${ENDPOINT}/${id}/pauses/start`)
+}
+
+export function finishPause(id) {
+  return api.post(`${ENDPOINT}/${id}/pauses/finish`)
+}
+
 
 export function getPrintableGameStatuses() {
   return {

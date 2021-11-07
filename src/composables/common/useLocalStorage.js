@@ -9,7 +9,7 @@ function getSavedValue(key, initialValue) {
   return initialValue
 }
 
-export default function useLocalStorage(key, initialValue) {
+export default function useLocalStorage(key, initialValue=null) {
   const item = ref(getSavedValue(key, initialValue))
 
   watch(item, (newValue) => {
@@ -17,7 +17,7 @@ export default function useLocalStorage(key, initialValue) {
   })
 
   const removeValue = () => {
-    item.vaue = null
+    item.value = null
     localStorage.removeItem(key)
   }
 

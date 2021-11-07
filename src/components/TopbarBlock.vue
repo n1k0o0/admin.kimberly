@@ -40,7 +40,7 @@
               <!--begin::Username-->
               <div class="d-flex flex-column">
                 <div class="fw-bolder d-flex align-items-center fs-5">
-                  <span class="badge badge-light-success fw-bolder fs-8 px-2 py-1 ms-2">{{ user.patronymic }}</span>
+                  <span class="badge badge-light-success fw-bolder fs-8 px-2 py-1 ms-2">{{ getPrintableUserType(user.type) }}</span>
                 </div>
                 <a
                   href="#"
@@ -79,7 +79,7 @@
 import { reactive } from 'vue';
 import { useStore } from 'vuex';
 import useAuthentication from "@/composables/useAuthentication.js";
-
+import {getPrintableUserType} from '@/services/internal-users/InternalUser'
 const store = useStore();
 
 const data = reactive({
@@ -105,7 +105,7 @@ document.addEventListener('click', () => toggleMenu());
 .topbar_menu .show.menu-sub {
   z-index: 105;
   position: absolute;
-  margin: 0px;
+  margin: 0;
   right: 0;
   top: 65px;
 }

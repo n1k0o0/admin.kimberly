@@ -1,7 +1,7 @@
 <template>
   <div class="d-flex flex-center flex-column flex-column-fluid p-10 pb-lg-20">
     <a
-      href="javascript:;"
+      href="javascript:"
       class="mb-12"
     >
       <img
@@ -72,9 +72,6 @@ const data = reactive({
 });
 
 onMounted(async () => {
-  if (store.getters['auth/GET_USER_ID']) {
-    await router.push({ name: 'dashboard' });
-  }
   localStorage.removeItem('firstSign')
 });
 

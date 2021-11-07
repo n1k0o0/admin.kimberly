@@ -28,3 +28,13 @@ i.el-input__icon.el-icon-view.el-input__clear {
 .pl-2{
   padding-left: 0.5rem;
 }
+.squad{
+  .el-tabs__item{
+    background-color: #C4C4C4;
+    color: #000;
+    &.is-active{
+      background-color: #fff;
+    }
+  }
+}
+

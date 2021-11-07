@@ -1,8 +1,8 @@
 <template>
-  <router-view v-if="!userType" />
-
+  <router-view v-if="!user?.type" />
+  <!--  Admin-->
   <div
-    v-if="userType"
+    v-if="user?.type===InternalUserTypes.admin"
     class="page d-flex flex-row flex-column-fluid"
   >
     <AsideBlock />
@@ -83,18 +83,28 @@
       <div />
     </div>
   </div>
+  <!--  Jury-->
+  <div
+    v-if="user?.type===InternalUserTypes.jury"
+    class="jury_page d-flex flex-column flex-column-fluid m-4"
+  >
+    <TopbarBlock class="justify-content-end p-4" />
+    <router-view />
+  </div>
 </template>
 
 <script setup>
 
-import AsideBlock from './components/AsideBlock.vue'
-import HeaderBlock from './components/HeaderBlock.vue'
-import FooterBlock from './components/FooterBlock.vue'
+import AsideBlock from '@/components/AsideBlock.vue'
+import HeaderBlock from '@/components/HeaderBlock.vue'
+import FooterBlock from '@/components/FooterBlock.vue'
+import TopbarBlock from '@/components/TopbarBlock.vue'
 import { computed, onMounted, reactive, ref } from 'vue'
 import { useStore } from 'vuex'
-import useCountryAndCity from "./composables/useCountryAndCity";
+import useCountryAndCity from "@/composables/useCountryAndCity";
 import {useRoute, useRouter} from "vue-router";
 import {InternalUserTypes} from '@/services/internal-users/InternalUser'
+import useLocalStorage from '@/composables/common/useLocalStorage';
 
 const store = useStore();
 
@@ -118,7 +128,5 @@ const closeCountryAndCityModal = () => {
   }
 }
 
-const userType = computed(() => store.getters['auth/GET_USER_TYPE'])
-
-
+const {item:user} = useLocalStorage('user',null)
 </script>

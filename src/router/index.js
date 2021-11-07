@@ -7,9 +7,8 @@ import store from "@/store/index.js";
 import {ElNotification} from "element-plus";
 
 const routes = [
-  {path: '/login/', name: 'auth', component: Auth,},
-  {path: '/dashboard', name: 'dashboard', component: Dashboard,},
-
+  {path: '/login/', name: 'auth', component: Auth, meta: {authorize: ['guest']},},
+  {path: '/', name: 'dashboard', component: Dashboard,meta: {authorize: [InternalUserTypes.admin]}},
   {
     path: '/stadiums/:id',
     name: 'stadiums-edit', component: () => import('@/views/stadiums/Edit.vue'),
@@ -113,6 +112,18 @@ const routes = [
     path: '/notifications', name: 'notifications', component: () => import('@/views/notifications/Index.vue'),
     meta: {authorize: [InternalUserTypes.admin]}
   },
+  {
+    path: '/jury', name: 'jury', component: () => import('@/views/jury/Index.vue'),
+    meta: {authorize: [InternalUserTypes.jury]}
+  },
+  {
+    path: '/jury/games', name: 'games-jury', component: () => import('@/views/jury/Games.vue'),
+    meta: {authorize: [InternalUserTypes.jury]}
+  },
+  {
+    path: '/jury/games/:id', name: 'game-jury', component: () => import('@/views/jury/Game.vue'),
+    meta: {authorize: [InternalUserTypes.jury]}
+  },
 ]
 
 const router = createRouter({
@@ -125,17 +136,31 @@ router.beforeEach((to, from, next) => {
   const {authorize} = to.meta;
   const currentUser = store.getters['auth/GET_USER'];
 
+  if (!to.name) {
+    if (currentUser.type === InternalUserTypes.jury) {
+      return next({name: 'jury'});
+    } else if (currentUser.type === InternalUserTypes.admin) {
+      return next({path: "/"});
+    }
+    return next({path: "/login"});
+  }
+
   if (authorize) {
     if (!currentUser) {
-      console.log('not auth', currentUser)
       // not logged in so redirect to login page with the return url
-      return next({path: "/login"});
+      if (!authorize.includes('guest')) {
+        return next({path: "/login"});
+      }
+      return next();
     }
     // check if route is restricted by role
     if (authorize.length && !authorize.includes(currentUser.type)) {
       // role not authorised so redirect to home page
       ElNotification({type: 'error', title: 'Ошибка', message: 'Нет доступа'})
-      return next({name: "Dashboard"});
+      if (currentUser.type === InternalUserTypes.jury) {
+        return next({name: 'jury'});
+      }
+      return next({path: "/"});
     }
   }
 
