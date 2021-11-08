@@ -93,6 +93,10 @@ const routes = [
     path: '/users', name: 'users', component: () => import('@/views/users/Index.vue'),
     meta: {authorize: [InternalUserTypes.admin]}
   },
+  {
+    path: '/users/create', name: 'users-create', component: () => import('@/views/users/Create.vue'),
+    meta: {authorize: [InternalUserTypes.admin]}
+  },
 
   {
     path: '/schools/:id', name: 'schools-edit', component: () => import('@/views/schools/Edit.vue'),

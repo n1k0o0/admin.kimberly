@@ -132,6 +132,29 @@
         </el-popconfirm>
       </el-col>
     </el-row>
+    <el-row
+      v-if="!user.school"
+      :gutter="20"
+    >
+      <el-divider />
+      <el-col :span="24">
+        <span class="d-block h4">Создать школу</span>
+      </el-col>
+      <el-col :span="6">
+        <el-input
+          v-model="school.name"
+          placeholder="Имя школы"
+        />
+      </el-col>
+      <el-col :span="4">
+        <el-button
+          type="primary"
+          @click="createSchoolClicked"
+        >
+          Создать
+        </el-button>
+      </el-col>
+    </el-row>
     <el-row class="my-3 flex-row-reverse">
       <el-button-group>
         <el-button @click="$router.push({name: 'users'})">
@@ -143,12 +166,14 @@
 </template>
 
 <script>
-import { onMounted, ref } from "vue";
-import { useRoute } from "vue-router";
-import { useLoadingState } from "@/composables/common/useLoadingState.js";
-import { getPrintableUserStatuses, getPrintableUserTypes } from "@/services/users/User.js";
-import { getUser, updateUser, uploadUserAvatar } from "@/services/users/users.js";
+import {onMounted, reactive, ref} from "vue";
+import {useRoute, useRouter} from "vue-router";
+import {useLoadingState} from "@/composables/common/useLoadingState.js";
+import {getPrintableUserStatuses, getPrintableUserTypes} from "@/services/users/User.js";
+import {getUser, updateUser, uploadUserAvatar} from "@/services/users/users.js";
 import SingleImageUploader from "@/components/common/SingleImageUploader.vue";
+import useCountryAndCity from "@/composables/useCountryAndCity";
+import {createSchool} from "@/services/schools/schools";
 
 export default {
   name: "Edit",
@@ -156,21 +181,29 @@ export default {
     SingleImageUploader,
   },
   setup() {
+    const {selectedCityId} = useCountryAndCity()
+    const router = useRouter()
     let userId = null;
     let user = ref({});
     const route = useRoute();
+    let school = reactive({
+      city_id: selectedCityId,
+      name: '',
+      user_id: route.params.id,
+    });
+
 
     const userStatuses = getPrintableUserStatuses();
     const userTypes = getPrintableUserTypes();
 
     const newPassword = ref("");
 
-    const { loading, setLoaded, setLoading } = useLoadingState(false);
+    const {loading, setLoaded, setLoading} = useLoadingState(false);
     onMounted(async () => {
       try {
         userId = route.params.id;
         setLoading();
-        const { data } = await getUser(userId);
+        const {data} = await getUser(userId);
         user.value = data;
       } catch (e) {
       } finally {
@@ -188,14 +221,14 @@ export default {
       }
     };
 
-    const handleUserPhoneChanged = () => updateUserFields({ phone: user.value.phone });
-    const handleUserEmailChanged = () => updateUserFields({ email: user.value.email });
-    const handleUserFirstNameChanged = () => updateUserFields({ first_name: user.value.first_name });
-    const handleUserLastNameChanged = () => updateUserFields({ last_name: user.value.last_name });
-    const handleUserPatronymicChanged = () => updateUserFields({ patronymic: user.value.patronymic });
-    const handleUserStatusChanged = () => updateUserFields({ status: user.value.status });
-    const handleUpdatePassword = () => updateUserFields({ password: newPassword.value });
-    const handleAvatarRemoved = (file) => {
+    const handleUserPhoneChanged = () => updateUserFields({phone: user.value.phone});
+    const handleUserEmailChanged = () => updateUserFields({email: user.value.email});
+    const handleUserFirstNameChanged = () => updateUserFields({first_name: user.value.first_name});
+    const handleUserLastNameChanged = () => updateUserFields({last_name: user.value.last_name});
+    const handleUserPatronymicChanged = () => updateUserFields({patronymic: user.value.patronymic});
+    const handleUserStatusChanged = () => updateUserFields({status: user.value.status});
+    const handleUpdatePassword = () => updateUserFields({password: newPassword.value});
+    const handleAvatarRemoved = () => {
       user.value.avatar = null;
     };
 
@@ -211,11 +244,17 @@ export default {
       }
     };
 
+    const createSchoolClicked = async () => {
+      const {data: createdSchool} = await createSchool(school)
+      await router.push({name: 'schools-edit', params: {id: createdSchool.id}})
+    }
+
     return {
       loading,
       userTypes,
       userStatuses,
       user,
+      school,
       newPassword,
       handleAvatarRemoved,
       handleAvatarChanged,
@@ -226,6 +265,7 @@ export default {
       handleUserPatronymicChanged,
       handleUserStatusChanged,
       handleUpdatePassword,
+      createSchoolClicked
     };
   },
 };

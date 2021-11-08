@@ -3,47 +3,54 @@
     <template #header>
       <h3>Пользователи</h3>
       <el-row
-        :gutter="2"
-        justify="space-between"
+        :gutter="20"
       >
-        <el-row>
-          <el-col :span="6">
-            <el-input
-              v-model="search.login"
-              placeholder="Email"
+        <el-col :span="6">
+          <el-input
+            v-model="search.login"
+            placeholder="Email"
+          />
+        </el-col>
+        <el-col :span="6">
+          <el-select
+            v-model="search.types"
+            multiple
+            placeholder="Тип пользователя"
+          >
+            <el-option
+              v-for="(type, key) in userTypes"
+              :key="key"
+              :label="type"
+              :value="key"
             />
-          </el-col>
-          <el-col :span="6">
-            <el-select
-              v-model="search.types"
-              multiple
-              placeholder="Тип пользователя"
-            >
-              <el-option
-                v-for="(type, key) in userTypes"
-                :key="key"
-                :label="type"
-                :value="key"
-              />
-            </el-select>
-          </el-col>
-          <el-col :span="6">
-            <el-date-picker
-              v-model="search.created_at_start"
-              placeholder="Создан от"
-              type="date"
-              @change="onCreatedAtStartChanged"
-            />
-          </el-col>
-          <el-col :span="6">
-            <el-date-picker
-              v-model="search.created_at_end"
-              placeholder="Создан по"
-              type="date"
-              @change="onCreatedAtEndChanged"
-            />
-          </el-col>
-        </el-row>
+          </el-select>
+        </el-col>
+        <el-col :span="6">
+          <el-date-picker
+            v-model="search.created_at_start"
+            placeholder="Создан от"
+            type="date"
+            @change="onCreatedAtStartChanged"
+          />
+        </el-col>
+        <el-col :span="6">
+          <el-date-picker
+            v-model="search.created_at_end"
+            placeholder="Создан по"
+            type="date"
+            @change="onCreatedAtEndChanged"
+          />
+        </el-col>
+      </el-row>
+      <el-row
+        class="my-3 flex-row-reverse"
+      >
+        <el-button
+          type="primary"
+          @click="$router.push({name: 'users-create'})"
+        >
+          Создать
+        </el-button>
       </el-row>
     </template>
     <el-table
@@ -119,18 +126,18 @@
 </template>
 
 <script>
-import { paginateUsers, removeUser, } from '@/services/users/users.js'
-import { onMounted, reactive, ref, watch } from 'vue'
-import { useLoadingState } from '@/composables/common/useLoadingState.js'
-import { getPrintableUserStatus, getPrintableUserType, getPrintableUserTypes } from '@/services/users/User.js'
+import {paginateUsers, removeUser} from '@/services/users/users.js'
+import {onMounted, reactive, ref, watch} from 'vue'
+import {useLoadingState} from '@/composables/common/useLoadingState.js'
+import {getPrintableUserStatus, getPrintableUserType, getPrintableUserTypes} from '@/services/users/User.js'
 import moment from 'moment'
 import usePagination from '@/composables/common/usePagination'
 
 export default {
   name: 'Index',
-  setup () {
-    const { loading, setLoaded, setLoading } = useLoadingState(true)
-    const { pagination, setPagination, currentPage } = usePagination()
+  setup() {
+    const {loading, setLoaded, setLoading} = useLoadingState(true)
+    const {pagination, setPagination, currentPage} = usePagination()
     const search = reactive({
       login: '',
       types: [],
@@ -141,7 +148,7 @@ export default {
     const users = ref([])
 
     onMounted(async () => {
-      const { data: { data: userCollection, meta } } = await paginateUsers()
+      const {data: {data: userCollection, meta}} = await paginateUsers()
       setPagination(meta)
       users.value = userCollection
       setLoaded()
@@ -150,7 +157,7 @@ export default {
     watch([search, currentPage], async () => {
       setLoading()
       try {
-        const { data: { data: users, meta } } = await paginateUsers(search, currentPage.value)
+        const {data: {data: users, meta}} = await paginateUsers(search, currentPage.value)
         setPagination(meta)
         users.value = users
       } catch (e) {
