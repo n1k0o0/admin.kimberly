@@ -423,7 +423,7 @@ export default {
     const addGoal = async (gamePlayerId) => {
       try {
         setLoading()
-        await addGoalJury(game.value.id, {gamePlayerId: gamePlayerId})
+        await addGoalJury(game.value.id, {game_player_id: gamePlayerId})
         await getGameData()
       } finally {
         setLoaded()
@@ -433,7 +433,7 @@ export default {
     const deleteGoal = async (gamePlayerId, goalMinute) => {
       try {
         setLoading()
-        await deleteGoalJury(game.value.id, {gamePlayerId: gamePlayerId, minute: goalMinute})
+        await deleteGoalJury(game.value.id, {game_player_id: gamePlayerId, minute: goalMinute})
         await getGameData()
       } catch (e) {
       } finally {
