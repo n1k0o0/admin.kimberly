@@ -4,16 +4,40 @@
     @click="$router.push({name: 'games-jury'})"
   >
     <svg
-      width="36"
-      height="24"
-      viewBox="0 0 36 24"
+      width="30"
+      height="30"
+      viewBox="0 0 40 40"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <path
-        d="M0.939339 10.9393C0.353554 11.5251 0.353554 12.4749 0.939339 13.0607L10.4853 22.6066C11.0711 23.1924 12.0208 23.1924 12.6066 22.6066C13.1924 22.0208 13.1924 21.0711 12.6066 20.4853L4.12132 12L12.6066 3.51472C13.1924 2.92893 13.1924 1.97918 12.6066 1.3934C12.0208 0.807609 11.0711 0.807609 10.4853 1.3934L0.939339 10.9393ZM36 10.5L2 10.5L2 13.5L36 13.5L36 10.5Z"
-        fill="black"
+      <g clip-path="url(#clip0_102:601)">
+        <path
+          d="M22.5 26.25L15 19.5006L22.5 12.75"
+          stroke="#181c32"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </g>
+      <rect
+        x="0.25"
+        y="0.25"
+        width="39.5"
+        height="39.5"
+        rx="15.75"
+        stroke="#181c32"
+        stroke-width="0.5"
       />
+      <defs>
+        <clipPath id="clip0_102:601">
+          <rect
+            width="17"
+            height="11"
+            fill="black"
+            transform="translate(25 11) rotate(90)"
+          />
+        </clipPath>
+      </defs>
     </svg>
   </div>
   <h1 class="title">
@@ -43,6 +67,9 @@
           >
             <h1>{{ game?.team_1_goals ?? 0 }}-{{ game?.team_2_goals ?? 0 }}</h1>
             <p class="game_info_score_status">
+              {{ minutes }}:{{ seconds }}
+            </p>
+            <p class="game_info_score_status">
               {{ getPrintableGameStatus(game?.status) }}
             </p>
           </el-col>
@@ -62,13 +89,15 @@
     <el-row class="game_details">
       <el-col :span="24">
         <p>
-          {{ $moment(game.started_at).format('YYYY-MM-DD') }} / {{ game.league?.name }} / {{ game.division?.name }}
+          {{ $moment(game.started_at).format('YYYY-MM-DD HH:mm') }} / {{ game.league?.name }} / {{
+            game.division?.name
+          }}
         </p>
       </el-col>
     </el-row>
     <el-row
       v-if="game.status!=='finished'"
-      class="game_status_button"
+      class="game_buttons"
     >
       <el-col
         :span="24"
@@ -76,12 +105,14 @@
       >
         <el-popconfirm
           title="Изменить статус игры?"
+          confirm-button-text="Да"
+          cancel-button-text="Нет"
           @confirm="changeStatusClicked"
         >
           <template #reference>
-            <el-button>
+            <el-button :type="game.status === 'not_started'?'success':'danger'">
               {{
-                game.status === 'not_started' ? 'Начать матч' : game.status === 'started' ? 'Заершить матч' : 'Завершен'
+                game.status === 'not_started' ? 'Начать матч' : game.status === 'started' ? 'Завершить матч' : 'Завершен'
               }}
             </el-button>
           </template>
@@ -90,25 +121,42 @@
       <el-col
         v-if="game.status==='started'"
         :span="24"
+        class="game_buttons_pauses"
       >
         <el-row :gutter="10">
           <el-col :span="12">
             <el-popconfirm
               title="Приостановить игру?"
+              confirm-button-text="Да"
+              cancel-button-text="Нет"
+              :disabled="isOnPause"
               @confirm="startPauseClicked"
             >
               <template #reference>
-                <el-button>Пауза</el-button>
+                <el-button
+                  :disabled="isOnPause"
+                  class="game_buttons_pauses_pause"
+                >
+                  Пауза
+                </el-button>
               </template>
             </el-popconfirm>
           </el-col>
           <el-col :span="12">
             <el-popconfirm
               title="Продолжить игру?"
+              confirm-button-text="Да"
+              cancel-button-text="Нет"
+              :disabled="!isOnPause"
               @confirm="finishPauseClicked"
             >
               <template #reference>
-                <el-button>Продолжить игру</el-button>
+                <el-button
+                  :disabled="!isOnPause"
+                  class="game_buttons_pauses_continue"
+                >
+                  Продолжить игру
+                </el-button>
               </template>
             </el-popconfirm>
           </el-col>
@@ -120,7 +168,7 @@
         :span="24"
         class="squad_title"
       >
-        <h2>Составы компанд</h2>
+        <h2>Составы команд</h2>
       </el-col>
       <el-col
         class="squad_body"
@@ -168,6 +216,8 @@
                 <el-popconfirm
                   title="Добавить гол?"
                   class="cursor-pointer"
+                  confirm-button-text="Да"
+                  cancel-button-text="Нет"
                   @confirm="addGoal(player.id,player.team_id)"
                 >
                   <template #reference>
@@ -217,6 +267,8 @@
                 <el-popconfirm
                   title="Добавить гол?"
                   class="cursor-pointer"
+                  confirm-button-text="Да"
+                  cancel-button-text="Нет"
                   @confirm="addGoal(player.id,player.team_id)"
                 >
                   <template #reference>
@@ -268,6 +320,8 @@
               <el-popconfirm
                 title="Удалить гол?"
                 class="cursor-pointer"
+                confirm-button-text="Да"
+                cancel-button-text="Нет"
                 @confirm="deleteGoal(scorer.id,goal)"
               >
                 <template #reference>
@@ -336,6 +390,8 @@
               <el-popconfirm
                 title="Удалить гол?"
                 class="cursor-pointer"
+                confirm-button-text="Да"
+                cancel-button-text="Нет"
                 @confirm="deleteGoal(scorer.id,goal)"
               >
                 <template #reference>
@@ -387,6 +443,7 @@ import {
 } from '@/services/games/gameService.js'
 import {computed, onMounted, ref} from "vue";
 import {useRoute} from "vue-router";
+import moment from 'moment'
 
 export default {
   name: "Game",
@@ -395,6 +452,13 @@ export default {
     const route = useRoute()
     const gameId = computed(() => route.params.id)
     const game = ref([])
+    let clockInterval
+    const isOnPause = ref(false)
+    const pause = ref([false])
+    let time = ref(0)
+    let pauses = ref(0)
+    let minutes = ref(0)
+    let seconds = ref(0)
     const activeTeamTab = ref('first')
     let secondTeamsPlayers = ref({})
     let firstTeamsPlayers = ref({})
@@ -402,19 +466,44 @@ export default {
     let secondTeamsScorers = ref({})
 
     const getGameData = async () => {
+      time.value = 0
+      pauses.value = 0
       const {data} = await getGame(gameId.value)
       game.value = data
       firstTeamsPlayers.value = data.players.filter(player => player.team_id === data.team_1_id).sort((a, b) => (a.number) - (b.number))
       secondTeamsPlayers.value = data.players.filter(player => player.team_id === data.team_2_id).sort((a, b) => (a.number) - (b.number))
       firstTeamsScorers.value = firstTeamsPlayers.value.filter(player => player.goals?.length > 0).sort((a, b) => (b.goals?.length) - (a.goals?.length))
       secondTeamsScorers.value = secondTeamsPlayers.value.filter(player => player.goals?.length > 0).sort((a, b) => (b.goals?.length) - (a.goals?.length))
+      pause.value = game.value?.pauses?.filter(pause => !pause.finished_at)
+      isOnPause.value = !!pause.value.length
+
+      if (game.value.status !== 'not_started') {
+        if (game.value.pauses?.length) {
+          game.value.pauses.forEach(pause => pauses.value += moment.duration(moment(pause.finished_at).diff(moment(pause.started_at)))._milliseconds)
+        }
+
+        let lastActiveDate = pause.value[0]?.started_at ?? new Date()
+        time.value = moment.duration(moment(lastActiveDate).diff(moment(game.value.actual_start_time)))._milliseconds - pauses.value
+        minutes.value = Math.floor(moment.duration(time.value).asMinutes())
+        seconds.value = moment.duration(time.value).seconds()
+      }
 
     }
+
 
     onMounted(async () => {
       try {
         setLoading()
         await getGameData()
+        if (game.value.status === "started") {
+          clockInterval = setInterval(() => {
+            if (!isOnPause.value) {
+              time.value += 100
+              minutes.value = Math.floor(moment.duration(time.value).asMinutes())
+              seconds.value = moment.duration(time.value).seconds()
+            }
+          }, 100)
+        }
       } finally {
         setLoaded()
       }
@@ -448,6 +537,18 @@ export default {
         let finish = game.value.status === 'started'
         await changeStatus(game.value.id, {start: start, finish: finish})
         await getGameData()
+        if (finish) {
+          clearInterval(clockInterval);
+        }
+        if (start) {
+          clockInterval = setInterval(() => {
+            if (!isOnPause.value) {
+              time.value += 100
+              minutes.value = Math.floor(moment.duration(time.value).asMinutes())
+              seconds.value = moment.duration(time.value).seconds()
+            }
+          }, 100)
+        }
       } catch (e) {
       } finally {
         setLoaded()
@@ -458,6 +559,7 @@ export default {
       try {
         setLoading()
         await startPause(game.value.id)
+        await getGameData()
       } finally {
         setLoaded()
       }
@@ -467,6 +569,7 @@ export default {
       try {
         setLoading()
         await finishPause(game.value.id)
+        await getGameData()
       } finally {
         setLoaded()
       }
@@ -482,6 +585,9 @@ export default {
       secondTeamsPlayers,
       firstTeamsScorers,
       secondTeamsScorers,
+      isOnPause,
+      seconds,
+      minutes,
       addGoal,
       deleteGoal,
       changeStatusClicked,
@@ -571,13 +677,39 @@ export default {
   }
 }
 
-.game_status_button {
+.game_buttons {
   text-align: center;
   margin-bottom: 50px;
 
+  &_pauses {
+    &_pause {
+      background: yellow;
+      color: #8A8A8A !important;
+
+      &.is-disabled {
+        background: lighten(grey, 30)
+      }
+
+      &:hover:not(.is-disabled) {
+        background: darken(yellow, 5);
+      }
+    }
+
+    &_continue {
+      background: #099348;
+
+      &.is-disabled {
+        background: lighten(grey, 30)
+      }
+
+      &:hover:not(.is-disabled) {
+        background: darken(#099348, 5);
+      }
+    }
+  }
+
   button {
     width: 100%;
-    background: #099348;
     color: #FFFFFF;
   }
 }

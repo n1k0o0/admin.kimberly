@@ -4,16 +4,40 @@
     @click="$router.push({name: 'jury'})"
   >
     <svg
-      width="36"
-      height="24"
-      viewBox="0 0 36 24"
+      width="30"
+      height="30"
+      viewBox="0 0 40 40"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <path
-        d="M0.939339 10.9393C0.353554 11.5251 0.353554 12.4749 0.939339 13.0607L10.4853 22.6066C11.0711 23.1924 12.0208 23.1924 12.6066 22.6066C13.1924 22.0208 13.1924 21.0711 12.6066 20.4853L4.12132 12L12.6066 3.51472C13.1924 2.92893 13.1924 1.97918 12.6066 1.3934C12.0208 0.807609 11.0711 0.807609 10.4853 1.3934L0.939339 10.9393ZM36 10.5L2 10.5L2 13.5L36 13.5L36 10.5Z"
-        fill="black"
+      <g clip-path="url(#clip0_102:601)">
+        <path
+          d="M22.5 26.25L15 19.5006L22.5 12.75"
+          stroke="#181c32"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </g>
+      <rect
+        x="0.25"
+        y="0.25"
+        width="39.5"
+        height="39.5"
+        rx="15.75"
+        stroke="#181c32"
+        stroke-width="0.5"
       />
+      <defs>
+        <clipPath id="clip0_102:601">
+          <rect
+            width="17"
+            height="11"
+            fill="black"
+            transform="translate(25 11) rotate(90)"
+          />
+        </clipPath>
+      </defs>
     </svg>
   </div>
   <h1 class="title">
@@ -52,6 +76,12 @@
         class="team"
       >
         {{ game.team_2.name }}
+      </el-col>
+      <el-divider>Детали игры</el-divider>
+      <el-col :span="24">
+        <p class="text-center">
+          {{ game.league?.name }} / {{ game.division?.name }} / {{ $moment(game.started_at).format('YYYY-MM-DD HH:mm') }}
+        </p>
       </el-col>
     </el-row>
   </div>
@@ -111,6 +141,13 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.el-divider{
+  background-color: #444444;
+  .el-divider__text{
+    background-color: #DEE4E1!important;
+  }
+}
+
 .back_arrow{
   position: absolute;
   left: 20px;
