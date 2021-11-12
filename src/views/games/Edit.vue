@@ -344,8 +344,8 @@ export default {
         gameId = route.params.id
         setLoading()
         const {data} = await getGame(gameId)
-        firstTeamsPlayers.value = data.players.filter(player => player.team_id === data.team_1_id).sort((a, b) => (b.goals?.length || 0) - (a.goals?.length || 0))
-        secondTeamsPlayers.value = data.players.filter(player => player.team_id === data.team_2_id).sort((a, b) => (b.goals?.length || 0) - (a.goals?.length || 0))
+        firstTeamsPlayers.value = data.team_1_players.sort((a, b) => (b.goals?.length || 0) - (a.goals?.length || 0))
+        secondTeamsPlayers.value = data.team_2_players.sort((a, b) => (b.goals?.length || 0) - (a.goals?.length || 0))
         const {data: {data: tournamentItems}} = await paginateTournaments({city_id: data.league.city_id}, null, 0)
         const {data: {data: leagueItems}} = await paginateLeagues({city_id: data.league.city_id}, null, 0)
         const {data: {data: stadiumItems}} = await paginateStadiums({city_id: data.league.city_id}, null, 0)
@@ -381,8 +381,8 @@ export default {
         setLoading()
         await deleteGoalAdmin(game.id, {player_id: playerId, minute: goalMinute, team_id: teamId})
         const {data} = await getGame(gameId)
-        firstTeamsPlayers.value = data.players.filter(player => player.team_id === data.team_1_id).sort((a, b) => (b.goals?.length || 0) - (a.goals?.length || 0))
-        secondTeamsPlayers.value = data.players.filter(player => player.team_id === data.team_2_id).sort((a, b) => (b.goals?.length || 0) - (a.goals?.length || 0))
+        firstTeamsPlayers.value = data.team_1_players.sort((a, b) => (b.goals?.length || 0) - (a.goals?.length || 0))
+        secondTeamsPlayers.value = data.team_2_players.sort((a, b) => (b.goals?.length || 0) - (a.goals?.length || 0))
       } catch (e) {
       } finally {
         setLoaded()
@@ -401,8 +401,8 @@ export default {
           setLoading()
           await addGoalAdmin(game.id, {player_id: playerId, minute: value, team_id: teamId})
           const {data} = await getGame(gameId)
-          firstTeamsPlayers.value = data.players.filter(player => player.team_id === data.team_1_id).sort((a, b) => (b.goals?.length || 0) - (a.goals?.length || 0))
-          secondTeamsPlayers.value = data.players.filter(player => player.team_id === data.team_2_id).sort((a, b) => (b.goals?.length || 0) - (a.goals?.length || 0))
+          firstTeamsPlayers.value = data.team_1_players.sort((a, b) => (b.goals?.length || 0) - (a.goals?.length || 0))
+          secondTeamsPlayers.value = data.team_2_players.sort((a, b) => (b.goals?.length || 0) - (a.goals?.length || 0))
         })
         .catch(() => {
         }).finally(() => {
