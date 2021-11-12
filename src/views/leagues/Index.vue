@@ -6,8 +6,7 @@
         :gutter="2"
         justify="space-between"
       >
-        <el-row>
-        </el-row>
+        <el-row />
         <el-row>
           <el-button
             type="primary"
@@ -83,18 +82,18 @@
 </template>
 
 <script>
-import { onMounted, reactive, ref, watch } from 'vue'
-import { useLoadingState } from '@/composables/common/useLoadingState.js'
+import {onMounted, reactive, ref, watch} from 'vue'
+import {useLoadingState} from '@/composables/common/useLoadingState.js'
 import usePagination from '@/composables/common/usePagination'
-import { paginateLeagues, removeLeague } from '@/services/leagues/leagueService.js'
+import {paginateLeagues, removeLeague} from '@/services/leagues/leagueService.js'
 import useCountryAndCity from '@/composables/useCountryAndCity.js'
 
 export default {
   name: 'Index',
-  setup () {
-    const { loading, setLoaded, setLoading } = useLoadingState(true)
-    const { pagination, setPagination, currentPage } = usePagination()
-    const { selectedCityId, selectedCountryId } = useCountryAndCity()
+  setup() {
+    const {loading, setLoaded, setLoading} = useLoadingState(true)
+    const {pagination, setPagination, currentPage} = usePagination()
+    const {selectedCityId, selectedCountryId} = useCountryAndCity()
     const search = reactive({
       city_id: selectedCityId,
       country_id: selectedCountryId,
@@ -102,7 +101,7 @@ export default {
     const leagues = ref([])
 
     onMounted(async () => {
-      const { data: { data: leagueItems, meta } } = await paginateLeagues(search)
+      const {data: {data: leagueItems, meta}} = await paginateLeagues(search)
       setPagination(meta)
       leagues.value = leagueItems
       setLoaded()
@@ -111,7 +110,7 @@ export default {
     watch([search, currentPage], async () => {
       setLoading()
       try {
-        const { data: { data: leagueItems, meta } } = await paginateLeagues(search, currentPage.value)
+        const {data: {data: leagueItems, meta}} = await paginateLeagues(search, currentPage.value)
         setPagination(meta)
         leagues.value = leagueItems
       } catch (e) {
@@ -124,7 +123,7 @@ export default {
       try {
         setLoading()
         await removeLeague(leagueId)
-        const { data: { data: leagueItems, meta } } = await paginateLeagues(search, currentPage.value)
+        const {data: {data: leagueItems, meta}} = await paginateLeagues(search, currentPage.value)
         leagues.value = leagueItems
         setPagination(meta)
       } catch (e) {

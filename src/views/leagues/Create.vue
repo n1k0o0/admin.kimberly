@@ -84,19 +84,19 @@
 </template>
 
 <script>
-import { reactive } from "vue";
-import { useLoadingState } from "@/composables/common/useLoadingState.js";
-import { parseErrors } from "@/helpers.js";
-import { useRouter } from "vue-router";
-import { createLeague } from "@/services/leagues/leagueService.js";
+import {reactive} from "vue";
+import {useLoadingState} from "@/composables/common/useLoadingState.js";
+import {parseErrors} from "@/helpers.js";
+import {useRouter} from "vue-router";
+import {createLeague} from "@/services/leagues/leagueService.js";
 import useCountryAndCity from "@/composables/useCountryAndCity.js";
 
 export default {
   name: "Create",
   setup() {
     const router = useRouter();
-    const { loading, setLoaded, setLoading } = useLoadingState(false);
-    const { selectedCityId } = useCountryAndCity();
+    const {loading, setLoaded, setLoading} = useLoadingState(false);
+    const {selectedCityId} = useCountryAndCity();
     const newDivision = reactive({
       name: ''
     });
@@ -109,7 +109,7 @@ export default {
     const onAddDivisionClicked = () => {
       const sameDivision = newLeague.divisions.find(divisionItem => divisionItem.name === newDivision.name);
       if (!sameDivision) {
-        newLeague.divisions.push({ ...newDivision });
+        newLeague.divisions.push({...newDivision});
       }
       newDivision.name = '';
     };
@@ -120,9 +120,8 @@ export default {
     const onCreateLeagueClicked = async () => {
       try {
         setLoading();
-        const { data } = await createLeague(newLeague);
-        // TODO добавлять в стор к городу
-        await router.push({ name: 'leagues' });
+        const {} = await createLeague(newLeague);
+        await router.push({name: 'leagues'});
       } catch (e) {
         const errors = parseErrors(e.response.data.errors);
         console.log(errors);

@@ -226,7 +226,7 @@
             :xs="24"
           >
             <el-col :span="16">
-              <h6>{{ secondTeamsPlayer.player?.first_name?? 'Автогол' }} {{ secondTeamsPlayer.player?.last_name }}</h6>
+              <h6>{{ secondTeamsPlayer.player?.first_name ?? 'Автогол' }} {{ secondTeamsPlayer.player?.last_name }}</h6>
               <p v-if="secondTeamsPlayer.number">
                 №{{ secondTeamsPlayer.number }} - {{ secondTeamsPlayer.position }}
               </p>
@@ -344,8 +344,8 @@ export default {
         gameId = route.params.id
         setLoading()
         const {data} = await getGame(gameId)
-        firstTeamsPlayers.value = data.players.filter(player => player.team_id === data.team_1_id).sort((a,b)=>(b.goals?.length||0)-(a.goals?.length||0))
-        secondTeamsPlayers.value = data.players.filter(player => player.team_id === data.team_2_id).sort((a,b)=>(b.goals?.length||0)-(a.goals?.length||0))
+        firstTeamsPlayers.value = data.players.filter(player => player.team_id === data.team_1_id).sort((a, b) => (b.goals?.length || 0) - (a.goals?.length || 0))
+        secondTeamsPlayers.value = data.players.filter(player => player.team_id === data.team_2_id).sort((a, b) => (b.goals?.length || 0) - (a.goals?.length || 0))
         const {data: {data: tournamentItems}} = await paginateTournaments({city_id: data.league.city_id}, null, 0)
         const {data: {data: leagueItems}} = await paginateLeagues({city_id: data.league.city_id}, null, 0)
         const {data: {data: stadiumItems}} = await paginateStadiums({city_id: data.league.city_id}, null, 0)
@@ -376,20 +376,20 @@ export default {
       () => teams.value.filter(team => team.id !== game.team_1_id)
     )
 
-    const deleteGoal = async (playerId,teamId, goalMinute) => {
+    const deleteGoal = async (playerId, teamId, goalMinute) => {
       try {
         setLoading()
-        await deleteGoalAdmin(game.id, {player_id: playerId, minute: goalMinute,team_id:teamId})
+        await deleteGoalAdmin(game.id, {player_id: playerId, minute: goalMinute, team_id: teamId})
         const {data} = await getGame(gameId)
-        firstTeamsPlayers.value = data.players.filter(player => player.team_id === data.team_1_id).sort((a,b)=>(b.goals?.length||0)-(a.goals?.length||0))
-        secondTeamsPlayers.value = data.players.filter(player => player.team_id === data.team_2_id).sort((a,b)=>(b.goals?.length||0)-(a.goals?.length||0))
+        firstTeamsPlayers.value = data.players.filter(player => player.team_id === data.team_1_id).sort((a, b) => (b.goals?.length || 0) - (a.goals?.length || 0))
+        secondTeamsPlayers.value = data.players.filter(player => player.team_id === data.team_2_id).sort((a, b) => (b.goals?.length || 0) - (a.goals?.length || 0))
       } catch (e) {
       } finally {
         setLoaded()
       }
     }
 
-    const addGoal = async (playerId,teamId) => {
+    const addGoal = async (playerId, teamId) => {
       ElMessageBox.prompt('Введите минуту в которой был забит гол', 'Добавить гол', {
         confirmButtonText: 'OK',
         cancelButtonText: 'Cancel',
@@ -399,10 +399,10 @@ export default {
       })
         .then(async ({value}) => {
           setLoading()
-          await addGoalAdmin(game.id, {player_id: playerId, minute: value,team_id:teamId})
+          await addGoalAdmin(game.id, {player_id: playerId, minute: value, team_id: teamId})
           const {data} = await getGame(gameId)
-          firstTeamsPlayers.value = data.players.filter(player => player.team_id === data.team_1_id).sort((a,b)=>(b.goals?.length||0)-(a.goals?.length||0))
-          secondTeamsPlayers.value = data.players.filter(player => player.team_id === data.team_2_id).sort((a,b)=>(b.goals?.length||0)-(a.goals?.length||0))
+          firstTeamsPlayers.value = data.players.filter(player => player.team_id === data.team_1_id).sort((a, b) => (b.goals?.length || 0) - (a.goals?.length || 0))
+          secondTeamsPlayers.value = data.players.filter(player => player.team_id === data.team_2_id).sort((a, b) => (b.goals?.length || 0) - (a.goals?.length || 0))
         })
         .catch(() => {
         }).finally(() => {

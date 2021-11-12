@@ -38,10 +38,10 @@
 </template>
 
 <script>
-import { onMounted, ref } from "vue";
-import { useRoute, useRouter } from "vue-router";
-import { useLoadingState } from "@/composables/common/useLoadingState.js";
-import { getStadium, updateStadium } from "@/services/stadiums/stadiums.js";
+import {onMounted, ref} from "vue";
+import {useRoute, useRouter} from "vue-router";
+import {useLoadingState} from "@/composables/common/useLoadingState.js";
+import {getStadium, updateStadium} from "@/services/stadiums/stadiums.js";
 
 export default {
   name: "Edit",
@@ -52,13 +52,13 @@ export default {
     let stadiumId = null;
     let stadium = ref({});
 
-    const { loading, setLoaded, setLoading } = useLoadingState(false);
+    const {loading, setLoaded, setLoading} = useLoadingState(false);
 
     onMounted(async () => {
       try {
         stadiumId = route.params.id;
         setLoading();
-        const { data } = await getStadium(stadiumId);
+        const {data} = await getStadium(stadiumId);
         stadium.value = data;
       } catch (e) {
         console.log(e);
@@ -70,8 +70,8 @@ export default {
     const onUpdateStadiumClicked = async () => {
       try {
         setLoading();
-        await updateStadium(stadiumId, stadium.value);
-        await router.push({ name: 'stadiums' });
+        const {} = await updateStadium(stadiumId, stadium.value);
+        await router.push({name: 'stadiums'});
       } catch (e) {
       } finally {
         setLoaded();

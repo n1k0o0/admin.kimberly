@@ -12,6 +12,7 @@
         <div
           id="kt_aside_mobile_toggle"
           class="btn btn-icon btn-active-light-primary w-30px h-30px w-md-40px h-md-40px"
+          @click="toggleMobile"
         >
           <span class="svg-icon svg-icon-2x mt-1">
             <svg
@@ -20,7 +21,6 @@
               viewBox="0 0 24 24"
               width="24px"
               xmlns="http://www.w3.org/2000/svg"
-              xmlns:xlink="http://www.w3.org/1999/xlink"
             >
               <g
                 fill="none"
@@ -76,7 +76,10 @@
             data-kt-swapper-mode="prepend"
             data-kt-swapper-parent="{default: '#kt_body', lg: '#kt_header_nav'}"
           >
-            <el-row :gutter="20" class="p-3">
+            <el-row
+              :gutter="20"
+              class="p-3"
+            >
               <el-col :span="12">
                 <el-select
                   v-model="selectedCountryId"
@@ -107,15 +110,15 @@
             </el-row>
           </div>
         </div>
-        <TopbarBlock/>
+        <TopbarBlock />
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { onMounted, reactive, watch, } from 'vue'
-import { useStore } from 'vuex'
+import {onMounted, reactive, watch,} from 'vue'
+import {useStore} from 'vuex'
 import useCountryAndCity from '../composables/useCountryAndCity'
 import TopbarBlock from './TopbarBlock.vue'
 
@@ -125,7 +128,7 @@ const data = reactive({
 })
 const store = useStore()
 
-let { selectedCountry, selectedCountryId, selectedCityId, countries, cities } = useCountryAndCity()
+let {selectedCountry, selectedCountryId, selectedCityId, countries, cities} = useCountryAndCity()
 
 const toggleDropdown = (type) => {
   if (!type) {
@@ -153,11 +156,15 @@ const toggleSubmenu = (type) => {
   }
 }
 
+const toggleMobile = () => {
+  document.getElementById('kt_aside').classList.toggle('d-block')
+}
+
 watch(
   [selectedCountryId],
   (newName, prevName) => {
-    if (newName[0]===null) {
-      selectedCityId.value=null
+    if (newName[0] === null) {
+      selectedCityId.value = null
     }
   },
 )
@@ -172,8 +179,8 @@ watch(
 .header-menu .show.menu-sub {
   z-index: 105;
   position: absolute;
-  inset: 0px auto auto 0px;
-  margin: 0px;
+  inset: 0 auto auto 0;
+  margin: 0;
   transform: translate(0, 65px);
 }
 </style>

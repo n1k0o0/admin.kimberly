@@ -92,18 +92,18 @@
 </template>
 
 <script>
-import { reactive } from "vue";
-import { getPrintableInternalUserTypes } from "@/services/internal-users/InternalUser.js";
-import { createInternalUser } from "@/services/internal-users/internalUsers.js";
-import { useLoadingState } from "@/composables/common/useLoadingState.js";
-import { parseErrors } from "@/helpers.js";
-import { useRouter } from "vue-router";
+import {reactive} from "vue";
+import {getPrintableInternalUserTypes} from "@/services/internal-users/InternalUser.js";
+import {createInternalUser} from "@/services/internal-users/internalUsers.js";
+import {useLoadingState} from "@/composables/common/useLoadingState.js";
+import {parseErrors} from "@/helpers.js";
+import {useRouter} from "vue-router";
 
 export default {
   name: "Create",
   setup() {
     const internalUserTypes = getPrintableInternalUserTypes();
-    const { loading, setLoaded, setLoading } = useLoadingState(false);
+    const {loading, setLoaded, setLoading} = useLoadingState(false);
     const newUser = reactive({
       login: '',
       password: '',
@@ -117,8 +117,8 @@ export default {
     const onCreateInternalUserClicked = async () => {
       try {
         setLoading();
-        const { data } = await createInternalUser(newUser);
-        await router.push({ name: 'internal-users' });
+        const {} = await createInternalUser(newUser);
+        await router.push({name: 'internal-users'});
       } catch (e) {
         const errors = parseErrors(e.response.data.errors);
         console.log(errors);

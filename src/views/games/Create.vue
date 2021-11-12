@@ -191,10 +191,10 @@ export default {
     const onCreateGameClicked = async () => {
       try {
         setLoading()
-        await createGame(newGame)
+        const {}=await createGame(newGame)
         await router.push({name: 'calendar'})
       } catch (e) {
-        const errors = parseErrors(e.response.data.errors)
+        const errors = parseErrors(e.response?.data?.errors)
         console.log(errors)
       } finally {
         setLoaded()

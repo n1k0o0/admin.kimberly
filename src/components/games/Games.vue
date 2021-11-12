@@ -9,7 +9,7 @@
       label="Страна"
     >
       <template #default="scope">
-        {{ scope.row.league.country.name }}
+        {{ scope.row.tournament.city.country.name }}
       </template>
     </el-table-column>
     <el-table-column
@@ -17,7 +17,7 @@
       label="Город"
     >
       <template #default="scope">
-        {{ scope.row.league.city.name }}
+        {{ scope.row.tournament.city.name }}
       </template>
     </el-table-column>
 
