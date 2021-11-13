@@ -470,8 +470,8 @@ export default {
       pauses.value = 0
       const {data} = await getGame(gameId.value)
       game.value = data
-      firstTeamsPlayers.value = data.players.filter(player => player.team_id === data.team_1_id).sort((a, b) => (a.number) - (b.number))
-      secondTeamsPlayers.value = data.players.filter(player => player.team_id === data.team_2_id).sort((a, b) => (a.number) - (b.number))
+      firstTeamsPlayers.value = data.team_1_players.sort((a, b) => (a.number) - (b.number))
+      secondTeamsPlayers.value = data.team_2_players.sort((a, b) => (a.number) - (b.number))
       firstTeamsScorers.value = firstTeamsPlayers.value.filter(player => player.goals?.length > 0).sort((a, b) => (b.goals?.length) - (a.goals?.length))
       secondTeamsScorers.value = secondTeamsPlayers.value.filter(player => player.goals?.length > 0).sort((a, b) => (b.goals?.length) - (a.goals?.length))
       pause.value = game.value?.pauses?.filter(pause => !pause.finished_at)
