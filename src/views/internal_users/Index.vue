@@ -26,6 +26,7 @@
         <el-col :span="6">
           <el-date-picker
             v-model="search.created_at_start"
+            value-format="YYYY-MM-DD"
             type="date"
             placeholder="Создан от"
             @change="onCreatedAtStartChanged"
@@ -34,6 +35,7 @@
         <el-col :span="6">
           <el-date-picker
             v-model="search.created_at_end"
+            value-format="YYYY-MM-DD"
             placeholder="Создан по"
             type="date"
             @change="onCreatedAtEndChanged"
@@ -76,7 +78,7 @@
         label="Дата создания"
       >
         <template #default="scope">
-          {{ $moment.unix(scope.row.created_at).locale('ru').format('YYYY-MM-DD hh:mm') }}
+          {{ $moment.unix(scope.row.created_at).locale('ru').format('YYYY-MM-DD HH:mm') }}
         </template>
       </el-table-column>
       <el-table-column

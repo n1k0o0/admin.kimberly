@@ -24,6 +24,7 @@
               v-model="search.dateFrom"
               placeholder="Создан от"
               format="MM-DD-YYYY HH:mm"
+              value-format="YYYY-MM-DD HH:mm"
               type="datetime"
             />
           </el-col>
@@ -32,6 +33,7 @@
               v-model="search.dateTo"
               placeholder="Создан по"
               format="MM-DD-YYYY HH:mm"
+              value-format="YYYY-MM-DD HH:mm"
               type="datetime"
             />
           </el-col>

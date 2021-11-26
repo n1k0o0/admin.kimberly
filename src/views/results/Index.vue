@@ -94,6 +94,7 @@
           <el-date-picker
             v-model="search.date_from"
             format="DD-MM-YYYY"
+            value-format="YYYY-MM-DD"
             placeholder="Дата начала матча"
             type="date"
             @change="searchGames"
@@ -152,6 +153,7 @@ export default {
     const search = reactive({
       city_id: selectedCityId,
       country_id: selectedCountryId,
+      statuses:['not_started','started']
     })
     const gameStatuses = getPrintableGameStatuses()
     const tournaments = ref([])

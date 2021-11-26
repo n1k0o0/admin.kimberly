@@ -91,7 +91,7 @@
 import useCountryAndCity from "@/composables/useCountryAndCity";
 import useLocalStorage from "@/composables/common/useLocalStorage";
 import {useLoadingState} from '@/composables/common/useLoadingState.js'
-import {getAdminSchedule} from '@/services/games/gameService.js'
+import {getSchedule} from '@/services/games/gameService.js'
 import {onMounted, reactive, ref} from "vue";
 
 export default {
@@ -115,7 +115,7 @@ export default {
 
     const searchGames = async () => {
         setLoading()
-        const {data: {data: gameItems, }} = await getAdminSchedule(search,null,null)
+        const {data: {data: gameItems, }} = await getSchedule(search,null,null)
         games.value = gameItems
         setLoaded()
     }

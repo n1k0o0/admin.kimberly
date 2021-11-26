@@ -121,7 +121,8 @@
         >
           <el-date-picker
             v-model="game.started_at"
-            format="MM-DD-YYYY HH:mm"
+            format="DD-MM-YYYY HH:mm"
+            value-format="YYYY-MM-DD HH:mm"
             placeholder="Дата и время начало игры"
             type="datetime"
             editable

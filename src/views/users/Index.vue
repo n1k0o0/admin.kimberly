@@ -28,6 +28,7 @@
         <el-col :span="6">
           <el-date-picker
             v-model="search.created_at_start"
+            value-format="YYYY-MM-DD"
             placeholder="Создан от"
             type="date"
             @change="onCreatedAtStartChanged"
@@ -36,6 +37,7 @@
         <el-col :span="6">
           <el-date-picker
             v-model="search.created_at_end"
+            value-format="YYYY-MM-DD"
             placeholder="Создан по"
             type="date"
             @change="onCreatedAtEndChanged"

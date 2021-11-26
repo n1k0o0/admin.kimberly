@@ -444,6 +444,8 @@ import {
 import {computed, onMounted, ref} from "vue";
 import {useRoute} from "vue-router";
 import moment from 'moment'
+import momentTz from 'moment-timezone'
+
 
 export default {
   name: "Game",
@@ -457,8 +459,8 @@ export default {
     const pause = ref([false])
     let time = ref(0)
     let pauses = ref(0)
-    let minutes = ref(0)
-    let seconds = ref(0)
+    let minutes = ref('00')
+    let seconds = ref('00')
     const activeTeamTab = ref('first')
     let secondTeamsPlayers = ref({})
     let firstTeamsPlayers = ref({})
@@ -479,13 +481,17 @@ export default {
 
       if (game.value.status !== 'not_started') {
         if (game.value.pauses?.length) {
-          game.value.pauses.forEach(pause => pauses.value += moment.duration(moment(pause.finished_at).diff(moment(pause.started_at)))._milliseconds)
+          game.value.pauses.forEach(pause => pauses.value += pause.duration)
         }
 
-        let lastActiveDate = pause.value[0]?.started_at ?? new Date()
-        time.value = moment.duration(moment(lastActiveDate).diff(moment(game.value.actual_start_time)))._milliseconds - pauses.value
-        minutes.value = Math.floor(moment.duration(time.value).asMinutes())
-        seconds.value = moment.duration(time.value).seconds()
+        let diff = momentTz.tz('Europe/Moscow').utcOffset() - momentTz().utcOffset()
+        let date = moment(new Date()).add(diff, 'minutes')
+
+        let lastActiveDate = pause.value[0]?.started_at ?? date
+
+        time.value = moment.duration(moment(lastActiveDate).diff(moment(game.value.actual_start_time)))._milliseconds - pauses.value*1000
+        minutes.value = Math.floor(moment.duration(time.value).asMinutes()).toString().padStart(2, '0')
+        seconds.value = moment.duration(time.value).seconds().toString().padStart(2, '0')
       }
 
     }
@@ -499,8 +505,8 @@ export default {
           clockInterval = setInterval(() => {
             if (!isOnPause.value) {
               time.value += 100
-              minutes.value = Math.floor(moment.duration(time.value).asMinutes())
-              seconds.value = moment.duration(time.value).seconds()
+              minutes.value = Math.floor(moment.duration(time.value).asMinutes()).toString().padStart(2, '0')
+              seconds.value = moment.duration(time.value).seconds().toString().padStart(2, '0')
             }
           }, 100)
         }
@@ -544,8 +550,8 @@ export default {
           clockInterval = setInterval(() => {
             if (!isOnPause.value) {
               time.value += 100
-              minutes.value = Math.floor(moment.duration(time.value).asMinutes())
-              seconds.value = moment.duration(time.value).seconds()
+              minutes.value = Math.floor(moment.duration(time.value).asMinutes()).toString().padStart(2, '0')
+              seconds.value = moment.duration(time.value).seconds().toString().padStart(2, '0')
             }
           }, 100)
         }

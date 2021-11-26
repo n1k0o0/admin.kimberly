@@ -6,7 +6,7 @@
         :gutter="2"
         justify="space-between"
       >
-        <el-row/>
+        <el-row />
         <el-row>
           <el-button
             type="primary"

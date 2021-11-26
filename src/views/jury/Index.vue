@@ -50,6 +50,7 @@
           <el-date-picker
             v-model="date"
             format="DD-MM-YYYY"
+            value-format="YYYY-MM-DD"
             placeholder="Дата"
             type="date"
           />

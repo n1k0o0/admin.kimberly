@@ -31,6 +31,20 @@ export function getAdminSchedule(search, page = 1, limit = 10) {
   })
 }
 
+export function getSchedule(search, page = 1, limit = 10) {
+  let params = {
+    page,
+    limit,
+  }
+  if (search) {
+    params = {...params, ...cleanFalsyFields(search)}
+  }
+
+  return api.get(`${ENDPOINT}/schedule`, {
+    params
+  })
+}
+
 export function createGame(fields) {
   return api.post(`${ENDPOINT}`, fields)
 }

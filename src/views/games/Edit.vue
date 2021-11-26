@@ -116,6 +116,7 @@
         <el-date-picker
           v-model="game.started_at"
           format="DD-MM-YYYY HH:mm"
+          value-format="YYYY-MM-DD HH:mm"
           placeholder="Дата и время начало турнира"
           type="datetime"
           disabled
