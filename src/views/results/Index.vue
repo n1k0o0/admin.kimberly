@@ -5,23 +5,26 @@
       <el-row
         :gutter="20"
       >
-        <el-col :span="4">
+        <el-col :span="5">
           <el-select
-            v-model="search.tournament_ids"
+            v-model="search.stadium_ids"
             filterable
             multiple
-            placeholder="Турнир"
+            placeholder="Стадион"
             @change="searchGames"
           >
             <el-option
-              v-for="(tournament) in tournaments"
-              :key="tournament.id"
-              :label="tournament.name"
-              :value="tournament.id"
+              v-for="(stadium) in stadiums"
+              :key="stadium.id"
+              :label="stadium.title"
+              :value="stadium.id"
             />
           </el-select>
         </el-col>
-        <el-col :span="4">
+        <el-col
+          :span="5"
+          class="pb-5"
+        >
           <el-select
             v-model="search.league_ids"
             filterable
@@ -37,7 +40,7 @@
             />
           </el-select>
         </el-col>
-        <el-col :span="4">
+        <el-col :span="5">
           <el-select
             v-model="search.division_ids"
             :disabled="!search.league_ids || !search.league_ids.length"
@@ -54,7 +57,7 @@
             />
           </el-select>
         </el-col>
-        <el-col :span="4">
+        <el-col :span="5">
           <el-select
             v-model="search.team_ids"
             :disabled="!search.division_ids || !search.division_ids.length"
@@ -71,23 +74,7 @@
             />
           </el-select>
         </el-col>
-        <el-col :span="4">
-          <el-select
-            v-model="search.stadium_ids"
-            filterable
-            multiple
-            placeholder="Стадион"
-            @change="searchGames"
-          >
-            <el-option
-              v-for="(stadium) in stadiums"
-              :key="stadium.id"
-              :label="stadium.title"
-              :value="stadium.id"
-            />
-          </el-select>
-        </el-col>
-        <el-col :span="4">
+        <el-col :span="5">
           <el-select
             v-model="search.statuses"
             filterable
@@ -103,11 +90,31 @@
             />
           </el-select>
         </el-col>
+        <el-col :span="5">
+          <el-date-picker
+            v-model="search.date_from"
+            format="DD-MM-YYYY"
+            value-format="YYYY-MM-DD"
+            placeholder="Дата начала матча"
+            type="date"
+            @change="searchGames"
+          />
+        </el-col>
+        <el-col :span="5">
+          <el-date-picker
+            v-model="search.date_to"
+            format="DD-MM-YYYY"
+            value-format="YYYY-MM-DD"
+            placeholder="Дата завершения матча"
+            type="date"
+            @change="searchGames"
+          />
+        </el-col>
       </el-row>
     </template>
     <games
       :games="games"
-      with-goals
+      results
       :loading="loading"
       @remove-game="onRemoveGameClicked($event)"
     />
@@ -146,6 +153,7 @@ export default {
     const search = reactive({
       city_id: selectedCityId,
       country_id: selectedCountryId,
+      statuses:['not_started','started']
     })
     const gameStatuses = getPrintableGameStatuses()
     const tournaments = ref([])
@@ -171,7 +179,7 @@ export default {
 
     watch(
       () => search.league_ids,
-      (newName, prevName) => {
+      () => {
         if (search.league_ids && search.league_ids.length) {
 
           if (search.division_ids && search.division_ids.length) {
@@ -188,7 +196,7 @@ export default {
     )
     watch(
       () => search.division_ids,
-      async (newName, prevName) => {
+      async () => {
         if (search.division_ids && search.division_ids.length) {
           const {data: {data: teamItems,}} = await getTeams(search, null, 0)
           teams.value = teamItems
@@ -206,7 +214,7 @@ export default {
     )
     watch(
       () => search.city_id,
-      async (newName, prevName) => {
+      async () => {
         const {data: {data: tournamentItems}} = await getCurrentTournament(search, null, 0)
         const {data: {data: leagueItems}} = await paginateLeagues(search, null, 0)
         const {data: {data: stadiumItems}} = await paginateStadiums(search, null, 0)

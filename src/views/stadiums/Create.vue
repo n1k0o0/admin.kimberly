@@ -38,19 +38,19 @@
 </template>
 
 <script>
-import { reactive } from "vue";
-import { useLoadingState } from "@/composables/common/useLoadingState.js";
-import { parseErrors } from "@/helpers.js";
-import { useRouter } from "vue-router";
-import { createStadium } from "@/services/stadiums/stadiums.js";
+import {reactive} from "vue";
+import {useLoadingState} from "@/composables/common/useLoadingState.js";
+import {parseErrors} from "@/helpers.js";
+import {useRouter} from "vue-router";
+import {createStadium} from "@/services/stadiums/stadiums.js";
 import useCountryAndCity from "@/composables/useCountryAndCity.js";
 
 export default {
   name: "Create",
   setup() {
     const router = useRouter();
-    const { selectedCityId } = useCountryAndCity();
-    const { loading, setLoaded, setLoading } = useLoadingState(false);
+    const {selectedCityId} = useCountryAndCity();
+    const {loading, setLoaded, setLoading} = useLoadingState(false);
     const newStadium = reactive({
       title: '',
       city_id: selectedCityId,
@@ -61,8 +61,8 @@ export default {
     const onCreateStadiumClicked = async () => {
       try {
         setLoading();
-        const { data } = await createStadium(newStadium);
-        await router.push({ name: 'stadiums' });
+        const {} = await createStadium(newStadium);
+        await router.push({name: 'stadiums'});
       } catch (e) {
         const errors = parseErrors(e.response.data.errors);
         console.log(errors);

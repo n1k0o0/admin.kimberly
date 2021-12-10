@@ -5,7 +5,10 @@
     </template>
     <el-row>
       <el-col :span="24">
-        <h4>{{ game.team_1?.name }} - {{ game.team_2?.name }} ( {{ game.tournament?.name }}, {{ game.stadium?.title }} ) </h4>
+        <h4>
+          {{ game.team_1?.name }} - {{ game.team_2?.name }} ( {{ game.tournament?.name }}, {{ game.stadium?.title }}
+          )
+        </h4>
       </el-col>
     </el-row>
     <el-divider />
@@ -15,7 +18,7 @@
     >
       <el-col :span="6">
         <label>
-          Status
+          Статус
           <el-select
             v-model="game.status"
             filterable
@@ -31,23 +34,25 @@
       </el-col>
       <el-col :span="6">
         <label>
-          Start time
+          Дата начала
           <el-date-picker
             v-model="game.actual_start_time"
             format="DD-MM-YYYY HH:mm"
             value-format="YYYY-MM-DD HH:mm"
             type="datetime"
+            editable
           />
         </label>
       </el-col>
       <el-col :span="6">
         <label>
-          Finish time
+          Дата завершения
           <el-date-picker
             v-model="game.actual_finish_time"
             format="DD-MM-YYYY HH:mm"
             value-format="YYYY-MM-DD HH:mm"
             type="datetime"
+            editable
           />
         </label>
       </el-col>
@@ -62,23 +67,25 @@
     >
       <el-col :span="6">
         <label>
-          Start time
+          Дата начала
           <el-date-picker
             v-model="pause.started_at"
             format="DD-MM-YYYY HH:mm"
             value-format="YYYY-MM-DD HH:mm"
             type="datetime"
+            editable
           />
         </label>
       </el-col>
       <el-col :span="6">
         <label>
-          Finish time
+          Дата завершения
           <el-date-picker
             v-model="pause.finished_at"
             format="DD-MM-YYYY HH:mm"
             value-format="YYYY-MM-DD HH:mm"
             type="datetime"
+            editable
           />
         </label>
       </el-col>
@@ -126,7 +133,7 @@
 import {onMounted, reactive} from 'vue'
 import {useRoute, useRouter} from "vue-router";
 import {useLoadingState} from "@/composables/common/useLoadingState.js";
-import {getGame, getPrintableGameStatuses,updateGameStatistics} from '@/services/games/gameService.js';
+import {getGame, getPrintableGameStatuses, updateGameStatistics} from '@/services/games/gameService.js';
 
 export default {
   name: "Statistics",
@@ -144,7 +151,7 @@ export default {
       })
     }
     let removePause = (id, index) => {
-      if (id)game.removed_pause_ids.push(id)
+      if (id) game.removed_pause_ids.push(id)
       game.pauses.splice(index, 1);
     }
 
@@ -156,7 +163,7 @@ export default {
         const {data} = await getGame(gameId)
 
         Object.assign(game, data)
-        game.removed_pause_ids=[]
+        game.removed_pause_ids = []
       } catch (e) {
         console.log(e.message)
       } finally {
@@ -164,11 +171,11 @@ export default {
       }
     })
 
-    let onUpdateStatisticsClicked = async ()=>{
+    let onUpdateStatisticsClicked = async () => {
       try {
         setLoading()
-        await updateGameStatistics(gameId, game)
-        await router.push({ name: 'results' })
+        const {} = await updateGameStatistics(gameId, game)
+        await router.push({name: 'results'})
       } catch (e) {
       } finally {
         setLoaded()

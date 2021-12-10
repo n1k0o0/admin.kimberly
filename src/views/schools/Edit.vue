@@ -92,7 +92,7 @@
             :span="6"
             :xs="12"
           >
-            <label for="">
+            <label>
               YOUTUBE
               <el-input v-model="school.youtube_link" />
             </label>
@@ -101,7 +101,7 @@
             :span="6"
             :xs="12"
           >
-            <label for="">
+            <label>
               INSTAGRAM
               <el-input v-model="school.inst_link" />
             </label>
@@ -110,7 +110,7 @@
             :span="6"
             :xs="12"
           >
-            <label for="">
+            <label>
               VK
               <el-input v-model="school.vk_link" />
             </label>
@@ -119,7 +119,7 @@
             :span="6"
             :xs="12"
           >
-            <label for="">
+            <label>
               DIAGRAM
               <el-input v-model="school.diagram_link" />
             </label>
@@ -216,7 +216,7 @@ export default {
 
     watch(
       () => route.params.id,
-      async schoolId => {
+      async () => {
         if (!route.params.id) return
         try {
           setLoading()
@@ -229,11 +229,31 @@ export default {
         }
       }
     )
-    const updateSchoolClicked = async ()=>{
+    const updateSchoolClicked = async () => {
       try {
         setLoading()
-        let  {name,description,email,phone,branch_count,vk_link,youtube_link,inst_link,diagram_link}=school.value
-        await updateSchool(schoolId,  {name,description,email,phone,branch_count,vk_link,youtube_link,inst_link,diagram_link})
+        let {
+          name,
+          description,
+          email,
+          phone,
+          branch_count,
+          vk_link,
+          youtube_link,
+          inst_link,
+          diagram_link
+        } = school.value
+        await updateSchool(schoolId, {
+          name,
+          description,
+          email,
+          phone,
+          branch_count,
+          vk_link,
+          youtube_link,
+          inst_link,
+          diagram_link
+        })
       } catch (e) {
       } finally {
         setLoaded()

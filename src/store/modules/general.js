@@ -1,13 +1,29 @@
 const state = () => ({
   userPanel: false,
-  countries: [],
+  firstSign: localStorage.getItem('firstSign')??false,
+  countries: JSON.parse(localStorage.getItem('countries'))??[],
   selected_country_id: JSON.parse(localStorage.getItem('selected_country')) ?? null,
   selected_city_id: JSON.parse(localStorage.getItem('selected_city')) ?? null,
+  selected_stadium_id: JSON.parse(localStorage.getItem('selected_stadium')) ?? null,
+  selected_stadium_name: JSON.parse(localStorage.getItem('selected_stadium_name')) ?? null,
+  selected_date: JSON.parse(localStorage.getItem('selected_date')) ?? null,
 })
 
 const getters = {
   GET_USER_PANEL(state) {
     return state.userPanel
+  },
+  GET_FIRST_SIGN(state) {
+    return state.firstSign
+  },
+  GET_SELECTED_STADIUM(state) {
+    return state.selected_stadium_id
+  },
+  GET_SELECTED_STADIUM_NAME(state) {
+    return state.selected_stadium_name
+  },
+  GET_SELECTED_DATE(state) {
+    return state.selected_date
   },
   GET_SELECTED_COUNTRY(state) {
     return state.countries.find((countryItem) => countryItem.id === state.selected_country_id)
@@ -31,15 +47,12 @@ const getters = {
 }
 
 const mutations = {
-  INIT(state) {
-
-  },
   SET_COUNTRIES(state, countries) {
     countries.unshift({id:null,name:'Все',cities:[]})
     countries.map(country=>{
       country.cities.unshift({id:null,name:'Все'})
     })
-    state.countries = countries
+    localStorage.setItem('countries',JSON.stringify(countries))
   },
   SET_SELECTED_COUNTRY(state, countryId) {
     state.selected_country_id = countryId

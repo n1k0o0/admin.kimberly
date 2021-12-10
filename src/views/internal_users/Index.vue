@@ -26,6 +26,7 @@
         <el-col :span="6">
           <el-date-picker
             v-model="search.created_at_start"
+            value-format="YYYY-MM-DD"
             type="date"
             placeholder="Создан от"
             @change="onCreatedAtStartChanged"
@@ -34,6 +35,7 @@
         <el-col :span="6">
           <el-date-picker
             v-model="search.created_at_end"
+            value-format="YYYY-MM-DD"
             placeholder="Создан по"
             type="date"
             @change="onCreatedAtEndChanged"
@@ -76,7 +78,7 @@
         label="Дата создания"
       >
         <template #default="scope">
-          {{ $moment.unix(scope.row.created_at).locale('ru').format('YYYY-MM-DD hh:mm') }}
+          {{ $moment.unix(scope.row.created_at).locale('ru').format('YYYY-MM-DD HH:mm') }}
         </template>
       </el-table-column>
       <el-table-column
@@ -121,29 +123,29 @@
 import {
   paginateInternalUsers,
   removeInternalUser,
-} from "../../services/internal-users/internalUsers";
-import { onMounted, reactive, ref, watch } from "vue";
-import { useLoadingState } from "../../composables/common/useLoadingState";
-import { getPrintableInternalUserTypes, getPrintableUserType } from "../../services/internal-users/InternalUser";
+} from "@/services/internal-users/internalUsers";
+import {onMounted, reactive, ref, watch} from "vue";
+import {useLoadingState} from "@/composables/common/useLoadingState";
+import {getPrintableInternalUserTypes, getPrintableUserType} from "@/services/internal-users/InternalUser";
 import moment from "moment";
-import usePagination from "../../composables/common/usePagination";
+import usePagination from "@/composables/common/usePagination";
 
 export default {
   name: "Index",
   setup() {
-    const { loading, setLoaded, setLoading } = useLoadingState(true)
-    const { pagination, setPagination, currentPage } = usePagination()
+    const {loading, setLoaded, setLoading} = useLoadingState(true)
+    const {pagination, setPagination, currentPage} = usePagination()
     const search = reactive({
       login: '',
       types: [],
-      created_at_start: null,
-      created_at_end: null,
+      created_at_start: '',
+      created_at_end: '',
     })
     const internalUserTypes = getPrintableInternalUserTypes()
     const users = ref([]);
 
     onMounted(async () => {
-      const { data: {data: internalUsers, meta}} = await paginateInternalUsers();
+      const {data: {data: internalUsers, meta}} = await paginateInternalUsers();
       setPagination(meta)
       users.value = internalUsers
       setLoaded()
@@ -152,7 +154,7 @@ export default {
     watch([search, currentPage], async () => {
       setLoading()
       try {
-        const { data: {data: internalUsers, meta}} = await paginateInternalUsers(search, currentPage.value);
+        const {data: {data: internalUsers, meta}} = await paginateInternalUsers(search, currentPage.value);
         setPagination(meta)
         users.value = internalUsers
       } catch (e) {
@@ -165,11 +167,11 @@ export default {
       try {
         setLoading()
         await removeInternalUser(internalUserId)
-        const { data: {data: internalUsers, meta}} = await paginateInternalUsers(search, currentPage.value);
+        const {data: {data: internalUsers, meta}} = await paginateInternalUsers(search, currentPage.value);
         setPagination(meta)
         users.value = internalUsers
-      } catch (e) {}
-      finally {
+      } catch (e) {
+      } finally {
         setLoaded()
       }
     }

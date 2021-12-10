@@ -93,21 +93,21 @@
 </template>
 
 <script>
-import { computed, onMounted, ref } from "vue";
-import { useRoute, useRouter } from "vue-router";
-import { useLoadingState } from "@/composables/common/useLoadingState.js";
-import { getLeague, updateLeague } from "@/services/leagues/leagueService.js";
-import { createDivision, removeDivision, updateDivision } from "@/services/divisions/divisionService.js";
-import { parseErrors } from "@/helpers.js";
+import {onMounted, ref} from "vue";
+import {useRoute, useRouter} from "vue-router";
+import {useLoadingState} from "@/composables/common/useLoadingState.js";
+import {getLeague, updateLeague} from "@/services/leagues/leagueService.js";
+import {createDivision, removeDivision, updateDivision} from "@/services/divisions/divisionService.js";
+import {parseErrors} from "@/helpers.js";
 import AddDivision from "@/components/divisions/AddDivision.vue";
 
 export default {
   name: "Edit",
-  components: { AddDivision },
+  components: {AddDivision},
   setup() {
     const route = useRoute()
     const router = useRouter()
-    const { loading, setLoaded, setLoading } = useLoadingState(false)
+    const {loading, setLoaded, setLoading} = useLoadingState(false)
 
     let leagueId = null
     let league = ref({
@@ -119,7 +119,7 @@ export default {
       try {
         leagueId = route.params.id
         setLoading()
-        const { data } = await getLeague(leagueId)
+        const {data} = await getLeague(leagueId)
         league.value = data
       } catch (e) {
       } finally {
@@ -127,13 +127,13 @@ export default {
       }
     })
 
-    const onDivisionAdded = async ({ division: newDivision }) => {
+    const onDivisionAdded = async ({division: newDivision}) => {
       try {
         const sameDivision = league.value.divisions.find(divisionItem => divisionItem.name === newDivision.name)
         if (sameDivision) {
           return
         }
-        const { data: division } = await createDivision(leagueId, {...newDivision});
+        const {data: division} = await createDivision(leagueId, {...newDivision});
         league.value.divisions.push(division)
       } catch (e) {
         const errors = parseErrors(e.response.data.errors)
@@ -169,7 +169,7 @@ export default {
 
     const onRemoveDivisionClicked = async (division) => {
       try {
-        const { data } = await removeDivision(division.id);
+        const {} = await removeDivision(division.id);
         const divisionIndex = league.value.divisions.findIndex(divisionItem => divisionItem.id === division.id)
         if (divisionIndex >= 0) {
           league.value.divisions.splice(divisionIndex, 1)
@@ -183,8 +183,8 @@ export default {
     const onUpdateLeagueClicked = async () => {
       try {
         setLoading()
-        await updateLeague(leagueId, league.value)
-        await router.push({ name: 'leagues' })
+        const {} = await updateLeague(leagueId, league.value)
+        await router.push({name: 'leagues'})
       } catch (e) {
       } finally {
         setLoaded()

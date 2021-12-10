@@ -92,11 +92,11 @@
 </template>
 
 <script>
-import { onMounted, ref } from "vue";
-import { useRoute, useRouter } from "vue-router";
-import { getInternalUser, updateInternalUser } from "@/services/internal-users/internalUsers.js";
-import { getPrintableInternalUserTypes } from "@/services/internal-users/InternalUser.js";
-import { useLoadingState } from "@/composables/common/useLoadingState.js";
+import {onMounted, ref} from "vue";
+import {useRoute, useRouter} from "vue-router";
+import {getInternalUser, updateInternalUser} from "@/services/internal-users/internalUsers.js";
+import {getPrintableInternalUserTypes} from "@/services/internal-users/InternalUser.js";
+import {useLoadingState} from "@/composables/common/useLoadingState.js";
 
 export default {
   name: "Edit",
@@ -107,12 +107,12 @@ export default {
     const route = useRoute();
     const router = useRouter();
 
-    const { loading, setLoaded, setLoading } = useLoadingState(false);
+    const {loading, setLoaded, setLoading} = useLoadingState(false);
     onMounted(async () => {
       try {
         internalUserId = route.params.id;
         setLoading();
-        const { data } = await getInternalUser(internalUserId);
+        const {data} = await getInternalUser(internalUserId);
         user.value = data;
       } catch (e) {
       } finally {
@@ -122,8 +122,8 @@ export default {
     const onUpdateInternalUserClicked = async () => {
       try {
         setLoading();
-        await updateInternalUser(internalUserId, user.value);
-        await router.push({ name: 'internal-users' });
+        const {} = await updateInternalUser(internalUserId, user.value);
+        await router.push({name: 'internal-users'});
       } catch (e) {
       } finally {
         setLoaded();
