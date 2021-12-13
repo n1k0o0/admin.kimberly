@@ -11,7 +11,7 @@
         <el-col>
           <league-and-division-selectors
             :division-id="editedTeam.division_id"
-            :league-id="editedTeam.league_id"
+            :league-id="editedTeam.league.id"
             :leagues="leagues"
             @league-selected="onLeagueSelected"
             @division-selected="onDivisionSelected"
