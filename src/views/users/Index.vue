@@ -159,9 +159,9 @@ export default {
     watch([search, currentPage], async () => {
       setLoading()
       try {
-        const {data: {data: users, meta}} = await paginateUsers(search, currentPage.value)
+        const {data: {data: userCollection, meta}} = await paginateUsers(search, currentPage.value)
         setPagination(meta)
-        users.value = users
+        users.value = userCollection
       } catch (e) {
       } finally {
         setLoaded()
