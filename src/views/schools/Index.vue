@@ -65,7 +65,7 @@
           <el-popconfirm
             cancel-button-text="Отмена"
             confirm-button-text="Да"
-            title="Вы действительно хотите удалить стадион?"
+            title="Удалить школу?"
             @confirm="onRemoveSchoolClicked(scope.row.id)"
           >
             <template #reference>
@@ -141,6 +141,7 @@ export default {
         setPagination(meta)
         schools.value = schoolItems
       } catch (e) {
+        console.log(e)
       } finally {
         setLoaded()
       }
