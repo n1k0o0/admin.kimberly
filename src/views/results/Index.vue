@@ -153,6 +153,7 @@ export default {
     const search = reactive({
       city_id: selectedCityId,
       country_id: selectedCountryId,
+      current_tournament: 1,
       statuses:['not_started','started']
     })
     const gameStatuses = getPrintableGameStatuses()
