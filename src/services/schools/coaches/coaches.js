@@ -12,7 +12,17 @@ export function removeCoach(coach_id) {
   return api.delete(`${ ENDPOINT }/${ coach_id }`);
 }
 
-export function updateCoach(coach_id, fields) {
-  const formData = convertObjectToFormData({ ...fields, coach_id, _method: 'PUT' });
+export function updateCoach(coach_id, data) {
+  const formData = new FormData()
+  formData.append('_method', 'PUT')
+  Object.keys(data).forEach(function (key) {
+    if(data[key]==='null' || data[key]===null) {
+      data[key]=''
+    }
+    if (!(data[key] instanceof File) && key === 'avatar' && data[key] !== '' && data[key] !== null) {
+      return
+    }
+    formData.append(`${key}`, data[key])
+  })
   return api.post(`${ ENDPOINT }/${ coach_id }`, formData);
 }

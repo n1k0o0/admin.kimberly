@@ -29,6 +29,9 @@ export function convertObjectToFormData(obj, fillable = null) {
   const allowedKeys = fillable ? getAllowedKeysInObject(obj, fillable) : Object.keys(obj);
 
   return allowedKeys.reduce((formData, key) => {
+    if(obj[key]==='null' || obj[key]===null) {
+      obj[key]=''
+    }
     formData.append(key, obj[key]);
     return formData;
   }, new FormData);
