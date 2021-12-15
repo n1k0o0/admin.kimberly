@@ -76,7 +76,10 @@ export default {
       avatar.value = props.coach.avatar;
     });
 
-    const handleAvatarRemoved = (file) => avatar.value = null;
+    const handleAvatarRemoved = (file) => {
+      avatar.value = ''
+      editedCoach.value.avatar=''
+    };
 
     const handleAvatarChanged = async (file, fileList) => {
       avatar.value = file;
