@@ -33,11 +33,11 @@
         prop="id"
       />
       <el-table-column
-        label="Название"
+        label="Страна"
         prop="country.name"
       />
       <el-table-column
-        label="Название"
+        label="Город"
         prop="city.name"
       />
       <el-table-column
@@ -152,6 +152,9 @@ export default {
     watch([search, currentPage], async () => {
       setLoading()
       try {
+        const { data: { data: leagueItems } } = await paginateLeagues(search, null, 0)
+        availableLeagues.value = leagueItems
+
         const { data: { data: schoolItems, meta } } = await paginateSchools(search, currentPage.value)
         setPagination(meta)
         schools.value = schoolItems

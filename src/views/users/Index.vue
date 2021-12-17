@@ -82,6 +82,10 @@
         </template>
       </el-table-column>
       <el-table-column
+        label="Телефон"
+        prop="phone"
+      />
+      <el-table-column
         label="Тип"
       >
         <template #default="scope">
