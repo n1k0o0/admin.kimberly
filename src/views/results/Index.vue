@@ -142,6 +142,7 @@ import {getPrintableTournamentStatus} from '@/services/tournaments/Tournament.js
 import {getTeams} from '@/services/schools/teams/teams.js'
 import useCountryAndCity from '@/composables/useCountryAndCity.js'
 import Games from '@/components/games/Games.vue'
+import {ElNotification} from "element-plus";
 
 export default {
   name: 'Index',
@@ -154,7 +155,7 @@ export default {
       city_id: selectedCityId,
       country_id: selectedCountryId,
       current_tournament: 1,
-      statuses:['not_started','started']
+      statuses: ['not_started', 'started']
     })
     const gameStatuses = getPrintableGameStatuses()
     const tournaments = ref([])
@@ -165,17 +166,27 @@ export default {
 
     onMounted(async () => {
       setLoading()
+      try {
+        const {data: tournamentItems} = await getCurrentTournament(search, null, 0).catch(error=>{
+          if (error.response.status===404){
+            ElNotification.closeAll()
+            ElNotification({type: 'error', title: 'Нет текущего турнира'})
+          }
+        })
+        const {data: {data: leagueItems}} = await paginateLeagues(search, null, 0)
+        const {data: {data: stadiumItems}} = await paginateStadiums(search, null, 0)
+        console.log(gameStatuses)
+        await searchGames()
+        leagues.value = leagueItems
+        stadiums.value = stadiumItems
+        tournaments.value = [tournamentItems]
+      } catch (e) {
 
-      const  {data: tournamentItems} = await getCurrentTournament(search, null, 0)
-      const {data: {data: leagueItems}} = await paginateLeagues(search, null, 0)
-      const {data: {data: stadiumItems}} = await paginateStadiums(search, null, 0)
-      console.log(gameStatuses)
-      await searchGames()
-      leagues.value = leagueItems
-      stadiums.value = stadiumItems
-      tournaments.value = [tournamentItems]
+      }
+      finally {
+        setLoaded()
+      }
 
-      setLoaded()
     })
 
     watch(
@@ -216,7 +227,12 @@ export default {
     watch(
       () => search.city_id,
       async () => {
-        const {data: {data: tournamentItems}} = await getCurrentTournament(search, null, 0)
+        const {data: {data: tournamentItems}} = await getCurrentTournament(search, null, 0).catch(error=>{
+          if (error.response.status===404){
+            ElNotification.closeAll()
+            ElNotification({type: 'error', title: 'Нет текущего турнира'})
+          }
+        })
         const {data: {data: leagueItems}} = await paginateLeagues(search, null, 0)
         const {data: {data: stadiumItems}} = await paginateStadiums(search, null, 0)
 

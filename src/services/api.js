@@ -28,25 +28,25 @@ api.interceptors.response.use(undefined, (error) => {
       window.location.href = '/login';
     }
     ElNotification({type: 'error', title: 'Ошибка авторизации', message: 'Введен неверный логин или пароль'})
-    return;
+    return Promise.reject(error);
   }
   if (error.response && error.response.status === 403) {
     ElNotification({type: 'error', title: 'Ошибка авторизации', message: 'Нет прав на совершение действия'})
-    return;
+    return Promise.reject(error);
   }
   if (error.response && error.response.status === 404) {
     ElNotification({type: 'error', title: '404', message: 'Ресурс отсутствует'})
-    return;
+    return Promise.reject(error);
   }
 
   if (error.response && error.response.status === 422) {
     ElNotification({type: 'error', title: 'Ошибка', message: Object.values(errorMessage).join("\r\n")??'Обратитесь к разработчикам.'})
-    return;
+    return Promise.reject(error);
   }
 
   if (error.response && error.response.status === 500) {
     ElNotification({type: 'error', title: 'Ошибка', message: errorMessage??'Обратитесь к разработчикам.'})
-    return;
+    return Promise.reject(error);
   }
 
   if (error.response.data.errors){

@@ -487,8 +487,13 @@ export default {
         let diff = momentTz.tz('Europe/Moscow').utcOffset() - momentTz().utcOffset()
         let date = moment(new Date()).add(diff, 'minutes')
 
+        console.log('timeTz',momentTz.tz('Europe/Moscow'))
+        console.log('time Tz Moscow Offset',momentTz.tz('Europe/Moscow').utcOffset())
+        console.log('timeTz Offset',momentTz().utcOffset())
+        console.log('time Offset',moment().utcOffset())
+        console.log('date',date)
         let lastActiveDate = pause.value[0]?.started_at ?? date
-
+        console.log('lastActiveDate',lastActiveDate)
         time.value = moment.duration(moment(lastActiveDate).diff(moment(game.value.actual_start_time)))._milliseconds - pauses.value*1000
         minutes.value = Math.floor(moment.duration(time.value).asMinutes()).toString().padStart(2, '0')
         seconds.value = moment.duration(time.value).seconds().toString().padStart(2, '0')
